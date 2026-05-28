@@ -27,3 +27,5 @@ Homestead.yaml
 Thumbs.db
 cookies.txt
 database/database.sqlite
+.vercel-tmp/
+**/node_modules

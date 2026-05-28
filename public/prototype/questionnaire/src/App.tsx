@@ -32,6 +32,7 @@ const STEP_CONFIG: Record<Exclude<Step, "welcome" | "complete">, { title: string
 function App() {
   const [step, setStep] = useState<Step>("welcome")
   const [direction, setDirection] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     bringsYouHere: "",
     supportAreas: [],
@@ -52,12 +53,54 @@ function App() {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [currentIndex])
 
-  const handleNext = useCallback(() => {
+  const submitQuestionnaire = useCallback(async (): Promise<boolean> => {
+    setIsSubmitting(true)
+    try {
+      const payload = {
+        brings_to_therapy: formData.bringsYouHere || null,
+        support_areas: formData.supportAreas.length > 0 ? formData.supportAreas : null,
+        previous_therapy: formData.previousTherapy || null,
+        presenting_issue: formData.currentChallenges || null,
+        communication_style: formData.communicationStyle || null,
+        duration_expectation: formData.expectations || null,
+        additional_notes: formData.additionalNotes || null,
+      }
+
+      const response = await fetch("/api/v1/pre-intake", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to submit questionnaire")
+      }
+
+      return true
+    } catch (error) {
+      console.error("Submission error:", error)
+      return false
+    } finally {
+      setIsSubmitting(false)
+    }
+  }, [formData])
+
+  const handleNext = useCallback(async () => {
     const nextIndex = currentIndex + 1
     if (nextIndex < STEP_ORDER.length) {
+      if (STEP_ORDER[nextIndex] === "complete") {
+        const success = await submitQuestionnaire()
+        if (!success) {
+          alert("Something went wrong while saving your responses. Please try again.")
+          return
+        }
+      }
       goToStep(STEP_ORDER[nextIndex])
     }
-  }, [currentIndex, goToStep])
+  }, [currentIndex, goToStep, submitQuestionnaire])
 
   const handleBack = useCallback(() => {
     const prevIndex = currentIndex - 1
@@ -185,9 +228,9 @@ function App() {
                 Back
               </Button>
 
-              <Button onClick={handleNext} className="gap-2">
-                {step === "preferences" ? "Complete" : "Continue"}
-                <ArrowRight className="h-4 w-4" />
+              <Button onClick={handleNext} className="gap-2" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : step === "preferences" ? "Complete" : "Continue"}
+                {!isSubmitting && <ArrowRight className="h-4 w-4" />}
               </Button>
             </motion.div>
           )}

@@ -8,7 +8,24 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   body { background: var(--color-bg); }
-  .booking-page { min-height: 100svh; padding-top: 72px; display: flex; flex-direction: column; }
+  .nav, .footer, .wa-float, .scroll-progress { display: none !important; }
+  .booking-page { min-height: 100svh; padding-top: 0; display: flex; flex-direction: column; }
+
+  /* Booking Header */
+  .booking-header { position: sticky; top: 0; z-index: 100; background: var(--color-white); border-bottom: 1px solid var(--color-border); padding: var(--space-4) var(--space-6); }
+  .booking-header__inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+  .booking-header__brand { display: flex; align-items: center; gap: var(--space-3); }
+  .booking-header__avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--color-teal); display: flex; align-items: center; justify-content: center; color: white; font-family: var(--font-heading); font-size: var(--size-sm); font-weight: 500; }
+  .booking-header__name { font-family: var(--font-heading); font-size: var(--size-md); color: var(--color-text); }
+
+  /* Step Indicators */
+  .step-indicators { display: flex; align-items: center; gap: 0; }
+  .step-indicator { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--size-sm); font-weight: 500; border: 2px solid var(--color-border); color: var(--color-text-light); transition: all 0.3s ease; }
+  .step-indicator--active { border-color: var(--color-teal); background: var(--color-teal); color: white; }
+  .step-indicator--done { border-color: var(--color-teal); background: var(--color-teal); color: white; }
+  .step-indicator__line { width: 32px; height: 2px; background: var(--color-border); transition: background 0.3s ease; }
+  .step-indicator__line--done { background: var(--color-teal); }
+
   .booking-container { max-width: 720px; margin: 0 auto; padding: var(--space-12) var(--space-6); width: 100%; flex: 1; }
   @media (min-width: 640px) { .booking-container { padding: var(--space-16) var(--space-8); } }
 
@@ -26,6 +43,7 @@
   .step-section { margin-bottom: var(--space-10); }
   .step-section__label { font-size: var(--size-base); font-weight: 500; color: var(--color-text); margin-bottom: var(--space-4); display: block; }
   .step-section__label span { color: var(--color-text-light); font-weight: 400; margin-left: 3px; }
+  .step-section__helper { font-size: var(--size-xs); color: var(--color-text-light); margin-top: var(--space-2); }
 
   .option-cards { display: flex; flex-direction: column; gap: var(--space-3); }
   .option-cards--2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
@@ -72,18 +90,35 @@
   .booking-footer { border-top: 1px solid var(--color-border); padding: var(--space-6) 0; }
   .booking-footer__inner { max-width: 720px; margin: 0 auto; padding: 0 var(--space-6); display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); font-size: var(--size-xs); color: var(--color-text-light); }
   @media (max-width: 560px) { .booking-footer__inner { flex-direction: column; text-align: center; } }
-  @media (max-width: 800px) { .booking-page { padding-top: 64px; } }
 </style>
 @endsection
 
 @section('content')
 <main id="main-content" class="booking-page">
+
+  <!-- Booking Header with Step Indicators -->
+  <header class="booking-header">
+    <div class="booking-header__inner">
+      <div class="booking-header__brand">
+        <div class="booking-header__avatar">L</div>
+        <span class="booking-header__name">Therapist Lysander</span>
+      </div>
+      <div class="step-indicators" id="step-indicators">
+        <div class="step-indicator step-indicator--active" id="ind-1">1</div>
+        <div class="step-indicator__line" id="line-1"></div>
+        <div class="step-indicator" id="ind-2">2</div>
+        <div class="step-indicator__line" id="line-2"></div>
+        <div class="step-indicator" id="ind-3">3</div>
+      </div>
+    </div>
+  </header>
+
   <div class="booking-container">
 
     <!-- Progress bar -->
     <div class="progress-bar-wrap">
       <div class="progress-bar-labels">
-        <span class="progress-bar-label" id="progress-label">Step 1 of 4</span>
+        <span class="progress-bar-label" id="progress-label">Step 1 of 3</span>
         <span class="progress-bar-pct" id="progress-pct">0%</span>
       </div>
       <div class="progress-bar-track">
@@ -174,43 +209,10 @@
       </div>
     </div>
 
-    <!-- STEP 2: Pre-Intake -->
+    <!-- STEP 2: Pre-Intake Questionnaire -->
     <div id="step-2" class="step-content" style="display:none;">
-      <h1 class="step-heading">A few questions</h1>
-      <p class="step-subheading">This helps me understand where you're starting from and how I can best support you. Share as much or as little as you like.</p>
-
-      <div class="step-section">
-        <label class="step-section__label">What brings you here today?</label>
-        <div class="form-group">
-          <textarea class="form-textarea" id="pi-brings" placeholder="In your own words, what led you to reach out... (optional)"></textarea>
-        </div>
-      </div>
-
-      <div class="step-section">
-        <label class="step-section__label">What areas would you like support with? <span>(Select all that apply)</span></label>
-        <div class="option-cards">
-          @foreach([
-            ['trauma','Trauma or PTSD','Processing past experiences that still affect you'],
-            ['anxiety','Anxiety or worry','Persistent anxiety, panic, or overwhelming thoughts'],
-            ['depression','Low mood or depression','Feeling stuck, numb, or lacking motivation'],
-            ['self-worth','Self-worth or identity','Questions about who you are and your value'],
-            ['relationships','Relationships','Challenges with partners, family, or connections'],
-            ['life-transition','Life transition','Major changes like relocation, career, or loss'],
-            ['burnout','Burnout or stress','Feeling emotionally or physically exhausted'],
-            ['other','Something else','A concern not listed here'],
-          ] as [$val, $label, $desc])
-          <div class="option-card option-card--checkbox" data-value="{{ $val }}" tabindex="0" role="checkbox" aria-checked="false" onclick="piToggleMulti(this,'pi-support')">
-            <span class="option-card__indicator">
-              <svg class="option-card__indicator-check" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <span class="option-card__content">
-              <span class="option-card__label">{{ $label }}</span>
-              <span class="option-card__desc">{{ $desc }}</span>
-            </span>
-          </div>
-          @endforeach
-        </div>
-      </div>
+      <h1 class="step-heading">Your experience so far</h1>
+      <p class="step-subheading">Understanding your background helps me meet you where you are.</p>
 
       <div class="step-section">
         <label class="step-section__label">Have you worked with a therapist or coach before?</label>
@@ -233,50 +235,11 @@
       </div>
 
       <div class="step-section">
-        <label class="step-section__label">What communication style do you prefer?</label>
-        <div class="option-cards">
-          @foreach([
-            ['gentle','Gentle and supportive','I prefer a soft, empathetic approach with lots of encouragement'],
-            ['direct','Direct and structured','I appreciate clear guidance, frameworks, and honest feedback'],
-            ['collaborative','Collaborative','I like to be actively involved in setting the direction'],
-            ['flexible','Flexible and intuitive','I\'m open to going with what feels right in the moment'],
-          ] as [$val, $label, $desc])
-          <div class="option-card option-card--radio" data-value="{{ $val }}" tabindex="0" role="radio" aria-checked="false" onclick="piSelectSingle(this,'pi-comm')">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">{{ $label }}</span>
-              <span class="option-card__desc">{{ $desc }}</span>
-            </span>
-          </div>
-          @endforeach
-        </div>
-      </div>
-
-      <div class="step-section">
-        <label class="step-section__label">What are your expectations for duration?</label>
-        <div class="option-cards">
-          @foreach([
-            ['short-term','Short-term support','A few sessions to work through something specific'],
-            ['medium-term','Medium-term work','Several weeks or months of regular sessions'],
-            ['long-term','Long-term therapy','Ongoing support for deeper or complex concerns'],
-            ['exploring','I\'m still exploring','Not sure yet — I\'d like to discuss this with you'],
-          ] as [$val, $label, $desc])
-          <div class="option-card option-card--radio" data-value="{{ $val }}" tabindex="0" role="radio" aria-checked="false" onclick="piSelectSingle(this,'pi-expect')">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">{{ $label }}</span>
-              <span class="option-card__desc">{{ $desc }}</span>
-            </span>
-          </div>
-          @endforeach
-        </div>
-      </div>
-
-      <div class="step-section">
-        <label class="step-section__label">Anything else you'd like me to know? <span>(optional)</span></label>
+        <label class="step-section__label">What are your main emotional challenges or goals <span style="color:var(--color-teal);font-weight:500;">right now</span>?</label>
         <div class="form-group">
-          <textarea class="form-textarea" id="pi-notes" placeholder="Triggers, preferences, accessibility needs, or anything that would help you feel safe..."></textarea>
+          <textarea class="form-textarea" id="pi-goals" placeholder="I'd like to feel more... / I struggle with..."></textarea>
         </div>
+        <p class="step-section__helper">A few sentences are enough. This will guide our first conversation.</p>
       </div>
 
       <div class="step-nav">
@@ -285,13 +248,13 @@
           Back
         </button>
         <button class="btn btn--primary" onclick="goStep(3)">
-          Continue to scheduling
+          Continue
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
         </button>
       </div>
     </div>
 
-    <!-- STEP 3: Schedule -->
+    <!-- STEP 3: Schedule & Confirm -->
     <div id="step-3" class="step-content" style="display:none;">
       <h1 class="step-heading">Choose a time</h1>
       <p class="step-subheading">Weekday sessions only. Tap a day to see available time slots.</p>
@@ -306,44 +269,32 @@
         <div class="time-slots" id="time-slots"></div>
       </div>
 
+      <div id="summary-section" style="display:none;">
+        <div class="step-section" style="margin-top:var(--space-8);">
+          <label class="step-section__label">Review your booking</label>
+          <div class="summary-card" id="summary-card">
+            <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value" id="sum-name">—</span></div>
+            <div class="summary-row"><span class="summary-label">Session type</span><span class="summary-value" id="sum-type">—</span></div>
+            <div class="summary-row"><span class="summary-label">Format</span><span class="summary-value" id="sum-format">—</span></div>
+            <div class="summary-row"><span class="summary-label">Date &amp; time</span><span class="summary-value" id="sum-datetime">—</span></div>
+            <div class="summary-row"><span class="summary-label">Email</span><span class="summary-value" id="sum-email">—</span></div>
+          </div>
+        </div>
+
+        <div class="step-section" style="margin-top:var(--space-6);">
+          <label class="step-section__label">Additional notes <span>(optional)</span></label>
+          <div class="form-group">
+            <textarea class="form-textarea" id="b-notes" placeholder="Briefly share what brings you here — this helps me prepare for our first conversation."></textarea>
+          </div>
+        </div>
+      </div>
+
       <div class="step-nav">
         <button class="btn--ghost" onclick="goStep(2)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
           Back
         </button>
-        <button class="btn btn--primary" id="btn-to-4" style="opacity:0.5;pointer-events:none;" onclick="goStep(4)">
-          Review &amp; confirm
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- STEP 4: Confirm -->
-    <div id="step-4" class="step-content" style="display:none;">
-      <h1 class="step-heading">Review &amp; confirm</h1>
-      <p class="step-subheading">Please double-check your details before sending your booking request.</p>
-
-      <div class="summary-card" id="summary-card">
-        <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value" id="sum-name">—</span></div>
-        <div class="summary-row"><span class="summary-label">Session type</span><span class="summary-value" id="sum-type">—</span></div>
-        <div class="summary-row"><span class="summary-label">Format</span><span class="summary-value" id="sum-format">—</span></div>
-        <div class="summary-row"><span class="summary-label">Date &amp; time</span><span class="summary-value" id="sum-datetime">—</span></div>
-        <div class="summary-row"><span class="summary-label">Email</span><span class="summary-value" id="sum-email">—</span></div>
-      </div>
-
-      <div class="step-section" style="margin-top:var(--space-8);">
-        <label class="step-section__label">Additional notes <span>(optional)</span></label>
-        <div class="form-group">
-          <textarea class="form-textarea" id="b-notes" placeholder="Briefly share what brings you here — this helps me prepare for our first conversation."></textarea>
-        </div>
-      </div>
-
-      <div class="step-nav">
-        <button class="btn--ghost" onclick="goStep(3)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
-          Back
-        </button>
-        <button class="btn btn--primary" id="btn-submit" onclick="submitBooking()">
+        <button class="btn btn--primary" id="btn-submit" style="opacity:0.5;pointer-events:none;" onclick="submitBooking()">
           Send booking request
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
         </button>
@@ -357,7 +308,7 @@
 <footer class="booking-footer">
   <div class="booking-footer__inner">
     <span>Your responses are confidential and secure.</span>
-    <span>Therapist Lysander &middot; Book a Session</span>
+    <span>Therapist Lysander &middot; Pre-Intake Questionnaire</span>
   </div>
 </footer>
 @endsection
@@ -365,13 +316,25 @@
 @section('page_scripts')
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+function showToast(message, type) {
+  const existing = document.getElementById('toast-notification');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'toast-notification';
+  const bg = type === 'error' ? '#dc2626' : type === 'success' ? '#16a34a' : '#5a7a76';
+  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' + bg + ';color:#fff;padding:12px 24px;border-radius:8px;font-size:14px;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:opacity 0.3s;';
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 4000);
+}
+
 const state = {
   type: 'online', format: 'intake', name: '', email: '',
   date: '', time: '',
-  'pi-support': [], 'pi-therapy': '', 'pi-comm': '', 'pi-expect': '',
-  piBrings: '', piNotes: '',
+  'pi-therapy': '', piGoals: '',
 };
 
+let currentStep = 1;
 let inlinePicker;
 let scheduleData = { inactive_days: [5, 6], fully_blocked_dates: [] };
 
@@ -409,17 +372,6 @@ document.querySelectorAll('#step-1 .option-card[data-type]').forEach(el => {
   el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();selectType();} });
 });
 
-function piToggleMulti(el, group) {
-  el.classList.toggle('selected');
-  const checked = el.classList.contains('selected');
-  el.setAttribute('aria-checked', checked ? 'true' : 'false');
-  const val = el.dataset.value;
-  const arr = state[group] || (state[group] = []);
-  const idx = arr.indexOf(val);
-  if (checked && idx === -1) arr.push(val);
-  if (!checked && idx > -1) arr.splice(idx, 1);
-}
-
 function piSelectSingle(el, group) {
   const container = el.closest('.option-cards, .option-cards--2');
   container.querySelectorAll('.option-card').forEach(opt => {
@@ -427,6 +379,30 @@ function piSelectSingle(el, group) {
   });
   el.classList.add('selected'); el.setAttribute('aria-checked', 'true');
   state[group] = el.dataset.value;
+}
+
+function updateStepIndicators(step) {
+  [1, 2, 3].forEach(s => {
+    const ind = document.getElementById('ind-' + s);
+    ind.classList.remove('step-indicator--active', 'step-indicator--done');
+    if (s < step) {
+      ind.classList.add('step-indicator--done');
+      ind.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>';
+    } else if (s === step) {
+      ind.classList.add('step-indicator--active');
+      ind.textContent = s;
+    } else {
+      ind.textContent = s;
+    }
+  });
+  [1, 2].forEach(l => {
+    const line = document.getElementById('line-' + l);
+    if (l < step) {
+      line.classList.add('step-indicator__line--done');
+    } else {
+      line.classList.remove('step-indicator__line--done');
+    }
+  });
 }
 
 function goStep(step) {
@@ -439,27 +415,21 @@ function goStep(step) {
     state.name = name; state.email = email;
   }
   if (step === 3) {
-    state.piBrings = document.getElementById('pi-brings').value.trim();
-    state.piNotes = document.getElementById('pi-notes').value.trim();
+    state.piGoals = document.getElementById('pi-goals').value.trim();
     setTimeout(initInlinePicker, 50);
   }
-  if (step === 4) {
-    if (!state.date || !state.time) { showToast('Please select a date and time.','info'); return; }
-    const fmts = {'intake':'Free intake (30 min)','standard':'Standard therapy session (50 min)','emdr':'EMDR session (50 min)','initial':'Initial consultation (50 min)'};
-    document.getElementById('sum-name').textContent = state.name;
-    document.getElementById('sum-type').textContent = state.type === 'online' ? 'Online (video call)' : 'In-person — Amsterdam (on request)';
-    document.getElementById('sum-format').textContent = fmts[state.format] || state.format;
-    document.getElementById('sum-datetime').textContent = state.date + ' at ' + state.time;
-    document.getElementById('sum-email').textContent = state.email;
-  }
 
-  const fillPct = ((step - 1) / 3) * 100;
+  currentStep = step;
+  const totalSteps = 3;
+  const fillPct = Math.round(((step - 1) / (totalSteps - 1)) * 100);
   document.getElementById('progress-fill').style.width = fillPct + '%';
-  document.getElementById('progress-label').textContent = 'Step ' + step + ' of 4';
-  document.getElementById('progress-pct').textContent = Math.round(fillPct) + '%';
+  document.getElementById('progress-label').textContent = 'Step ' + step + ' of ' + totalSteps;
+  document.getElementById('progress-pct').textContent = fillPct + '%';
 
-  [1,2,3,4].forEach(s => {
-    const el = document.getElementById('step-'+s);
+  updateStepIndicators(step);
+
+  [1, 2, 3].forEach(s => {
+    const el = document.getElementById('step-' + s);
     if (el) el.style.display = s === step ? 'block' : 'none';
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -489,7 +459,8 @@ function initInlinePicker() {
       state.date = dateStr; state.time = '';
       fetchAndRenderSlots(dateStr);
       document.getElementById('slots-wrap').style.display = 'block';
-      const btn = document.getElementById('btn-to-4');
+      document.getElementById('summary-section').style.display = 'none';
+      const btn = document.getElementById('btn-submit');
       btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
     }
   });
@@ -515,7 +486,8 @@ function fetchAndRenderSlots(dateStr) {
           document.querySelectorAll('#time-slots .time-slot').forEach(s => s.classList.remove('selected'));
           div.classList.add('selected');
           state.time = slot;
-          const btn = document.getElementById('btn-to-4');
+          showSummary();
+          const btn = document.getElementById('btn-submit');
           btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
         });
         grid.appendChild(div);
@@ -526,7 +498,18 @@ function fetchAndRenderSlots(dateStr) {
     });
 }
 
+function showSummary() {
+  const fmts = {'intake':'Free intake (30 min)','standard':'Standard therapy session (50 min)','emdr':'EMDR session (50 min)','initial':'Initial consultation (50 min)'};
+  document.getElementById('sum-name').textContent = state.name;
+  document.getElementById('sum-type').textContent = state.type === 'online' ? 'Online (video call)' : 'In-person — Amsterdam (on request)';
+  document.getElementById('sum-format').textContent = fmts[state.format] || state.format;
+  document.getElementById('sum-datetime').textContent = state.date + ' at ' + state.time;
+  document.getElementById('sum-email').textContent = state.email;
+  document.getElementById('summary-section').style.display = 'block';
+}
+
 function submitBooking() {
+  if (!state.date || !state.time) { showToast('Please select a date and time.','info'); return; }
   const notes = document.getElementById('b-notes').value.trim();
   const btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = 'Sending...';
@@ -539,12 +522,8 @@ function submitBooking() {
     date: state.date,
     time: state.time,
     notes: notes,
-    support_areas: state['pi-support'] || [],
-    pi_brings: state.piBrings || null,
     pi_therapy: state['pi-therapy'] || null,
-    pi_comm: state['pi-comm'] || null,
-    pi_expect: state['pi-expect'] || null,
-    pi_notes: state.piNotes || null,
+    pi_brings: state.piGoals || null,
   };
 
   fetch('/booking', {
@@ -561,24 +540,17 @@ function submitBooking() {
     return r.json();
   })
   .then(data => {
-    const supportLabels = {
-      'trauma': 'Trauma or PTSD', 'anxiety': 'Anxiety', 'depression': 'Low mood/depression',
-      'self-worth': 'Self-worth', 'relationships': 'Relationships', 'life-transition': 'Life transition',
-      'burnout': 'Burnout/stress', 'other': 'Something else'
-    };
-    const piSupport = (state['pi-support'] || []).map(v => supportLabels[v] || v).join(', ');
     const msg = encodeURIComponent(
       'Hi Lysander,\n\nI\'d like to book a session:\n\n' +
       'Name: ' + state.name + '\n' +
       'Type: ' + (state.type === 'online' ? 'Online' : 'In-person') + '\n' +
       'Format: ' + state.format + '\n' +
       'Date: ' + state.date + ' at ' + state.time + '\n' +
-      (piSupport ? '\nSupport areas: ' + piSupport : '') +
       (notes ? '\nNotes: ' + notes : '') +
       '\n\nThank you!'
     );
 
-    document.getElementById('step-4').innerHTML = `
+    document.getElementById('step-3').innerHTML = `
       <div class="success-state">
         <div class="success-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-teal)" stroke-width="2" width="34" height="34"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
@@ -596,7 +568,8 @@ function submitBooking() {
     showToast('Booking request submitted!', 'success');
     document.getElementById('progress-fill').style.width = '100%';
     document.getElementById('progress-pct').textContent = '100%';
-    document.getElementById('progress-label').textContent = 'Step 4 of 4';
+    document.getElementById('progress-label').textContent = 'Complete';
+    updateStepIndicators(4);
   })
   .catch(err => {
     btn.disabled = false; btn.textContent = 'Send booking request';
