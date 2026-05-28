@@ -1,0 +1,607 @@
+@extends('layouts.app')
+
+@section('title', 'Book a Session | Lysander Verschuur, MSc.')
+@section('meta_description', 'Book a therapy session with Lysander Verschuur — psychologist and trauma specialist. Free intake available. Primarily online, with limited in-person availability in Amsterdam.')
+@section('canonical', 'https://www.therapistlysander.com/booking/')
+
+@section('page_styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+  body { background: var(--color-bg); }
+  .booking-page { min-height: 100svh; padding-top: 72px; display: flex; flex-direction: column; }
+  .booking-container { max-width: 720px; margin: 0 auto; padding: var(--space-12) var(--space-6); width: 100%; flex: 1; }
+  @media (min-width: 640px) { .booking-container { padding: var(--space-16) var(--space-8); } }
+
+  .progress-bar-wrap { margin-bottom: var(--space-10); }
+  .progress-bar-labels { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
+  .progress-bar-label { font-size: var(--size-xs); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); }
+  .progress-bar-pct { font-size: var(--size-xs); font-weight: 500; color: var(--color-teal); }
+  .progress-bar-track { height: 4px; background: var(--color-border); border-radius: 999px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--color-teal), var(--color-accent)); border-radius: 999px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  .step-content { animation: fadeInUp 0.4s ease; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .step-heading { font-family: var(--font-heading); font-size: clamp(var(--size-2xl), 4vw, var(--size-3xl)); margin-bottom: var(--space-3); line-height: 1.15; }
+  .step-subheading { font-size: var(--size-md); color: var(--color-text-muted); line-height: 1.6; margin-bottom: var(--space-10); }
+  .step-section { margin-bottom: var(--space-10); }
+  .step-section__label { font-size: var(--size-base); font-weight: 500; color: var(--color-text); margin-bottom: var(--space-4); display: block; }
+  .step-section__label span { color: var(--color-text-light); font-weight: 400; margin-left: 3px; }
+
+  .option-cards { display: flex; flex-direction: column; gap: var(--space-3); }
+  .option-cards--2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+  @media (max-width: 480px) { .option-cards--2 { grid-template-columns: 1fr; } }
+  .option-card { display: flex; align-items: flex-start; gap: var(--space-4); border: 1.5px solid var(--color-border); border-radius: 12px; padding: var(--space-4) var(--space-5); cursor: pointer; transition: all 0.2s ease; background: var(--color-white); text-align: left; }
+  .option-card:hover { border-color: rgba(90, 122, 118, 0.35); background: var(--color-bg); }
+  .option-card.selected { border-color: var(--color-teal); background: rgba(232, 239, 238, 0.45); box-shadow: 0 2px 12px rgba(90, 122, 118, 0.08); }
+  .option-card__indicator { margin-top: 2px; width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border: 2px solid var(--color-text-light); transition: all 0.2s ease; }
+  .option-card--radio .option-card__indicator { border-radius: 50% !important; }
+  .option-card--checkbox .option-card__indicator { border-radius: 6px !important; }
+  .option-card.selected .option-card__indicator { border-color: var(--color-teal); background: var(--color-teal); }
+  .option-card__indicator-dot { width: 8px; height: 8px; border-radius: 50%; background: white; opacity: 0; transition: opacity 0.2s ease; }
+  .option-card.selected .option-card__indicator-dot { opacity: 1; }
+  .option-card__indicator-check { opacity: 0; transition: opacity 0.2s ease; }
+  .option-card.selected .option-card__indicator-check { opacity: 1; }
+  .option-card__content { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .option-card__label { font-size: var(--size-base); font-weight: 500; color: var(--color-text); line-height: 1.4; }
+  .option-card__desc { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.5; }
+
+  .time-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
+  @media (max-width: 560px) { .time-slots { grid-template-columns: repeat(3, 1fr); } }
+  .time-slot { padding: var(--space-3) var(--space-2); text-align: center; font-size: var(--size-sm); border: 1.5px solid var(--color-border); border-radius: var(--radius); color: var(--color-text-muted); cursor: pointer; transition: all var(--transition); background: var(--color-white); }
+  .time-slot:hover { border-color: var(--color-accent); color: var(--color-text); }
+  .time-slot.selected { background: var(--color-teal); border-color: var(--color-teal); color: white; }
+  .time-slot.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+  .flatpickr-calendar.inline { width: 100% !important; box-shadow: none !important; border: 1px solid var(--color-border) !important; border-radius: var(--radius-md) !important; margin-bottom: var(--space-6) !important; }
+
+  .summary-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-4) var(--space-6); border-bottom: 1px solid var(--color-border); }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-label { font-size: var(--size-sm); color: var(--color-text-muted); }
+  .summary-value { font-size: var(--size-sm); font-weight: 500; color: var(--color-text); text-align: right; }
+
+  .step-nav { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-10); padding-top: var(--space-8); border-top: 1px solid var(--color-border); }
+  .step-nav--end { justify-content: flex-end; }
+  .btn--ghost { background: transparent; color: var(--color-text-muted); border: none; padding: var(--space-3) var(--space-4); font-size: var(--size-sm); display: inline-flex; align-items: center; gap: var(--space-2); transition: color var(--transition); cursor: pointer; }
+  .btn--ghost:hover { color: var(--color-text); }
+
+  .success-state { text-align: center; padding: var(--space-12) 0; animation: fadeInUp 0.5s ease; }
+  .success-icon { width: 72px; height: 72px; background: var(--color-teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-6); }
+  .success-icon svg { width: 34px; height: 34px; }
+
+  .booking-footer { border-top: 1px solid var(--color-border); padding: var(--space-6) 0; }
+  .booking-footer__inner { max-width: 720px; margin: 0 auto; padding: 0 var(--space-6); display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); font-size: var(--size-xs); color: var(--color-text-light); }
+  @media (max-width: 560px) { .booking-footer__inner { flex-direction: column; text-align: center; } }
+  @media (max-width: 800px) { .booking-page { padding-top: 64px; } }
+</style>
+@endsection
+
+@section('content')
+<main id="main-content" class="booking-page">
+  <div class="booking-container">
+
+    <!-- Progress bar -->
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-labels">
+        <span class="progress-bar-label" id="progress-label">Step 1 of 4</span>
+        <span class="progress-bar-pct" id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%;"></div>
+      </div>
+    </div>
+
+    @php $bookingHero = $sections['booking_hero'] ?? null; @endphp
+    <!-- STEP 1: Details -->
+    <div id="step-1" class="step-content">
+      <h1 class="step-heading">{{ $bookingHero?->content['heading'] ?? "Let's get started" }}</h1>
+      <p class="step-subheading">{{ $bookingHero?->content['subheading'] ?? 'Book a free 30-minute introduction call. No commitment required.' }}</p>
+
+      <div class="step-section">
+        <label class="step-section__label">Session format</label>
+        <div class="option-cards">
+          <div class="option-card option-card--radio selected" data-format="intake" tabindex="0" role="radio" aria-checked="true">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">Free introduction call <span style="font-size:0.75em;font-weight:500;color:var(--color-teal);background:var(--color-teal-light);padding:1px 7px;border-radius:20px;margin-left:4px;">Free · 30 min</span></span>
+              <span class="option-card__desc">A no-commitment call to explore your situation and see if we're a good fit.</span>
+            </span>
+          </div>
+          <div class="option-card option-card--radio" data-format="standard" tabindex="0" role="radio" aria-checked="false">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">Standard therapy session <span style="font-size:0.75em;font-weight:400;color:var(--color-text-muted);margin-left:4px;">50 min · €110</span></span>
+              <span class="option-card__desc">Regular individual therapy session — CBT, ACT, EMDR, or integrative.</span>
+            </span>
+          </div>
+          <div class="option-card option-card--radio" data-format="emdr" tabindex="0" role="radio" aria-checked="false">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">EMDR session <span style="font-size:0.75em;font-weight:400;color:var(--color-text-muted);margin-left:4px;">50 min · €110</span></span>
+              <span class="option-card__desc">Eye movement desensitisation and reprocessing — trauma-focused therapy.</span>
+            </span>
+          </div>
+          <div class="option-card option-card--radio" data-format="initial" tabindex="0" role="radio" aria-checked="false">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">Initial consultation <span style="font-size:0.75em;font-weight:400;color:var(--color-text-muted);margin-left:4px;">50 min · €110</span></span>
+              <span class="option-card__desc">In-depth intake session exploring background, goals, and treatment plan.</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-section">
+        <label class="step-section__label">Session type</label>
+        <div class="option-cards--2">
+          <div class="option-card option-card--radio selected" data-type="online" tabindex="0" role="radio" aria-checked="true">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">Online</span>
+              <span class="option-card__desc">Secure video call &mdash; available worldwide</span>
+            </span>
+          </div>
+          <div class="option-card option-card--radio" data-type="in-person" tabindex="0" role="radio" aria-checked="false">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">In-person <span style="font-size:0.7em;font-weight:400;color:var(--color-accent);vertical-align:middle;">Limited</span></span>
+              <span class="option-card__desc">Amsterdam &mdash; limited availability, on request</span>
+            </span>
+          </div>
+        </div>
+        <div id="inperson-note" style="display:none;margin-top:10px;background:var(--color-teal-light);border:1px solid var(--color-accent-light);border-radius:8px;padding:10px 14px;font-size:var(--size-sm);color:var(--color-teal);">
+          In-person sessions in Amsterdam are available on a limited basis. After submitting, Lysander will confirm availability and suggest a location.
+        </div>
+      </div>
+
+      <div class="step-section">
+        <label class="step-section__label">Your details</label>
+        <div class="form-group">
+          <label class="form-label" for="b-name">Full name</label>
+          <input type="text" class="form-input" id="b-name" placeholder="Your name" autocomplete="name">
+        </div>
+        <div class="form-group" style="margin-top:var(--space-4);">
+          <label class="form-label" for="b-email">Email address</label>
+          <input type="email" class="form-input" id="b-email" placeholder="your@email.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="step-nav step-nav--end">
+        <button class="btn btn--primary" onclick="goStep(2)">
+          Continue
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Pre-Intake -->
+    <div id="step-2" class="step-content" style="display:none;">
+      <h1 class="step-heading">A few questions</h1>
+      <p class="step-subheading">This helps me understand where you're starting from and how I can best support you. Share as much or as little as you like.</p>
+
+      <div class="step-section">
+        <label class="step-section__label">What brings you here today?</label>
+        <div class="form-group">
+          <textarea class="form-textarea" id="pi-brings" placeholder="In your own words, what led you to reach out... (optional)"></textarea>
+        </div>
+      </div>
+
+      <div class="step-section">
+        <label class="step-section__label">What areas would you like support with? <span>(Select all that apply)</span></label>
+        <div class="option-cards">
+          @foreach([
+            ['trauma','Trauma or PTSD','Processing past experiences that still affect you'],
+            ['anxiety','Anxiety or worry','Persistent anxiety, panic, or overwhelming thoughts'],
+            ['depression','Low mood or depression','Feeling stuck, numb, or lacking motivation'],
+            ['self-worth','Self-worth or identity','Questions about who you are and your value'],
+            ['relationships','Relationships','Challenges with partners, family, or connections'],
+            ['life-transition','Life transition','Major changes like relocation, career, or loss'],
+            ['burnout','Burnout or stress','Feeling emotionally or physically exhausted'],
+            ['other','Something else','A concern not listed here'],
+          ] as [$val, $label, $desc])
+          <div class="option-card option-card--checkbox" data-value="{{ $val }}" tabindex="0" role="checkbox" aria-checked="false" onclick="piToggleMulti(this,'pi-support')">
+            <span class="option-card__indicator">
+              <svg class="option-card__indicator-check" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="option-card__content">
+              <span class="option-card__label">{{ $label }}</span>
+              <span class="option-card__desc">{{ $desc }}</span>
+            </span>
+          </div>
+          @endforeach
+        </div>
+      </div>
+
+      <div class="step-section">
+        <label class="step-section__label">Have you worked with a therapist or coach before?</label>
+        <div class="option-cards">
+          @foreach([
+            ['yes-ongoing','Yes, I\'m currently in therapy','With this therapist or another professional'],
+            ['yes-past','Yes, in the past','I\'ve worked with a therapist or coach before'],
+            ['no','No, this is my first time','I\'m completely new to therapy or coaching'],
+            ['prefer-not','I prefer not to say','We can discuss this in our session instead'],
+          ] as [$val, $label, $desc])
+          <div class="option-card option-card--radio" data-value="{{ $val }}" tabindex="0" role="radio" aria-checked="false" onclick="piSelectSingle(this,'pi-therapy')">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">{{ $label }}</span>
+              <span class="option-card__desc">{{ $desc }}</span>
+            </span>
+          </div>
+          @endforeach
+        </div>
+      </div>
+
+      <div class="step-section">
+        <label class="step-section__label">What communication style do you prefer?</label>
+        <div class="option-cards">
+          @foreach([
+            ['gentle','Gentle and supportive','I prefer a soft, empathetic approach with lots of encouragement'],
+            ['direct','Direct and structured','I appreciate clear guidance, frameworks, and honest feedback'],
+            ['collaborative','Collaborative','I like to be actively involved in setting the direction'],
+            ['flexible','Flexible and intuitive','I\'m open to going with what feels right in the moment'],
+          ] as [$val, $label, $desc])
+          <div class="option-card option-card--radio" data-value="{{ $val }}" tabindex="0" role="radio" aria-checked="false" onclick="piSelectSingle(this,'pi-comm')">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">{{ $label }}</span>
+              <span class="option-card__desc">{{ $desc }}</span>
+            </span>
+          </div>
+          @endforeach
+        </div>
+      </div>
+
+      <div class="step-section">
+        <label class="step-section__label">What are your expectations for duration?</label>
+        <div class="option-cards">
+          @foreach([
+            ['short-term','Short-term support','A few sessions to work through something specific'],
+            ['medium-term','Medium-term work','Several weeks or months of regular sessions'],
+            ['long-term','Long-term therapy','Ongoing support for deeper or complex concerns'],
+            ['exploring','I\'m still exploring','Not sure yet — I\'d like to discuss this with you'],
+          ] as [$val, $label, $desc])
+          <div class="option-card option-card--radio" data-value="{{ $val }}" tabindex="0" role="radio" aria-checked="false" onclick="piSelectSingle(this,'pi-expect')">
+            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+            <span class="option-card__content">
+              <span class="option-card__label">{{ $label }}</span>
+              <span class="option-card__desc">{{ $desc }}</span>
+            </span>
+          </div>
+          @endforeach
+        </div>
+      </div>
+
+      <div class="step-section">
+        <label class="step-section__label">Anything else you'd like me to know? <span>(optional)</span></label>
+        <div class="form-group">
+          <textarea class="form-textarea" id="pi-notes" placeholder="Triggers, preferences, accessibility needs, or anything that would help you feel safe..."></textarea>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn--ghost" onclick="goStep(1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+          Back
+        </button>
+        <button class="btn btn--primary" onclick="goStep(3)">
+          Continue to scheduling
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Schedule -->
+    <div id="step-3" class="step-content" style="display:none;">
+      <h1 class="step-heading">Choose a time</h1>
+      <p class="step-subheading">Weekday sessions only. Tap a day to see available time slots.</p>
+
+      <div class="step-section">
+        <label class="step-section__label">Select a date</label>
+        <div id="inline-calendar"></div>
+      </div>
+
+      <div class="step-section" id="slots-wrap" style="display:none;">
+        <label class="step-section__label">Available times</label>
+        <div class="time-slots" id="time-slots"></div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn--ghost" onclick="goStep(2)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+          Back
+        </button>
+        <button class="btn btn--primary" id="btn-to-4" style="opacity:0.5;pointer-events:none;" onclick="goStep(4)">
+          Review &amp; confirm
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Confirm -->
+    <div id="step-4" class="step-content" style="display:none;">
+      <h1 class="step-heading">Review &amp; confirm</h1>
+      <p class="step-subheading">Please double-check your details before sending your booking request.</p>
+
+      <div class="summary-card" id="summary-card">
+        <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value" id="sum-name">—</span></div>
+        <div class="summary-row"><span class="summary-label">Session type</span><span class="summary-value" id="sum-type">—</span></div>
+        <div class="summary-row"><span class="summary-label">Format</span><span class="summary-value" id="sum-format">—</span></div>
+        <div class="summary-row"><span class="summary-label">Date &amp; time</span><span class="summary-value" id="sum-datetime">—</span></div>
+        <div class="summary-row"><span class="summary-label">Email</span><span class="summary-value" id="sum-email">—</span></div>
+      </div>
+
+      <div class="step-section" style="margin-top:var(--space-8);">
+        <label class="step-section__label">Additional notes <span>(optional)</span></label>
+        <div class="form-group">
+          <textarea class="form-textarea" id="b-notes" placeholder="Briefly share what brings you here — this helps me prepare for our first conversation."></textarea>
+        </div>
+      </div>
+
+      <div class="step-nav">
+        <button class="btn--ghost" onclick="goStep(3)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+          Back
+        </button>
+        <button class="btn btn--primary" id="btn-submit" onclick="submitBooking()">
+          Send booking request
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+        </button>
+      </div>
+      <p style="font-size:var(--size-xs);color:var(--color-text-light);margin-top:var(--space-4);text-align:center;">Your booking request will be sent to Lysander. You'll receive a confirmation via email or WhatsApp within 24 hours.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="booking-footer">
+  <div class="booking-footer__inner">
+    <span>Your responses are confidential and secure.</span>
+    <span>Therapist Lysander &middot; Book a Session</span>
+  </div>
+</footer>
+@endsection
+
+@section('page_scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+const state = {
+  type: 'online', format: 'intake', name: '', email: '',
+  date: '', time: '',
+  'pi-support': [], 'pi-therapy': '', 'pi-comm': '', 'pi-expect': '',
+  piBrings: '', piNotes: '',
+};
+
+let inlinePicker;
+let scheduleData = { inactive_days: [5, 6], fully_blocked_dates: [] };
+
+// Load schedule data on page load (working days + blocked dates)
+fetch('/api/availability/schedule')
+  .then(r => r.json())
+  .then(data => { scheduleData = data; })
+  .catch(() => {});
+
+// Format selection (option-cards with data-format)
+document.querySelectorAll('#step-1 .option-card[data-format]').forEach(el => {
+  function selectFormat() {
+    document.querySelectorAll('#step-1 .option-card[data-format]').forEach(t => {
+      t.classList.remove('selected'); t.setAttribute('aria-checked','false');
+    });
+    el.classList.add('selected'); el.setAttribute('aria-checked','true');
+    state.format = el.dataset.format;
+  }
+  el.addEventListener('click', selectFormat);
+  el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();selectFormat();} });
+});
+
+// Session type selection (online / in-person)
+document.querySelectorAll('#step-1 .option-card[data-type]').forEach(el => {
+  function selectType() {
+    document.querySelectorAll('#step-1 .option-card[data-type]').forEach(t => {
+      t.classList.remove('selected'); t.setAttribute('aria-checked','false');
+    });
+    el.classList.add('selected'); el.setAttribute('aria-checked','true');
+    state.type = el.dataset.type;
+    const note = document.getElementById('inperson-note');
+    if (note) note.style.display = state.type === 'in-person' ? 'block' : 'none';
+  }
+  el.addEventListener('click', selectType);
+  el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();selectType();} });
+});
+
+function piToggleMulti(el, group) {
+  el.classList.toggle('selected');
+  const checked = el.classList.contains('selected');
+  el.setAttribute('aria-checked', checked ? 'true' : 'false');
+  const val = el.dataset.value;
+  const arr = state[group] || (state[group] = []);
+  const idx = arr.indexOf(val);
+  if (checked && idx === -1) arr.push(val);
+  if (!checked && idx > -1) arr.splice(idx, 1);
+}
+
+function piSelectSingle(el, group) {
+  const container = el.closest('.option-cards, .option-cards--2');
+  container.querySelectorAll('.option-card').forEach(opt => {
+    opt.classList.remove('selected'); opt.setAttribute('aria-checked', 'false');
+  });
+  el.classList.add('selected'); el.setAttribute('aria-checked', 'true');
+  state[group] = el.dataset.value;
+}
+
+function goStep(step) {
+  if (step === 2) {
+    const name = document.getElementById('b-name').value.trim();
+    const email = document.getElementById('b-email').value.trim();
+    if (!name || !email) { showToast('Please enter your name and email before continuing.','info'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address.','info'); return; }
+    if (!state.format) { showToast('Please select a session format.','info'); return; }
+    state.name = name; state.email = email;
+  }
+  if (step === 3) {
+    state.piBrings = document.getElementById('pi-brings').value.trim();
+    state.piNotes = document.getElementById('pi-notes').value.trim();
+    setTimeout(initInlinePicker, 50);
+  }
+  if (step === 4) {
+    if (!state.date || !state.time) { showToast('Please select a date and time.','info'); return; }
+    const fmts = {'intake':'Free intake (30 min)','standard':'Standard therapy session (50 min)','emdr':'EMDR session (50 min)','initial':'Initial consultation (50 min)'};
+    document.getElementById('sum-name').textContent = state.name;
+    document.getElementById('sum-type').textContent = state.type === 'online' ? 'Online (video call)' : 'In-person — Amsterdam (on request)';
+    document.getElementById('sum-format').textContent = fmts[state.format] || state.format;
+    document.getElementById('sum-datetime').textContent = state.date + ' at ' + state.time;
+    document.getElementById('sum-email').textContent = state.email;
+  }
+
+  const fillPct = ((step - 1) / 3) * 100;
+  document.getElementById('progress-fill').style.width = fillPct + '%';
+  document.getElementById('progress-label').textContent = 'Step ' + step + ' of 4';
+  document.getElementById('progress-pct').textContent = Math.round(fillPct) + '%';
+
+  [1,2,3,4].forEach(s => {
+    const el = document.getElementById('step-'+s);
+    if (el) el.style.display = s === step ? 'block' : 'none';
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function initInlinePicker() {
+  if (inlinePicker) { inlinePicker.destroy(); }
+
+  // Convert inactive_days (0=Mon..6=Sun) to JS day-of-week (0=Sun..6=Sat)
+  const disabledJsDays = scheduleData.inactive_days.map(d => (d + 1) % 7);
+  const blockedDates = scheduleData.fully_blocked_dates || [];
+
+  inlinePicker = flatpickr('#inline-calendar', {
+    inline: true, minDate: 'today', maxDate: new Date().fp_incr(60),
+    disable: [
+      function(date) {
+        if (disabledJsDays.includes(date.getDay())) return true;
+        const y = date.getFullYear();
+        const m = String(date.getMonth()+1).padStart(2,'0');
+        const dd = String(date.getDate()).padStart(2,'0');
+        if (blockedDates.includes(y+'-'+m+'-'+dd)) return true;
+        return false;
+      }
+    ],
+    locale: { firstDayOfWeek: 1 },
+    onChange(selectedDates, dateStr) {
+      state.date = dateStr; state.time = '';
+      fetchAndRenderSlots(dateStr);
+      document.getElementById('slots-wrap').style.display = 'block';
+      const btn = document.getElementById('btn-to-4');
+      btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
+    }
+  });
+}
+
+function fetchAndRenderSlots(dateStr) {
+  const grid = document.getElementById('time-slots');
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">Loading...</div>';
+
+  fetch('/api/availability/slots?date=' + encodeURIComponent(dateStr))
+    .then(r => r.json())
+    .then(data => {
+      grid.innerHTML = '';
+      if (!data.available || !data.slots.length) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">No available slots for this date.</div>';
+        return;
+      }
+      data.slots.forEach(slot => {
+        const div = document.createElement('div');
+        div.className = 'time-slot';
+        div.textContent = slot;
+        div.addEventListener('click', () => {
+          document.querySelectorAll('#time-slots .time-slot').forEach(s => s.classList.remove('selected'));
+          div.classList.add('selected');
+          state.time = slot;
+          const btn = document.getElementById('btn-to-4');
+          btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
+        });
+        grid.appendChild(div);
+      });
+    })
+    .catch(() => {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#dc2626;font-size:13px;padding:12px;">Failed to load availability. Please try again.</div>';
+    });
+}
+
+function submitBooking() {
+  const notes = document.getElementById('b-notes').value.trim();
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true; btn.textContent = 'Sending...';
+
+  const payload = {
+    name: state.name,
+    email: state.email,
+    format: state.format,
+    type: state.type,
+    date: state.date,
+    time: state.time,
+    notes: notes,
+    support_areas: state['pi-support'] || [],
+    pi_brings: state.piBrings || null,
+    pi_therapy: state['pi-therapy'] || null,
+    pi_comm: state['pi-comm'] || null,
+    pi_expect: state['pi-expect'] || null,
+    pi_notes: state.piNotes || null,
+  };
+
+  fetch('/booking', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+    },
+    body: JSON.stringify(payload),
+  })
+  .then(r => {
+    if (!r.ok) throw new Error('Server error');
+    return r.json();
+  })
+  .then(data => {
+    const supportLabels = {
+      'trauma': 'Trauma or PTSD', 'anxiety': 'Anxiety', 'depression': 'Low mood/depression',
+      'self-worth': 'Self-worth', 'relationships': 'Relationships', 'life-transition': 'Life transition',
+      'burnout': 'Burnout/stress', 'other': 'Something else'
+    };
+    const piSupport = (state['pi-support'] || []).map(v => supportLabels[v] || v).join(', ');
+    const msg = encodeURIComponent(
+      'Hi Lysander,\n\nI\'d like to book a session:\n\n' +
+      'Name: ' + state.name + '\n' +
+      'Type: ' + (state.type === 'online' ? 'Online' : 'In-person') + '\n' +
+      'Format: ' + state.format + '\n' +
+      'Date: ' + state.date + ' at ' + state.time + '\n' +
+      (piSupport ? '\nSupport areas: ' + piSupport : '') +
+      (notes ? '\nNotes: ' + notes : '') +
+      '\n\nThank you!'
+    );
+
+    document.getElementById('step-4').innerHTML = `
+      <div class="success-state">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-teal)" stroke-width="2" width="34" height="34"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+        </div>
+        <h2 style="margin-bottom:var(--space-3);">Booking request sent!</h2>
+        <p style="color:var(--color-text-muted);font-size:var(--size-sm);margin:0 auto var(--space-8);max-width:380px;">
+          Thank you, ${state.name}. Lysander will confirm your session for <strong>${state.date} at ${state.time}</strong> via email or WhatsApp within 24 hours.
+        </p>
+        <a href="https://wa.me/66935309052?text=${msg}" target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp" style="margin:0 auto;">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Also send via WhatsApp
+        </a>
+        <a href="{{ route('home') }}" class="btn btn--outline" style="display:block;margin:var(--space-4) auto 0;max-width:200px;justify-content:center;">Back to home</a>
+      </div>`;
+    showToast('Booking request submitted!', 'success');
+    document.getElementById('progress-fill').style.width = '100%';
+    document.getElementById('progress-pct').textContent = '100%';
+    document.getElementById('progress-label').textContent = 'Step 4 of 4';
+  })
+  .catch(err => {
+    btn.disabled = false; btn.textContent = 'Send booking request';
+    showToast('Something went wrong. Please try again.', 'error');
+  });
+}
+</script>
+@endsection

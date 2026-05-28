@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | Therapist Lysander</title>
+  <link rel="stylesheet" href="/css/site.css">
+  <style>
+    body { background: var(--color-bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: var(--space-6); }
+    .login-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-10); width: 100%; max-width: 400px; box-shadow: var(--shadow-md); }
+    .login-card__logo { text-align: center; margin-bottom: var(--space-8); }
+    .login-card__logo img { height: 40px; }
+    .login-card__title { font-family: var(--font-heading); font-size: var(--size-xl); color: var(--color-text); margin-bottom: var(--space-2); text-align: center; }
+    .login-card__sub { font-size: var(--size-sm); color: var(--color-text-muted); text-align: center; margin-bottom: var(--space-8); }
+    .form-error { background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius); padding: var(--space-3) var(--space-4); font-size: var(--size-sm); color: #dc2626; margin-bottom: var(--space-6); }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-card__logo">
+      <img src="/images/logo.png" alt="Therapist Lysander">
+    </div>
+    <h1 class="login-card__title">Admin Login</h1>
+    <p class="login-card__sub">Sign in to manage your website content.</p>
+
+    
+    <form method="POST" action="http://127.0.0.1:8001/admin/login">
+      <input type="hidden" name="_token" value="SAjCL1rJr7lsvFjvUN0nnorFkOfrwHpf7UMH7ZMI" autocomplete="off">      <div class="form-group">
+        <label class="form-label" for="email">Email address</label>
+        <input type="email" class="form-input" id="email" name="email" value="" required autofocus autocomplete="email">
+      </div>
+      <div class="form-group" style="margin-top:var(--space-4);">
+        <label class="form-label" for="password">Password</label>
+        <input type="password" class="form-input" id="password" name="password" required autocomplete="current-password">
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-4);margin-bottom:var(--space-6);">
+        <input type="checkbox" id="remember" name="remember" style="width:16px;height:16px;">
+        <label for="remember" style="font-size:var(--size-sm);color:var(--color-text-muted);">Remember me</label>
+      </div>
+      <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;">
+        Sign in
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+      </button>
+    </form>
+
+    <div style="margin-top:var(--space-6);padding-top:var(--space-6);border-top:1px solid var(--color-border);text-align:center;">
+      <a href="http://127.0.0.1:8001" style="font-size:var(--size-sm);color:var(--color-text-muted);">
+        &larr; Back to website
+      </a>
+    </div>
+  </div>
+</body>
+</html>

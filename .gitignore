@@ -1,53 +1,29 @@
-# Dependencies
-node_modules/
-
-# Build artifacts
-dist/
-build/
-
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS files
+*.log
 .DS_Store
-Thumbs.db
-nul
-
-# Large binary/archive files
-*.zip
-*.tar.gz
-
-# Screenshots (development artifacts)
-screenshot_*.png
-
-# WhatsApp images
-WhatsApp Image*
-
-# Documents (keep in separate docs if needed)
-*.docx
-
-# PDF reports
-TherapistLysander-UX-Audit.pdf
-
-# Laravel
-/vendor/
-/storage/*.key
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+/node_modules
+/public/build
+/public/fonts-manifest.dev.json
 /public/hot
 /public/storage
-/public/prototype
-.phpunit.result.cache
+/storage/*.key
+/storage/pail
+/vendor
+_ide_helper.php
 Homestead.json
 Homestead.yaml
-npm-debug.log
-yarn-error.log
-
-# Compiled assets
-/public/build
+Thumbs.db
+cookies.txt
+database/database.sqlite
