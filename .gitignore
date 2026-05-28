@@ -37,11 +37,17 @@ WhatsApp Image*
 # PDF reports
 TherapistLysander-UX-Audit.pdf
 
-# Laravel specific (for future use)
+# Laravel
 /vendor/
 /storage/*.key
+/public/hot
+/public/storage
+/public/prototype
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+
+# Compiled assets
+/public/build
