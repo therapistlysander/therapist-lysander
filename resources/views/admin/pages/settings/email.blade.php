@@ -78,22 +78,22 @@
                 <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#9ca3af;margin:0 0 10px;">Client Notifications</p>
 
                 <label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;">
-                    <input type="checkbox" name="settings[notify_contact_confirmation]" value="1" {{ ($notificationSettings['notify_contact_confirmation']->value ?? '1') === '1' ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
+                    <input type="checkbox" name="settings[notify_contact_confirmation]" value="1" {{ ($notificationSettings['notify_contact_confirmation']->value ?? true) ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
                     <span style="font-size:13px;color:#374151;">Send contact form confirmation to client</span>
                 </label>
 
                 <label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;">
-                    <input type="checkbox" name="settings[notify_booking_confirmation]" value="1" {{ ($notificationSettings['notify_booking_confirmation']->value ?? '1') === '1' ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
+                    <input type="checkbox" name="settings[notify_booking_confirmation]" value="1" {{ ($notificationSettings['notify_booking_confirmation']->value ?? true) ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
                     <span style="font-size:13px;color:#374151;">Send booking confirmation to client</span>
                 </label>
 
                 <label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;">
-                    <input type="checkbox" name="settings[notify_booking_approved]" value="1" {{ ($notificationSettings['notify_booking_approved']->value ?? '1') === '1' ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
+                    <input type="checkbox" name="settings[notify_booking_approved]" value="1" {{ ($notificationSettings['notify_booking_approved']->value ?? true) ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
                     <span style="font-size:13px;color:#374151;">Send approval/scheduled email to client</span>
                 </label>
 
                 <label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;">
-                    <input type="checkbox" name="settings[notify_booking_rejected]" value="1" {{ ($notificationSettings['notify_booking_rejected']->value ?? '1') === '1' ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
+                    <input type="checkbox" name="settings[notify_booking_rejected]" value="1" {{ ($notificationSettings['notify_booking_rejected']->value ?? true) ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
                     <span style="font-size:13px;color:#374151;">Send rejection email to client</span>
                 </label>
             </div>
@@ -102,12 +102,12 @@
                 <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#9ca3af;margin:0 0 10px;">Admin Notifications</p>
 
                 <label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;">
-                    <input type="checkbox" name="settings[notify_admin_new_contact]" value="1" {{ ($notificationSettings['notify_admin_new_contact']->value ?? '1') === '1' ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
+                    <input type="checkbox" name="settings[notify_admin_new_contact]" value="1" {{ ($notificationSettings['notify_admin_new_contact']->value ?? true) ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
                     <span style="font-size:13px;color:#374151;">Alert admin on new contact submission</span>
                 </label>
 
                 <label style="display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;">
-                    <input type="checkbox" name="settings[notify_admin_new_booking]" value="1" {{ ($notificationSettings['notify_admin_new_booking']->value ?? '1') === '1' ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
+                    <input type="checkbox" name="settings[notify_admin_new_booking]" value="1" {{ ($notificationSettings['notify_admin_new_booking']->value ?? true) ? 'checked' : '' }} style="accent-color:#5a9e97;width:16px;height:16px;">
                     <span style="font-size:13px;color:#374151;">Alert admin on new booking request</span>
                 </label>
             </div>
