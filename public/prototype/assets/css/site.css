@@ -1215,4 +1215,71 @@ strong { font-weight: 600; }
   .nav__mobile { top: 68px; }
   .hero { padding-top: 68px; }
   .page-hero { padding-top: calc(68px + var(--space-12)); }
+
+  /* Intro strip mobile */
+  .intro-strip .container { flex-direction: column; text-align: center; gap: var(--space-6); }
+
+  /* Booking wrap mobile */
+  .booking-header { padding: var(--space-4) var(--space-6); }
+  .booking-body { padding: var(--space-6); }
+
+  /* Quote block mobile */
+  .quote-block { padding: var(--space-4) var(--space-6); }
+
+  /* Section header margin */
+  .section-header { margin-bottom: var(--space-10); }
+
+  /* Footer bottom stacked */
+  .footer__bottom { flex-direction: column; text-align: center; }
+}
+
+/* Extra-small screens (< 380px) — prevent overflow on very narrow devices */
+@media (max-width: 380px) {
+  :root {
+    --space-12: 2rem;
+    --space-10: 2rem;
+    --space-8: 1.5rem;
+  }
+  .container { padding: 0 var(--space-4); }
+  .container--narrow { padding: 0 var(--space-4); }
+  .nav__inner { padding: 0 var(--space-4); height: 60px; }
+  .nav__logo-img { height: 60px; }
+  .nav__mobile { top: 60px; }
+  .hero { padding-top: 60px; }
+  .page-hero { padding-top: calc(60px + var(--space-8)); }
+  .hero__content { padding: var(--space-8) var(--space-4) var(--space-10); }
+  .hero__title { font-size: clamp(1.5rem, 7vw, 2rem); }
+  .btn { padding: var(--space-3) var(--space-6); font-size: var(--size-xs); letter-spacing: 0.08em; }
+  .btn--lg { padding: var(--space-3) var(--space-6); }
+  .card { padding: var(--space-6); }
+  .testimonial { padding: var(--space-6); }
+  .stats { flex-direction: column; gap: var(--space-4); }
+  .stats__num { font-size: var(--size-2xl); }
+  .methods-list { grid-template-columns: 1fr; }
+  .areas-list { grid-template-columns: 1fr; }
+  .time-slots { grid-template-columns: 1fr; }
+  .wa-float { bottom: 14px; right: 12px; width: 44px; height: 44px; }
+  .wa-float svg { width: 24px; height: 24px; }
+  .footer__logo-img { height: 100px; }
+}
+
+/* Landscape mobile — ensure hero doesn't take full viewport */
+@media (max-width: 900px) and (orientation: landscape) {
+  .hero__image {
+    height: 50vw;
+    min-height: 180px;
+    max-height: 300px;
+  }
+  .hero__content {
+    padding: var(--space-8) var(--space-6) var(--space-10);
+  }
+}
+
+/* Touch target improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .nav__link { padding: var(--space-3) var(--space-2); }
+  .nav__mobile .nav__link { padding: var(--space-4) 0; min-height: 44px; display: flex; align-items: center; }
+  .approach-tab { padding: var(--space-3) var(--space-4); min-height: 44px; }
+  .time-slot { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .methods-list__item { min-height: 44px; }
 }

@@ -24,6 +24,11 @@
     .personal-section { padding: var(--space-10) var(--space-10); border-left: 3px solid var(--color-accent); background: var(--color-teal-light); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-12) 0; }
     .personal-section p { font-size: var(--size-md); color: var(--color-text-muted); line-height: 1.8; }
     .personal-section p + p { margin-top: var(--space-4); }
+
+    @media (max-width: 640px) {
+      .personal-section { padding: var(--space-6); }
+      .values-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>

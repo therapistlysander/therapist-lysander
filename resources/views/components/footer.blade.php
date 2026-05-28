@@ -2,8 +2,13 @@
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <img src="/images/logo.png" alt="Lysander Verschuur" class="footer__logo-img">
-        <span>Psychologist &amp; Trauma Therapist &middot; MSc.</span>
+        <div class="footer__brand-header">
+          <img src="/images/logo.png" alt="Lysander Verschuur" class="footer__logo-img">
+          <div class="footer__brand-identity">
+            <strong class="footer__brand-name">Lysander Verschuur</strong>
+            <span>Psychologist &amp; Trauma Therapist &middot; MSc.</span>
+          </div>
+        </div>
         <p>Online therapy for adults struggling with trauma, PTSD, anxiety, self-worth difficulties, and emotional overwhelm. Integrative, evidence-based, and tailored to the individual.</p>
       </div>
       <div class="footer__col">

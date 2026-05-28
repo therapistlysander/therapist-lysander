@@ -8,28 +8,19 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   body { background: var(--color-bg); }
-  .nav, .footer, .wa-float, .scroll-progress { display: none !important; }
-  .booking-page { min-height: 100svh; padding-top: 0; display: flex; flex-direction: column; }
-
-  /* Booking Header */
-  .booking-header { position: sticky; top: 0; z-index: 100; background: var(--color-white); border-bottom: 1px solid var(--color-border); padding: var(--space-4) var(--space-6); }
-  .booking-header__inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-  .booking-header__brand { display: flex; align-items: center; gap: var(--space-3); }
-  .booking-header__avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--color-teal); display: flex; align-items: center; justify-content: center; color: white; font-family: var(--font-heading); font-size: var(--size-sm); font-weight: 500; }
-  .booking-header__name { font-family: var(--font-heading); font-size: var(--size-md); color: var(--color-text); }
+  .booking-page { min-height: 60vh; display: flex; flex-direction: column; }
 
   /* Step Indicators */
-  .step-indicators { display: flex; align-items: center; gap: 0; }
-  .step-indicator { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--size-sm); font-weight: 500; border: 2px solid var(--color-border); color: var(--color-text-light); transition: all 0.3s ease; }
+  .step-indicators { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: var(--space-8); }
+  .step-indicator { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--size-sm); font-weight: 500; border: 2px solid var(--color-border); color: var(--color-text-light); transition: all 0.3s ease; flex-shrink: 0; }
   .step-indicator--active { border-color: var(--color-teal); background: var(--color-teal); color: white; }
   .step-indicator--done { border-color: var(--color-teal); background: var(--color-teal); color: white; }
-  .step-indicator__line { width: 32px; height: 2px; background: var(--color-border); transition: background 0.3s ease; }
+  .step-indicator__line { width: 40px; height: 2px; background: var(--color-border); transition: background 0.3s ease; }
   .step-indicator__line--done { background: var(--color-teal); }
 
-  .booking-container { max-width: 720px; margin: 0 auto; padding: var(--space-12) var(--space-6); width: 100%; flex: 1; }
-  @media (min-width: 640px) { .booking-container { padding: var(--space-16) var(--space-8); } }
+  .booking-container { max-width: 720px; margin: 0 auto; padding: var(--space-8) var(--space-4); width: 100%; flex: 1; }
 
-  .progress-bar-wrap { margin-bottom: var(--space-10); }
+  .progress-bar-wrap { margin-bottom: var(--space-8); }
   .progress-bar-labels { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3); }
   .progress-bar-label { font-size: var(--size-xs); font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-muted); }
   .progress-bar-pct { font-size: var(--size-xs); font-weight: 500; color: var(--color-teal); }
@@ -38,82 +29,121 @@
 
   .step-content { animation: fadeInUp 0.4s ease; }
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  .step-heading { font-family: var(--font-heading); font-size: clamp(var(--size-2xl), 4vw, var(--size-3xl)); margin-bottom: var(--space-3); line-height: 1.15; }
-  .step-subheading { font-size: var(--size-md); color: var(--color-text-muted); line-height: 1.6; margin-bottom: var(--space-10); }
-  .step-section { margin-bottom: var(--space-10); }
-  .step-section__label { font-size: var(--size-base); font-weight: 500; color: var(--color-text); margin-bottom: var(--space-4); display: block; }
+  .step-heading { font-family: var(--font-heading); font-size: clamp(1.5rem, 5vw, var(--size-3xl)); margin-bottom: var(--space-3); line-height: 1.15; }
+  .step-subheading { font-size: var(--size-base); color: var(--color-text-muted); line-height: 1.6; margin-bottom: var(--space-8); }
+  .step-section { margin-bottom: var(--space-8); }
+  .step-section__label { font-size: var(--size-base); font-weight: 500; color: var(--color-text); margin-bottom: var(--space-4); display: block; line-height: 1.4; }
   .step-section__label span { color: var(--color-text-light); font-weight: 400; margin-left: 3px; }
   .step-section__helper { font-size: var(--size-xs); color: var(--color-text-light); margin-top: var(--space-2); }
 
-  .option-cards { display: flex; flex-direction: column; gap: var(--space-3); }
-  .option-cards--2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
-  @media (max-width: 480px) { .option-cards--2 { grid-template-columns: 1fr; } }
-  .option-card { display: flex; align-items: flex-start; gap: var(--space-4); border: 1.5px solid var(--color-border); border-radius: 12px; padding: var(--space-4) var(--space-5); cursor: pointer; transition: all 0.2s ease; background: var(--color-white); text-align: left; }
+  .option-cards { display: flex; flex-direction: column; gap: var(--space-4); }
+  .option-cards--2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+  .option-card { display: flex; align-items: flex-start; gap: var(--space-4); border: 1.5px solid var(--color-border); border-radius: 12px; padding: var(--space-6); cursor: pointer; transition: all 0.2s ease; background: var(--color-white); text-align: left; -webkit-tap-highlight-color: transparent; }
   .option-card:hover { border-color: rgba(90, 122, 118, 0.35); background: var(--color-bg); }
+  .option-card:active { transform: scale(0.98); }
   .option-card.selected { border-color: var(--color-teal); background: rgba(232, 239, 238, 0.45); box-shadow: 0 2px 12px rgba(90, 122, 118, 0.08); }
-  .option-card__indicator { margin-top: 2px; width: 20px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border: 2px solid var(--color-text-light); transition: all 0.2s ease; }
+  .option-card--disabled { opacity: 0.45; cursor: not-allowed; pointer-events: none; }
+  .option-card--disabled .option-card__indicator { border-color: var(--color-border); }
+  .option-card--disabled .option-card__label { color: var(--color-text-light); }
+  .option-card--disabled .option-card__desc { color: var(--color-text-light); }
+  .option-card__indicator { margin-top: 3px; width: 22px; height: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border: 2px solid var(--color-text-light); transition: all 0.2s ease; }
   .option-card--radio .option-card__indicator { border-radius: 50% !important; }
   .option-card--checkbox .option-card__indicator { border-radius: 6px !important; }
   .option-card.selected .option-card__indicator { border-color: var(--color-teal); background: var(--color-teal); }
-  .option-card__indicator-dot { width: 8px; height: 8px; border-radius: 50%; background: white; opacity: 0; transition: opacity 0.2s ease; }
+  .option-card__indicator-dot { width: 9px; height: 9px; border-radius: 50%; background: white; opacity: 0; transition: opacity 0.2s ease; }
   .option-card.selected .option-card__indicator-dot { opacity: 1; }
   .option-card__indicator-check { opacity: 0; transition: opacity 0.2s ease; }
   .option-card.selected .option-card__indicator-check { opacity: 1; }
-  .option-card__content { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .option-card__content { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
   .option-card__label { font-size: var(--size-base); font-weight: 500; color: var(--color-text); line-height: 1.4; }
-  .option-card__desc { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.5; }
+  .option-card__desc { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.55; }
 
   .time-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-2); }
-  @media (max-width: 560px) { .time-slots { grid-template-columns: repeat(3, 1fr); } }
-  .time-slot { padding: var(--space-3) var(--space-2); text-align: center; font-size: var(--size-sm); border: 1.5px solid var(--color-border); border-radius: var(--radius); color: var(--color-text-muted); cursor: pointer; transition: all var(--transition); background: var(--color-white); }
+  .time-slot { padding: var(--space-3) var(--space-2); text-align: center; font-size: var(--size-sm); border: 1.5px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-text-muted); cursor: pointer; transition: all var(--transition); background: var(--color-white); -webkit-tap-highlight-color: transparent; }
   .time-slot:hover { border-color: var(--color-accent); color: var(--color-text); }
+  .time-slot:active { transform: scale(0.95); }
   .time-slot.selected { background: var(--color-teal); border-color: var(--color-teal); color: white; }
   .time-slot.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
 
   .flatpickr-calendar.inline { width: 100% !important; box-shadow: none !important; border: 1px solid var(--color-border) !important; border-radius: var(--radius-md) !important; margin-bottom: var(--space-6) !important; }
+  .flatpickr-calendar.inline .flatpickr-innerContainer { padding: var(--space-2); }
 
   .summary-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
-  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-4) var(--space-6); border-bottom: 1px solid var(--color-border); }
+  .summary-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); gap: var(--space-3); }
   .summary-row:last-child { border-bottom: none; }
-  .summary-label { font-size: var(--size-sm); color: var(--color-text-muted); }
-  .summary-value { font-size: var(--size-sm); font-weight: 500; color: var(--color-text); text-align: right; }
+  .summary-label { font-size: var(--size-sm); color: var(--color-text-muted); flex-shrink: 0; }
+  .summary-value { font-size: var(--size-sm); font-weight: 500; color: var(--color-text); text-align: right; word-break: break-word; }
 
-  .step-nav { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-10); padding-top: var(--space-8); border-top: 1px solid var(--color-border); }
+  .step-nav { display: flex; align-items: center; justify-content: space-between; margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--color-border); gap: var(--space-3); }
   .step-nav--end { justify-content: flex-end; }
-  .btn--ghost { background: transparent; color: var(--color-text-muted); border: none; padding: var(--space-3) var(--space-4); font-size: var(--size-sm); display: inline-flex; align-items: center; gap: var(--space-2); transition: color var(--transition); cursor: pointer; }
+  .btn--ghost { background: transparent; color: var(--color-text-muted); border: none; padding: var(--space-3) var(--space-4); font-size: var(--size-sm); display: inline-flex; align-items: center; gap: var(--space-2); transition: color var(--transition); cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .btn--ghost:hover { color: var(--color-text); }
 
-  .success-state { text-align: center; padding: var(--space-12) 0; animation: fadeInUp 0.5s ease; }
-  .success-icon { width: 72px; height: 72px; background: var(--color-teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-6); }
-  .success-icon svg { width: 34px; height: 34px; }
+  .success-state { text-align: center; padding: var(--space-10) 0; animation: fadeInUp 0.5s ease; }
+  .success-icon { width: 64px; height: 64px; background: var(--color-teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-6); }
+  .success-icon svg { width: 30px; height: 30px; }
 
-  .booking-footer { border-top: 1px solid var(--color-border); padding: var(--space-6) 0; }
-  .booking-footer__inner { max-width: 720px; margin: 0 auto; padding: 0 var(--space-6); display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); font-size: var(--size-xs); color: var(--color-text-light); }
-  @media (max-width: 560px) { .booking-footer__inner { flex-direction: column; text-align: center; } }
+  /* ===== Mobile Responsive ===== */
+  @media (max-width: 480px) {
+    .step-indicator { width: 28px; height: 28px; font-size: var(--size-xs); }
+    .step-indicator__line { width: 20px; }
+
+    .booking-container { padding: var(--space-6) var(--space-4); }
+    .step-heading { font-size: 1.5rem; }
+    .step-subheading { font-size: var(--size-sm); margin-bottom: var(--space-6); }
+    .step-section { margin-bottom: var(--space-6); }
+    .step-section__label { font-size: var(--size-sm); }
+
+    .option-cards--2 { grid-template-columns: 1fr; }
+    .option-card { padding: var(--space-4); gap: var(--space-3); }
+    .option-card__label { font-size: var(--size-sm); }
+    .option-card__desc { font-size: var(--size-xs); }
+
+    .time-slots { grid-template-columns: repeat(3, 1fr); }
+    .time-slot { padding: var(--space-3) var(--space-1); font-size: var(--size-xs); border-radius: var(--radius); }
+
+    .summary-row { padding: var(--space-3); flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+    .summary-value { text-align: left; }
+
+    .step-nav { margin-top: var(--space-6); padding-top: var(--space-4); }
+    .step-nav .btn { font-size: var(--size-xs); padding: var(--space-3) var(--space-6); }
+  }
+
+  /* Tablet refinements */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .booking-container { padding: var(--space-10) var(--space-6); }
+    .time-slots { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Desktop */
+  @media (min-width: 769px) {
+    .booking-container { padding: var(--space-16) var(--space-8); }
+    .step-subheading { font-size: var(--size-md); margin-bottom: var(--space-10); }
+    .step-section { margin-bottom: var(--space-10); }
+    .option-card { padding: var(--space-6) var(--space-8); }
+  }
+
+  /* Touch-friendly: increase tap targets */
+  @media (hover: none) and (pointer: coarse) {
+    .option-card { min-height: 56px; }
+    .time-slot { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+    .btn--ghost { min-height: 44px; }
+  }
 </style>
 @endsection
 
 @section('content')
-<main id="main-content" class="booking-page">
-
-  <!-- Booking Header with Step Indicators -->
-  <header class="booking-header">
-    <div class="booking-header__inner">
-      <div class="booking-header__brand">
-        <div class="booking-header__avatar">L</div>
-        <span class="booking-header__name">Therapist Lysander</span>
-      </div>
-      <div class="step-indicators" id="step-indicators">
-        <div class="step-indicator step-indicator--active" id="ind-1">1</div>
-        <div class="step-indicator__line" id="line-1"></div>
-        <div class="step-indicator" id="ind-2">2</div>
-        <div class="step-indicator__line" id="line-2"></div>
-        <div class="step-indicator" id="ind-3">3</div>
-      </div>
-    </div>
-  </header>
-
+<div class="booking-page">
   <div class="booking-container">
+
+    <!-- Step Indicators -->
+    <div class="step-indicators" id="step-indicators">
+      <div class="step-indicator step-indicator--active" id="ind-1">1</div>
+      <div class="step-indicator__line" id="line-1"></div>
+      <div class="step-indicator" id="ind-2">2</div>
+      <div class="step-indicator__line" id="line-2"></div>
+      <div class="step-indicator" id="ind-3">3</div>
+    </div>
 
     <!-- Progress bar -->
     <div class="progress-bar-wrap">
@@ -133,36 +163,13 @@
       <p class="step-subheading">{{ $bookingHero?->content['subheading'] ?? 'Book a free 30-minute introduction call. No commitment required.' }}</p>
 
       <div class="step-section">
-        <label class="step-section__label">Session format</label>
-        <div class="option-cards">
-          <div class="option-card option-card--radio selected" data-format="intake" tabindex="0" role="radio" aria-checked="true">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">Free introduction call <span style="font-size:0.75em;font-weight:500;color:var(--color-teal);background:var(--color-teal-light);padding:1px 7px;border-radius:20px;margin-left:4px;">Free · 30 min</span></span>
-              <span class="option-card__desc">A no-commitment call to explore your situation and see if we're a good fit.</span>
-            </span>
-          </div>
-          <div class="option-card option-card--radio" data-format="standard" tabindex="0" role="radio" aria-checked="false">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">Standard therapy session <span style="font-size:0.75em;font-weight:400;color:var(--color-text-muted);margin-left:4px;">50 min · €110</span></span>
-              <span class="option-card__desc">Regular individual therapy session — CBT, ACT, EMDR, or integrative.</span>
-            </span>
-          </div>
-          <div class="option-card option-card--radio" data-format="emdr" tabindex="0" role="radio" aria-checked="false">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">EMDR session <span style="font-size:0.75em;font-weight:400;color:var(--color-text-muted);margin-left:4px;">50 min · €110</span></span>
-              <span class="option-card__desc">Eye movement desensitisation and reprocessing — trauma-focused therapy.</span>
-            </span>
-          </div>
-          <div class="option-card option-card--radio" data-format="initial" tabindex="0" role="radio" aria-checked="false">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">Initial consultation <span style="font-size:0.75em;font-weight:400;color:var(--color-text-muted);margin-left:4px;">50 min · €110</span></span>
-              <span class="option-card__desc">In-depth intake session exploring background, goals, and treatment plan.</span>
-            </span>
-          </div>
+        <label class="step-section__label">You're booking</label>
+        <div class="option-card option-card--radio selected" style="cursor:default;margin-bottom:var(--space-2);">
+          <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
+          <span class="option-card__content">
+            <span class="option-card__label">Free introduction call <span style="font-size:0.75em;font-weight:500;color:var(--color-teal);background:var(--color-teal-light);padding:2px 8px;border-radius:20px;margin-left:6px;">Free · 30 min</span></span>
+            <span class="option-card__desc">A no-commitment video call to explore your situation and see if we're a good fit.</span>
+          </span>
         </div>
       </div>
 
@@ -176,16 +183,13 @@
               <span class="option-card__desc">Secure video call &mdash; available worldwide</span>
             </span>
           </div>
-          <div class="option-card option-card--radio" data-type="in-person" tabindex="0" role="radio" aria-checked="false">
+          <div class="option-card option-card--radio option-card--disabled" data-type="in-person" tabindex="-1" role="radio" aria-checked="false" aria-disabled="true">
             <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
             <span class="option-card__content">
-              <span class="option-card__label">In-person <span style="font-size:0.7em;font-weight:400;color:var(--color-accent);vertical-align:middle;">Limited</span></span>
-              <span class="option-card__desc">Amsterdam &mdash; limited availability, on request</span>
+              <span class="option-card__label">In-person <span style="font-size:0.7em;font-weight:400;color:var(--color-text-light);vertical-align:middle;">Coming soon</span></span>
+              <span class="option-card__desc">Amsterdam &mdash; not yet available</span>
             </span>
           </div>
-        </div>
-        <div id="inperson-note" style="display:none;margin-top:10px;background:var(--color-teal-light);border:1px solid var(--color-accent-light);border-radius:8px;padding:10px 14px;font-size:var(--size-sm);color:var(--color-teal);">
-          In-person sessions in Amsterdam are available on a limited basis. After submitting, Lysander will confirm availability and suggest a location.
         </div>
       </div>
 
@@ -303,14 +307,7 @@
     </div>
 
   </div>
-</main>
-
-<footer class="booking-footer">
-  <div class="booking-footer__inner">
-    <span>Your responses are confidential and secure.</span>
-    <span>Therapist Lysander &middot; Pre-Intake Questionnaire</span>
-  </div>
-</footer>
+</div>
 @endsection
 
 @section('page_scripts')
@@ -344,29 +341,16 @@ fetch('/api/availability/schedule')
   .then(data => { scheduleData = data; })
   .catch(() => {});
 
-// Format selection (option-cards with data-format)
-document.querySelectorAll('#step-1 .option-card[data-format]').forEach(el => {
-  function selectFormat() {
-    document.querySelectorAll('#step-1 .option-card[data-format]').forEach(t => {
-      t.classList.remove('selected'); t.setAttribute('aria-checked','false');
-    });
-    el.classList.add('selected'); el.setAttribute('aria-checked','true');
-    state.format = el.dataset.format;
-  }
-  el.addEventListener('click', selectFormat);
-  el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();selectFormat();} });
-});
+// Format is always 'intake' (free intro call only)
 
-// Session type selection (online / in-person)
-document.querySelectorAll('#step-1 .option-card[data-type]').forEach(el => {
+// Session type selection (online only — in-person is disabled via CSS)
+document.querySelectorAll('#step-1 .option-card[data-type]:not(.option-card--disabled)').forEach(el => {
   function selectType() {
     document.querySelectorAll('#step-1 .option-card[data-type]').forEach(t => {
       t.classList.remove('selected'); t.setAttribute('aria-checked','false');
     });
     el.classList.add('selected'); el.setAttribute('aria-checked','true');
     state.type = el.dataset.type;
-    const note = document.getElementById('inperson-note');
-    if (note) note.style.display = state.type === 'in-person' ? 'block' : 'none';
   }
   el.addEventListener('click', selectType);
   el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();selectType();} });
@@ -411,7 +395,6 @@ function goStep(step) {
     const email = document.getElementById('b-email').value.trim();
     if (!name || !email) { showToast('Please enter your name and email before continuing.','info'); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address.','info'); return; }
-    if (!state.format) { showToast('Please select a session format.','info'); return; }
     state.name = name; state.email = email;
   }
   if (step === 3) {
