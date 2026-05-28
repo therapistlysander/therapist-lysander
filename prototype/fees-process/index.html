@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fees &amp; Process | Therapist Lysander</title>
+  <meta name="description" content="Session fees, therapy process, and practical information for therapy with Lysander Verschuur, MSc. — €110 per session, online and in-person, free 30-minute introduction call.">
+  <link rel="canonical" href="https://www.therapistlysander.com/fees-process/">
+  <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <style>
+    .fee-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-10);
+      text-align: center;
+      border-top: 4px solid var(--color-teal);
+      box-shadow: var(--shadow-md);
+    }
+    .fee-card__amount {
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 6vw, 4.5rem);
+      color: var(--color-teal);
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+    .fee-card__duration {
+      font-size: var(--size-sm);
+      color: var(--color-text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--space-8);
+    }
+    .fee-card__includes {
+      text-align: left;
+      border-top: 1px solid var(--color-border);
+      padding-top: var(--space-6);
+      margin-top: var(--space-6);
+    }
+    .fee-card__includes h4 {
+      font-size: var(--size-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-4);
+    }
+    .fee-includes-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: var(--size-sm);
+      color: var(--color-text-muted);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-border);
+      line-height: 1.5;
+    }
+    .fee-includes-item:last-child { border-bottom: none; }
+    .fee-includes-item::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--color-teal);
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+
+    .process-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-8);
+      position: relative;
+    }
+    .process-card__number {
+      width: 44px; height: 44px;
+      background: var(--color-teal);
+      color: var(--color-white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: var(--size-lg);
+      margin-bottom: var(--space-5);
+    }
+    .process-card__duration {
+      font-size: var(--size-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: var(--space-2);
+    }
+    .process-card h3 {
+      font-size: var(--size-xl);
+      margin-bottom: var(--space-4);
+    }
+    .process-card p {
+      font-size: var(--size-sm);
+      color: var(--color-text-muted);
+      line-height: 1.75;
+    }
+    .process-card ul {
+      margin-top: var(--space-4);
+      list-style: none;
+    }
+    .process-card ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      font-size: var(--size-sm);
+      color: var(--color-text-muted);
+      padding: var(--space-2) 0;
+    }
+    .process-card ul li::before {
+      content: '–';
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+    .process-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-6);
+    }
+    @media (max-width: 1024px) {
+      .process-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 560px) {
+      .process-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+    .free-badge {
+      display: inline-block;
+      background: var(--color-teal);
+      color: var(--color-white);
+      font-size: var(--size-xs);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px var(--space-3);
+      border-radius: 40px;
+      margin-bottom: var(--space-4);
+    }
+    .availability-block {
+      background: var(--color-teal-light);
+      border: 1px solid var(--color-accent-light);
+      border-radius: var(--radius-md);
+      padding: var(--space-8);
+      display: flex;
+      gap: var(--space-8);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .availability-block__text { flex: 1; min-width: 220px; }
+    .availability-block__text h3 { margin-bottom: var(--space-3); }
+    .availability-block__text p { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.75; }
+    .availability-block__cta { flex-shrink: 0; }
+    @media (max-width: 640px) {
+      .availability-block { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav__inner">
+    <a href="../index.html" class="nav__logo" aria-label="Therapist Lysander — Home"><img src="../assets/images/logo.png" alt="Lysander Verschuur" class="nav__logo-img"></a>
+    <div class="nav__links" role="menubar">
+      <a href="../index.html" class="nav__link" role="menuitem">Home</a>
+      <a href="../trauma-approach/index.html" class="nav__link" role="menuitem">Trauma &amp; My Approach</a>
+      <a href="../clinical-training/index.html" class="nav__link" role="menuitem">Clinical Training</a>
+      <a href="../clients/index.html" class="nav__link" role="menuitem">Testimonials</a>
+      <a href="../fees-process/index.html" class="nav__link active" role="menuitem">Fees &amp; Process</a>
+      <a href="../contact-me/index.html" class="nav__link" role="menuitem">Contact</a>
+    </div>
+    <a href="../booking/index.html" class="nav__cta">Book a Free 30-Min Intro Call</a>
+    <button class="nav__burger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+      <span class="nav__burger-label">Menu</span>
+    </button>
+  </div>
+</nav>
+<div class="nav__mobile" role="menu">
+  <a href="../index.html" class="nav__link">Home</a>
+  <a href="../trauma-approach/index.html" class="nav__link">Trauma &amp; My Approach</a>
+  <a href="../clinical-training/index.html" class="nav__link">Clinical Training</a>
+  <a href="../clients/index.html" class="nav__link">Testimonials</a>
+  <a href="../fees-process/index.html" class="nav__link active">Fees &amp; Process</a>
+  <a href="../contact-me/index.html" class="nav__link">Contact</a>
+  <a href="../booking/index.html" class="nav__cta">Book a Free 30-Min Intro Call</a>
+</div>
+
+<main id="main-content">
+
+  <div class="page-hero">
+    <div class="container--narrow">
+      <span class="page-hero__eyebrow">Practical information</span>
+      <h1 class="page-hero__title">Fees &amp; Practical Information</h1>
+      <p class="page-hero__text">Transparent information about session fees, what is included, and how therapy begins. Starting is always free and without commitment.</p>
+    </div>
+  </div>
+
+  <!-- Fee + what's included -->
+  <section class="section section--white" aria-labelledby="fees-heading">
+    <div class="container">
+      <div class="grid-2 fade-in" style="align-items:start;">
+        <div>
+          <span class="section-label">Session fee</span>
+          <h2 id="fees-heading">Clear, transparent pricing</h2>
+          <div class="divider"></div>
+          <p style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">Individual therapy sessions are <strong>60 minutes</strong> and cost <strong>€110 per session</strong>. Sessions are conducted online in a confidential and professional setting.</p>
+          <p style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">I currently maintain a limited caseload in order to provide thoughtful and attentive care to each client. Waiting times are typically around 2–4 weeks, depending on availability and scheduling preferences.</p>
+          <div class="availability-block">
+            <div class="availability-block__text">
+              <h3>Current availability</h3>
+              <p>Waiting times are typically around <strong>2–4 weeks</strong>, depending on availability and scheduling preferences.</p>
+            </div>
+            <div class="availability-block__cta">
+              <a href="../booking/index.html" class="btn btn--primary">Book a Free Intro Call</a>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="fee-card">
+            <div class="free-badge">Free intro call</div>
+            <div class="fee-card__amount">€110</div>
+            <div class="fee-card__duration">Per session · 60 minutes</div>
+            <a href="../booking/index.html" class="btn btn--primary" style="width:100%;justify-content:center;">Book a Free 30-Minute Intro Call</a>
+            <div class="fee-card__includes">
+              <h4>What is included</h4>
+              <div class="fee-includes-item">Reflection or e-health documents after sessions</div>
+              <div class="fee-includes-item">Exercises or therapeutic material between sessions</div>
+              <div class="fee-includes-item">Preparation and integration of therapeutic work</div>
+              <div class="fee-includes-item">Limited contact between sessions for practical questions or brief support related to the therapy process</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What is included – explanation -->
+  <section class="section section--alt" aria-labelledby="included-heading">
+    <div class="container">
+      <div class="section-header fade-in" style="text-align:center;">
+        <span class="section-label">Beyond the session</span>
+        <h2 id="included-heading" class="section-title">More than just the session itself</h2>
+        <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:640px;margin:0 auto;">My aim is to offer therapy that is thoughtful, structured, and supportive beyond the session alone — while maintaining clear professional boundaries and a sustainable therapeutic framework.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Therapy process -->
+  <section class="section section--white" aria-labelledby="process-heading">
+    <div class="container">
+      <div class="section-header fade-in" style="text-align:center;">
+        <span class="section-label">How therapy works</span>
+        <h2 id="process-heading" class="section-title">The therapy process</h2>
+        <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;margin:0 auto;">Therapy begins with a free, no-commitment introduction call. After our call, you'll complete a brief pre-intake questionnaire to help me prepare. Then we schedule your intake session — there is no pressure to continue at any step.</p>
+      </div>
+      <div class="process-cards fade-in">
+
+        <div class="process-card">
+          <div class="process-card__number">1</div>
+          <span class="free-badge" style="background:var(--color-teal-light);color:var(--color-teal);">Free</span>
+          <div class="process-card__duration">30 minutes · Online</div>
+          <h3>Free Introduction Call</h3>
+          <p>We begin with a free online introduction call to briefly explore your current situation, your goals for therapy, and whether we feel like a good fit to work together.</p>
+          <p style="margin-top:var(--space-3);">This conversation also offers space for practical questions about the therapy process. No commitment required.</p>
+        </div>
+
+        <div class="process-card" style="padding:var(--space-6);">
+          <div class="process-card__number" style="width:36px;height:36px;font-size:var(--size-base);margin-bottom:var(--space-4);">2</div>
+          <span class="free-badge" style="background:var(--color-teal-light);color:var(--color-teal);">Online</span>
+          <div class="process-card__duration">5 minutes · Free</div>
+          <h3 style="font-size:var(--size-lg);margin-bottom:var(--space-3);">Pre-Intake Questionnaire</h3>
+          <p>A short, confidential questionnaire to help me understand your needs before our first session.</p>
+        </div>
+
+        <div class="process-card">
+          <div class="process-card__number">3</div>
+          <div class="process-card__duration">60 minutes · €110</div>
+          <h3>Intake Session</h3>
+          <p>If we decide to continue, we start with a more in-depth intake session. During this session, we explore your background, current difficulties, relevant life experiences, and treatment goals in greater detail.</p>
+          <p style="margin-top:var(--space-3);">Following the intake, a treatment plan is developed outlining the main complaints, therapeutic goals, and proposed treatment approach.</p>
+        </div>
+
+        <div class="process-card">
+          <div class="process-card__number">4</div>
+          <div class="process-card__duration">60 minutes · €110</div>
+          <h3>Ongoing Sessions</h3>
+          <p>Follow-up sessions are tailored to your individual needs and therapeutic goals. Depending on the situation, therapy may focus on:</p>
+          <ul>
+            <li>Trauma processing</li>
+            <li>Emotional regulation</li>
+            <li>Anxiety and avoidance patterns</li>
+            <li>Self-worth and relational dynamics</li>
+            <li>Behavioral change</li>
+            <li>Nervous system regulation</li>
+            <li>Developing healthier coping patterns</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Practical info -->
+  <section class="section section--dark" aria-labelledby="practical-heading">
+    <div class="container">
+      <div class="section-header fade-in">
+        <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Practical details</span>
+        <h2 id="practical-heading" style="color:var(--color-white);">Session information</h2>
+      </div>
+      <div class="card-grid fade-in">
+        <div class="card" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);">
+          <div class="card__icon" style="background:rgba(255,255,255,0.1);color:var(--color-accent-light);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/></svg>
+          </div>
+          <h3 class="card__title" style="color:var(--color-white);">Online sessions</h3>
+          <p class="card__text" style="color:rgba(255,255,255,0.65);">Sessions take place in a secure, confidential online setting. Available to clients worldwide. Research shows online therapy is as effective as in-person for most psychological difficulties.</p>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);">
+          <div class="card__icon" style="background:rgba(255,255,255,0.1);color:var(--color-accent-light);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 class="card__title" style="color:var(--color-white);">Session duration</h3>
+          <p class="card__text" style="color:rgba(255,255,255,0.65);">Sessions are 60 minutes. The free introduction call is 30 minutes. Sessions are typically weekly in the early phase of therapy, adapting to your needs and progress over time.</p>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);">
+          <div class="card__icon" style="background:rgba(255,255,255,0.1);color:var(--color-accent-light);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802"/></svg>
+          </div>
+          <h3 class="card__title" style="color:var(--color-white);">Languages</h3>
+          <p class="card__text" style="color:rgba(255,255,255,0.65);">Sessions are conducted in Dutch or English. Both languages are equally available for all therapy modalities, including EMDR, Schema Therapy, and other approaches.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="container--narrow">
+      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Get started</span>
+      <h2>The first conversation is free</h2>
+      <p>Schedule a free 30-minute introduction call to briefly explore your situation, your goals for therapy, and whether we feel like a good fit to work together. No commitment required.</p>
+      <div class="cta-section__actions">
+        <a href="../booking/index.html" class="btn btn--primary btn--lg">Book a Free 30-Minute Intro Call</a>
+        <a href="https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy." target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp btn--lg">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp me
+        </a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand"><img src="../assets/images/logo.png" alt="Lysander Verschuur · Psychologist" class="footer__logo-img"><span>Psychologist &amp; Trauma Therapist · MSc.</span><p>Online therapy for adults struggling with trauma, PTSD, anxiety, self-worth difficulties, and emotional overwhelm.</p></div>
+      <div class="footer__col"><h4>Navigation</h4><a href="../index.html">Home</a><a href="../trauma-approach/index.html">Trauma &amp; My Approach</a><a href="../clinical-training/index.html">Clinical Training</a><a href="../clients/index.html">Testimonials</a><a href="../fees-process/index.html">Fees &amp; Process</a><a href="../contact-me/index.html">Contact</a><a href="../faq/index.html">FAQ</a></div>
+      <div class="footer__col"><h4>Contact</h4><a href="mailto:therapistlysander@gmail.com">therapistlysander@gmail.com</a><a href="https://wa.me/66935309052" target="_blank" rel="noopener noreferrer">WhatsApp: +66 93 530 9052</a><a href="../booking/index.html">Book a Free Intro Call</a></div>
+    </div>
+    <div class="footer__bottom"><p>© 2025 Lysander Verschuur, MSc. All rights reserved.</p><p>Psychotherapy &amp; Trauma Therapy</p></div>
+  </div>
+</footer>
+
+<a href="https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy." class="wa-float" target="_blank" rel="noopener noreferrer" aria-label="Contact via WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>

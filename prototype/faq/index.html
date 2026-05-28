@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ | Therapist Lysander</title>
+  <meta name="description" content="Frequently asked questions about therapy with Lysander Verschuur — fees, sessions, EMDR, online therapy, and how to get started.">
+  <link rel="canonical" href="https://www.therapistlysander.com/faq/">
+  <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <style>
+    .faq-page-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-16);
+      align-items: start;
+    }
+    /* Sticky sidebar nav */
+    .faq-sidebar {
+      position: sticky;
+      top: 88px;
+    }
+    .faq-sidebar__title {
+      font-size: var(--size-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-light);
+      margin-bottom: var(--space-4);
+    }
+    .faq-sidebar__link {
+      display: block;
+      font-size: var(--size-sm);
+      color: var(--color-text-muted);
+      padding: var(--space-2) 0;
+      border-left: 2px solid transparent;
+      padding-left: var(--space-3);
+      transition: color 0.2s, border-color 0.2s;
+      line-height: 1.4;
+    }
+    .faq-sidebar__link:hover,
+    .faq-sidebar__link.active {
+      color: var(--color-teal);
+      border-left-color: var(--color-teal);
+    }
+
+    /* Category blocks */
+    .faq-category {
+      margin-bottom: var(--space-16);
+    }
+    .faq-category:last-child { margin-bottom: 0; }
+    .faq-category__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 2px solid var(--color-teal-light);
+    }
+    .faq-category__icon {
+      width: 40px; height: 40px;
+      background: var(--color-teal-light);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-teal);
+      flex-shrink: 0;
+    }
+    .faq-category__icon svg { width: 20px; height: 20px; }
+    .faq-category__title {
+      font-family: var(--font-heading);
+      font-size: var(--size-xl);
+      color: var(--color-text);
+      margin: 0;
+    }
+
+    /* Accordion */
+    .faq-list {
+      border-top: 1px solid var(--color-border);
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--color-border);
+    }
+    .faq-toggle {
+      width: 100%;
+      text-align: left;
+      padding: var(--space-4) 0;
+      font-family: var(--font-body);
+      font-size: var(--size-base);
+      font-weight: 500;
+      color: var(--color-text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      line-height: 1.4;
+      transition: color 0.2s;
+    }
+    .faq-toggle:hover,
+    .faq-item.open .faq-toggle { color: var(--color-teal); }
+    .faq-icon {
+      width: 20px; height: 20px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--color-accent);
+      transition: color 0.2s;
+    }
+    .faq-icon svg {
+      width: 14px; height: 14px;
+      transition: transform 0.25s ease;
+    }
+    .faq-item.open .faq-icon { color: var(--color-teal); }
+    .faq-item.open .faq-icon svg { transform: rotate(45deg); }
+    .faq-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .faq-body.open { max-height: 600px; }
+    .faq-body__inner {
+      padding-bottom: var(--space-5);
+    }
+    .faq-body p {
+      font-size: var(--size-sm);
+      color: var(--color-text-muted);
+      line-height: 1.8;
+      max-width: none;
+      margin-bottom: var(--space-3);
+    }
+    .faq-body p:last-child { margin-bottom: 0; }
+
+    /* CTA strip */
+    .faq-cta {
+      background: var(--color-bg-dark);
+      border-radius: var(--radius-md);
+      padding: var(--space-10) var(--space-12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-8);
+      margin-top: var(--space-16);
+    }
+    .faq-cta h3 { color: var(--color-white); margin-bottom: var(--space-2); }
+    .faq-cta p { color: rgba(255,255,255,0.65); font-size: var(--size-sm); margin: 0; }
+
+    @media (max-width: 860px) {
+      .faq-page-grid { grid-template-columns: 1fr; }
+      .faq-sidebar { display: none; }
+      .faq-cta { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav__inner">
+    <a href="../index.html" class="nav__logo" aria-label="Therapist Lysander — Home"><img src="../assets/images/logo.png" alt="Lysander Verschuur" class="nav__logo-img"></a>
+    <div class="nav__links" role="menubar">
+      <a href="../index.html" class="nav__link" role="menuitem">Home</a>
+      <a href="../trauma-approach/index.html" class="nav__link" role="menuitem">Trauma &amp; My Approach</a>
+      <a href="../clinical-training/index.html" class="nav__link" role="menuitem">Clinical Training</a>
+      <a href="../clients/index.html" class="nav__link" role="menuitem">Testimonials</a>
+      <a href="../fees-process/index.html" class="nav__link" role="menuitem">Fees &amp; Process</a>
+      <a href="../contact-me/index.html" class="nav__link" role="menuitem">Contact</a>
+    </div>
+    <a href="../contact-me/index.html" class="nav__cta">Book a Free 30-Min Intro Call</a>
+    <button class="nav__burger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+      <span class="nav__burger-label">Menu</span>
+    </button>
+  </div>
+</nav>
+<div class="nav__mobile" role="menu">
+  <a href="../index.html" class="nav__link">Home</a>
+  <a href="../trauma-approach/index.html" class="nav__link">Trauma &amp; My Approach</a>
+  <a href="../clinical-training/index.html" class="nav__link">Clinical Training</a>
+  <a href="../clients/index.html" class="nav__link">Testimonials</a>
+  <a href="../fees-process/index.html" class="nav__link">Fees &amp; Process</a>
+  <a href="../contact-me/index.html" class="nav__link">Contact</a>
+  <a href="../contact-me/index.html" class="nav__cta">Book a Free 30-Min Intro Call</a>
+</div>
+
+<div class="scroll-progress" id="scroll-progress"></div>
+<main id="main-content">
+
+  <div class="page-hero">
+    <div class="container--narrow">
+      <span class="page-hero__eyebrow">Questions &amp; Answers</span>
+      <h1 class="page-hero__title">Frequently Asked Questions</h1>
+      <p class="page-hero__text">Answers to the most common questions about therapy, EMDR, fees, and how to get started. If something isn't covered here, feel free to reach out directly.</p>
+    </div>
+  </div>
+
+  <section class="section section--white">
+    <div class="container">
+      <div class="faq-page-grid">
+
+        <!-- Sidebar -->
+        <aside class="faq-sidebar">
+          <p class="faq-sidebar__title">Categories</p>
+          <a href="#getting-started" class="faq-sidebar__link">Getting started</a>
+          <a href="#fees-insurance" class="faq-sidebar__link">Fees &amp; insurance</a>
+          <a href="#sessions" class="faq-sidebar__link">Sessions &amp; format</a>
+          <a href="#therapy-approaches" class="faq-sidebar__link">Therapy approaches</a>
+          <a href="#practical" class="faq-sidebar__link">Practical</a>
+        </aside>
+
+        <!-- FAQ content -->
+        <div>
+
+          <!-- Getting started -->
+          <div class="faq-category" id="getting-started">
+            <div class="faq-category__header">
+              <div class="faq-category__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 10-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/></svg>
+              </div>
+              <h2 class="faq-category__title">Getting started</h2>
+            </div>
+            <div class="faq-list">
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  How do I know if therapy is right for me?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>If you feel stuck, overwhelmed, or like something from your past is holding you back in the present — therapy can help. You don't need to be in crisis to benefit. Many people come to therapy simply wanting to understand themselves better or to break unhelpful patterns.</p>
+                  <p>The free 30-minute introduction call is a good first step. It's informal, low-pressure, and gives you a chance to see whether working together feels right — without any commitment.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  What is the free introduction call like?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>The introduction call lasts about 30 minutes and is completely free. We'll talk about what brings you to therapy, what you're hoping for, and whether my approach feels like a good fit for you.</p>
+                  <p>There's no pressure, no assessment, and no commitment required. It's simply a relaxed conversation to help you decide if you'd like to move forward.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  What happens in the first session?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>The first session is an intake session. We take time to understand your history, your current situation, and what you'd like to work on. I may ask questions about your background, your relationships, and how your difficulties show up in daily life.</p>
+                  <p>By the end of the intake, we'll have a clearer picture of what to focus on, and I'll share my initial thoughts on how we might work together.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  How long is the waiting time?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Current waiting time is approximately 2–4 weeks from initial contact to the first session. I'll do my best to accommodate your schedule and preferred time slots where possible.</p>
+                </div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fees & insurance -->
+          <div class="faq-category" id="fees-insurance">
+            <div class="faq-category__header">
+              <div class="faq-category__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75"/></svg>
+              </div>
+              <h2 class="faq-category__title">Fees &amp; insurance</h2>
+            </div>
+            <div class="faq-list">
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  How much does a session cost?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Each therapy session is 60 minutes and costs €110. The free 30-minute introduction call is always free and without commitment.</p>
+                  <p>There are no hidden fees. What's included: e-health intake documents, session exercises and psychoeducation materials, brief between-session contact where needed, and ongoing treatment plan evaluation.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  Is therapy covered by insurance?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Coverage depends on your insurance provider and plan. I recommend contacting your insurer directly to ask about reimbursement for psychological therapy with a registered psychologist.</p>
+                  <p>I can provide invoices and session summaries to support reimbursement claims where applicable.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  What payment methods do you accept?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Payment details will be discussed during the intake process. Bank transfer is accepted. Please get in touch if you have specific questions about payment arrangements.</p>
+                </div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sessions & format -->
+          <div class="faq-category" id="sessions">
+            <div class="faq-category__header">
+              <div class="faq-category__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
+              </div>
+              <h2 class="faq-category__title">Sessions &amp; format</h2>
+            </div>
+            <div class="faq-list">
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  How many sessions will I need?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>This varies widely depending on what you're working on. Some people experience meaningful shifts in 8–12 sessions. Others benefit from longer-term work. We regularly evaluate progress together and adjust the plan accordingly.</p>
+                  <p>I never extend therapy beyond what's genuinely needed. My goal is to help you heal independently — not to create dependency.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  Do you offer online sessions?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Yes — all therapy modalities, including EMDR, can be done effectively online. Online sessions are available to clients worldwide and use a private, secure video platform.</p>
+                  <p>Research consistently shows that online therapy is as effective as in-person therapy for most presentations.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  Do you offer in-person sessions?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>In-person sessions are available in the Surat Thani (Ko Samui area) region of Thailand. Please get in touch to discuss availability and location details.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  What languages do you work in?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Sessions are available in both Dutch and English. I work with many international clients and expats, and am fully comfortable working in either language.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  How frequently do sessions take place?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Most clients begin with weekly sessions. As progress is made, the frequency may decrease to bi-weekly and eventually monthly for consolidation. We'll decide together what pace feels right for you.</p>
+                </div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Therapy approaches -->
+          <div class="faq-category" id="therapy-approaches">
+            <div class="faq-category__header">
+              <div class="faq-category__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+              </div>
+              <h2 class="faq-category__title">Therapy approaches</h2>
+            </div>
+            <div class="faq-list">
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  What is EMDR and how does it work?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>EMDR (Eye Movement Desensitisation and Reprocessing) is a structured therapy that helps the brain process traumatic memories that have become "stuck." During EMDR, you briefly focus on a distressing memory while simultaneously experiencing bilateral stimulation — typically eye movements.</p>
+                  <p>This process allows the memory to be reprocessed so that it loses its emotional charge. EMDR is one of the most evidence-based treatments for trauma and PTSD, endorsed by the WHO and NHS.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  Can EMDR be done online?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Yes. EMDR can be delivered effectively online using screen-based bilateral stimulation. Research supports the effectiveness of online EMDR, and many clients find the comfort of their own environment actually supports the process.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  Do I need a trauma diagnosis to work with you?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>No formal diagnosis is needed. Many people I work with haven't received — and don't need — a clinical diagnosis. If you're struggling with anxiety, low self-worth, emotional difficulties, relationship patterns, or a sense that your past affects your present, that's enough.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  What is Schema Therapy?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Schema Therapy is a deep-level therapy that addresses long-standing patterns — called schemas — that developed in childhood and continue to drive unhelpful thoughts, emotions, and behaviours in adulthood. It combines elements of CBT, attachment theory, and experiential techniques.</p>
+                  <p>It's particularly effective for people who feel stuck in repeating patterns, struggle with self-worth, or have found shorter-term therapies insufficient.</p>
+                </div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Practical -->
+          <div class="faq-category" id="practical">
+            <div class="faq-category__header">
+              <div class="faq-category__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/></svg>
+              </div>
+              <h2 class="faq-category__title">Practical</h2>
+            </div>
+            <div class="faq-list">
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  What are your qualifications?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>I hold an MSc in Psychology with specialisations in Social Psychology and Neurocognitive Science. I have completed extensive postgraduate training in EMDR, Schema Therapy, ACT, and CBT. Full details are available on the <a href="../clinical-training/index.html" style="color:var(--color-teal);">Clinical Training</a> page.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  Is everything I share confidential?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Yes. Everything you share in sessions is strictly confidential. The only exceptions are the standard legal limits — for example, if there is a serious risk of harm to you or others. I will always discuss confidentiality clearly at the start of our work together.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  What if therapy doesn't feel like the right fit?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>The therapeutic relationship matters enormously. If at any point you feel our work isn't the right fit, I encourage you to say so openly — I take that feedback seriously and without judgement. You are always free to stop or to seek a different therapist, and I will support that process if needed.</p>
+                </div></div>
+              </div>
+              <div class="faq-item">
+                <button class="faq-toggle" aria-expanded="false">
+                  How do I cancel or reschedule a session?
+                  <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                </button>
+                <div class="faq-body"><div class="faq-body__inner">
+                  <p>Please give at least 24 hours notice to cancel or reschedule a session. Sessions cancelled with less than 24 hours notice may be charged. You can reach me via email or WhatsApp.</p>
+                </div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom CTA -->
+          <div class="faq-cta fade-in">
+            <div>
+              <h3>Still have questions?</h3>
+              <p>Feel free to reach out directly — I'm happy to answer any questions before you decide to book.</p>
+            </div>
+            <a href="../contact-me/index.html" class="btn btn--primary btn--lg" style="white-space:nowrap;">
+              Book a Free Intro Call
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand"><img src="../assets/images/logo.png" alt="Lysander Verschuur · Psychologist" class="footer__logo-img"><span>Psychologist &amp; Trauma Therapist · MSc.</span><p>Online therapy for adults struggling with trauma, PTSD, anxiety, self-worth difficulties, and emotional overwhelm.</p></div>
+      <div class="footer__col"><h4>Navigation</h4><a href="../index.html">Home</a><a href="../trauma-approach/index.html">Trauma &amp; My Approach</a><a href="../clinical-training/index.html">Clinical Training</a><a href="../clients/index.html">Testimonials</a><a href="../fees-process/index.html">Fees &amp; Process</a><a href="../contact-me/index.html">Contact</a></div>
+      <div class="footer__col"><h4>Contact</h4><a href="mailto:therapistlysander@gmail.com">therapistlysander@gmail.com</a><a href="https://wa.me/66935309052" target="_blank" rel="noopener noreferrer">WhatsApp: +66 93 530 9052</a><a href="../contact-me/index.html">Book a Free Intro Call</a></div>
+    </div>
+    <div class="footer__bottom"><p>© 2025 Lysander Verschuur, MSc. All rights reserved.</p><p>Psychotherapy &amp; Trauma Therapy</p></div>
+  </div>
+</footer>
+
+<a href="https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy." class="wa-float" target="_blank" rel="noopener noreferrer" aria-label="Contact via WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script src="../assets/js/site.js"></script>
+<script>
+// FAQ accordion
+document.querySelectorAll('.faq-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    // Close all in same category
+    item.closest('.faq-list').querySelectorAll('.faq-item').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-toggle').setAttribute('aria-expanded', 'false');
+      i.querySelector('.faq-body').classList.remove('open');
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+      item.querySelector('.faq-body').classList.add('open');
+    }
+  });
+});
+
+// Sidebar active link on scroll
+const categories = document.querySelectorAll('.faq-category');
+const sidebarLinks = document.querySelectorAll('.faq-sidebar__link');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      sidebarLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector('.faq-sidebar__link[href="#' + entry.target.id + '"]');
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+categories.forEach(c => observer.observe(c));
+</script>
+</body>
+</html>

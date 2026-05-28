@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 20% 96%;
+    --foreground: 40 6% 22%;
+    --card: 0 0% 100%;
+    --card-foreground: 40 6% 22%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 40 6% 22%;
+    --primary: 168 15% 41%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 14% 91%;
+    --secondary-foreground: 40 6% 22%;
+    --muted: 40 14% 91%;
+    --muted-foreground: 35 6% 46%;
+    --accent: 168 20% 93%;
+    --accent-foreground: 168 15% 30%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 10% 85%;
+    --input: 40 10% 85%;
+    --ring: 168 15% 41%;
+    --radius: 0.75rem;
+
+    --gradient-warm: linear-gradient(180deg, hsl(40 20% 96%), hsl(40 14% 91%));
+    --gradient-teal: linear-gradient(135deg, #5a7a76, #72827f);
+    --shadow-soft: 0 4px 24px rgba(58, 56, 53, 0.08);
+    --shadow-elevated: 0 12px 40px rgba(58, 56, 53, 0.12);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-normal tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

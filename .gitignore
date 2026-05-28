@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+nul
+
+# Large binary/archive files
+*.zip
+*.tar.gz
+
+# Screenshots (development artifacts)
+screenshot_*.png
+
+# WhatsApp images
+WhatsApp Image*
+
+# Documents (keep in separate docs if needed)
+*.docx
+
+# PDF reports
+TherapistLysander-UX-Audit.pdf
+
+# Laravel specific (for future use)
+/vendor/
+/storage/*.key
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
