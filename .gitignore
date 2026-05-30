@@ -1,10 +1,22 @@
-*.log
-.DS_Store
+# Environment & secrets
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
+/auth.json
+/storage/*.key
+
+# Dependencies
+/vendor
+/node_modules
+**/node_modules
+
+# Build artifacts
+/public/build
+/public/hot
+/public/fonts-manifest.dev.json
+/public/storage
+
+# IDE & editor
 /.codex
 /.cursor/
 /.idea
@@ -12,20 +24,29 @@
 /.phpunit.cache
 /.vscode
 /.zed
-/auth.json
-/node_modules
-/public/build
-/public/fonts-manifest.dev.json
-/public/hot
-/public/storage
-/storage/*.key
-/storage/pail
-/vendor
+.phpactor.json
 _ide_helper.php
+
+# Testing
+.phpunit.result.cache
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+/storage/pail
+
+# Laravel
+database/database.sqlite
 Homestead.json
 Homestead.yaml
-Thumbs.db
+
+# Misc
 cookies.txt
-database/database.sqlite
 .vercel-tmp/
-**/node_modules
+
+# Documentation (keep prompts dir via .gitkeep)
+/docs/prompts/*
+!/docs/prompts/.gitkeep
