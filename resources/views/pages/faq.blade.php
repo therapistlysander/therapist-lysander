@@ -63,7 +63,7 @@
     <div class="container--narrow">
       <span class="page-hero__eyebrow">{{ $hero?->content['subheading'] ?? 'Questions & Answers' }}</span>
       <h1 class="page-hero__title">{{ $hero?->content['heading'] ?? 'Frequently Asked Questions' }}</h1>
-      <div class="page-hero__text">{!! $hero?->content['body'] ?? "<p>Answers to the most common questions about therapy, EMDR, fees, and how to get started. If something isn't covered here, feel free to reach out directly.</p>" !!}</div>
+      <div class="page-hero__text">{!! $hero?->content['body'] ?? "<p>Answers to common questions about therapy, trauma treatment, EMDR, practical matters, and what to expect when working together.</p>" !!}</div>
     </div>
   </div>
 
@@ -79,7 +79,7 @@
             $categoryLabels = [
               'general' => 'Getting started',
               'booking' => 'Booking',
-              'fees' => 'Fees &amp; insurance',
+              'fees' => 'Fees &amp; Insurance',
               'sessions' => 'Sessions &amp; format',
               'approach' => 'Therapy approaches',
             ];

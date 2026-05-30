@@ -3,7 +3,7 @@
     <a href="{{ route('home') }}" class="nav__logo" aria-label="Therapist Lysander — Home">
       <img src="/images/logo.png" alt="Lysander Verschuur" class="nav__logo-img">
     </a>
-    <span class="nav__identity">Lysander Verschuur <span class="nav__identity-title">Psychologist / Trauma Therapist</span></span>
+    <span class="nav__identity">Verschuur <span class="nav__identity-title">Psychologist &amp; Trauma Therapist</span></span>
     <div class="nav__links" role="menubar">
       <a href="{{ route('home') }}" class="nav__link {{ request()->routeIs('home') ? 'active' : '' }}" role="menuitem">Home</a>
       <a href="{{ route('approach') }}" class="nav__link {{ request()->routeIs('approach') ? 'active' : '' }}" role="menuitem">Trauma &amp; My Approach</a>
@@ -14,7 +14,8 @@
     </div>
     <a href="{{ route('booking') }}" class="nav__cta">Book a Free 30-Min Intro Call</a>
     <button class="nav__burger" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
+      <span class="nav__burger-bars"><span></span><span></span><span></span></span>
+      <svg class="nav__burger-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="24" height="24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
       <span class="nav__burger-label">Menu</span>
     </button>
   </div>

@@ -30,12 +30,12 @@
   .approach-panel h3 { font-size:var(--size-xl); margin-bottom:var(--space-4); }
   .approach-panel p { font-size:var(--size-md); color:var(--color-text-muted); line-height:1.8; }
   .process-steps { counter-reset:steps; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:var(--space-8); }
-  .process-step { counter-increment:steps; position:relative; padding-top:var(--space-10); }
+  .process-step { counter-increment:steps; position:relative; padding-top:var(--space-12); }
   .process-step::before { content:counter(steps); position:absolute; top:0; left:0; width:40px; height:40px; background:var(--color-teal); color:var(--color-white); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-size:var(--size-base); }
   .process-step h4 { font-size:var(--size-lg); margin-bottom:var(--space-3); color:var(--color-white); }
   .process-step p { font-size:var(--size-sm); color:rgba(255,255,255,0.65); }
-  .areas-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:var(--space-3); margin-top:var(--space-8); }
-  .areas-list__item { display:flex; align-items:center; gap:var(--space-3); font-size:var(--size-sm); color:var(--color-text-muted); padding:var(--space-3) 0; border-bottom:1px solid var(--color-border); }
+  .areas-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:0; margin-top:var(--space-8); }
+  .areas-list__item { display:flex; align-items:center; gap:var(--space-3); font-size:var(--size-sm); color:var(--color-text-muted); padding:var(--space-2) 0; border-bottom:1px solid var(--color-border); }
   .areas-list__item::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--color-accent); flex-shrink:0; }
 </style>
 @endsection
@@ -104,11 +104,11 @@
   <div class="container">
     <div class="grid-2 fade-in">
       <div>
-        <span class="section-label">What I treat</span>
-        <h2 id="areas-heading">{{ $areas?->content['heading'] ?? 'Individualized & goal-oriented therapy' }}</h2>
+        <span class="section-label">What I work with</span>
+        <h2 id="areas-heading">{{ $areas?->content['heading'] ?? 'Individualized & Goal-Oriented Therapy' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
-          {!! $areas?->content['body'] ?? '<p>Effective therapy requires more than applying a standard protocol. Each person brings a unique history, emotional world, personality structure, and set of coping patterns into therapy.</p><p>My aim is to understand the underlying processes contributing to your difficulties and to tailor treatment accordingly. Therapy is active, practical, and collaborative.</p>' !!}
+          {!! $areas?->content['body'] ?? '<p>Therapy is most effective when it is adapted to the person rather than forcing the person to fit a particular method or protocol.</p><p>I take time to understand your story, your strengths, your struggles, and the patterns that may be contributing to your difficulties. From there, we work collaboratively toward the goals that matter most to you, combining practical strategies with deeper emotional work where needed.</p>' !!}
         </div>
         @php $areaItems = $areas?->content['items'] ?? [['title'=>'Trauma and PTSD'],['title'=>'Anxiety disorders and panic'],['title'=>'Depression and grief'],['title'=>'Self-esteem and self-worth difficulties'],['title'=>'Perfectionism and control-related patterns'],['title'=>'Emotional regulation and anger-related difficulties'],['title'=>'Burnout and chronic stress'],['title'=>'Compulsive or avoidance-based coping patterns']]; @endphp
         <div class="areas-list" role="list">
@@ -139,15 +139,15 @@
   <div class="container">
     <div class="section-header fade-in">
       <span class="section-label">Therapeutic methods</span>
-      <h2 id="approaches-heading" class="section-title">{{ $approaches?->content['heading'] ?? 'Evidence-based approaches tailored to you' }}</h2>
-      <p class="text-muted" style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;">{!! $approaches?->content['body'] ?? 'I work integratively, drawing from multiple proven methods to address the root causes of your difficulties — not just the symptoms.' !!}</p>
+      <h2 id="approaches-heading" class="section-title">{{ $approaches?->content['heading'] ?? 'Evidence-Based Therapy, Tailored to the Individual' }}</h2>
+      <p class="text-muted" style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;">{!! $approaches?->content['body'] ?? 'I draw from a range of proven therapeutic approaches to help clients address the underlying patterns that contribute to emotional suffering, develop greater psychological flexibility, and create meaningful, lasting change.' !!}</p>
     </div>
     @php $approachItems = $approaches?->content['items'] ?? [
-      ['key'=>'cbt','title'=>'Cognitive Behavioural Therapy (CBT)','description'=>'CBT helps you identify and change unhelpful thought patterns and behaviours that maintain distress. We work together to recognise negative automatic thoughts, challenge their validity, and develop healthier cognitive patterns — resulting in lasting improvements in mood, anxiety, and self-esteem.'],
-      ['key'=>'act','title'=>'Acceptance and Commitment Therapy (ACT)','description'=>'ACT shifts the focus from fighting difficult thoughts and feelings to developing psychological flexibility. By identifying your core values and committing to actions aligned with them, you can build a meaningful life even in the presence of inner pain.'],
-      ['key'=>'emdr','title'=>'Eye Movement Desensitisation & Reprocessing (EMDR)','description'=>'EMDR is one of the most evidence-based treatments for trauma and PTSD. Using bilateral stimulation, EMDR helps the brain process and integrate traumatic memories that have become "stuck."'],
-      ['key'=>'schema','title'=>'Schema Therapy & Parts Work','description'=>'Schema therapy addresses deep-rooted emotional patterns formed in childhood that drive recurring difficulties in adult life. Combined with parts work, we bring care to wounded inner parts, replacing maladaptive coping with genuine emotional healing.'],
-      ['key'=>'somatic','title'=>'Somatic Psychotherapy','description'=>'Trauma is held not just in the mind but in the body. Somatic approaches address how stress, trauma, and emotion are stored in physical tension, movement patterns, and nervous system responses.'],
+      ['key'=>'cbt','title'=>'Cognitive Behavioral Therapy (CBT)','description'=>'CBT helps identify and change unhelpful thoughts, beliefs, and behavioural patterns that contribute to emotional distress. Together, we explore more balanced and helpful ways of thinking, leading to lasting improvements in mood, anxiety, and self-esteem.'],
+      ['key'=>'act','title'=>'Acceptance and Commitment Therapy (ACT)','description'=>'ACT helps people develop greater psychological flexibility by changing their relationship with difficult thoughts and emotions rather than struggling against them. By connecting with what truly matters and taking meaningful action, people can build a rich and fulfilling life.'],
+      ['key'=>'emdr','title'=>'EMDR','description'=>'EMDR is one of the most evidence-based treatments for trauma and PTSD. It helps the brain process distressing memories that continue to influence the present. EMDR can also be used to target anxiety-provoking future scenarios ("flashforwards"), reducing fear and helping people respond with greater confidence and flexibility.'],
+      ['key'=>'schema','title'=>'Schema Therapy','description'=>'Schema therapy focuses on deep-rooted emotional patterns that can contribute to recurring difficulties in relationships, self-esteem, and emotional wellbeing. Combined with parts work, it helps people better understand and care for the different parts of themselves, creating lasting change through greater self-awareness, self-compassion, and emotional flexibility.'],
+      ['key'=>'somatic','title'=>'Somatic Techniques','description'=>'Emotions, stress, and trauma are often experienced not only in our thoughts, but also in the body. Where relevant, I incorporate body awareness, nervous system regulation, and attention to physical sensations as part of the therapeutic process, helping clients develop a deeper understanding of their physical and emotional experiences.'],
     ]; @endphp
     <div class="approach-tabs" role="tablist" aria-label="Therapeutic approaches">
       @foreach($approachItems as $i => $approach)
@@ -178,7 +178,6 @@
         $steps = $process?->content['steps'] ?? [
           ['title' => 'Free Introduction Call',  'description' => 'A free 30-minute online introduction call to briefly explore your current situation, your goals for therapy, and whether we feel like a good fit to work together.'],
           ['title' => 'Intake Session',           'description' => 'An in-depth 60-minute intake session exploring your background, current difficulties, relevant life experiences, and treatment goals in greater detail.'],
-          ['title' => 'Treatment Plan',           'description' => 'Following the intake, a treatment plan is developed outlining the main complaints, therapeutic goals, and proposed treatment approach — tailored to you.'],
           ['title' => 'Ongoing Sessions',         'description' => 'Follow-up sessions of 60 minutes, tailored to your individual needs. Sessions are active, collaborative, and adapted to your pace and needs.'],
         ];
       @endphp
@@ -199,7 +198,7 @@
 <section class="section section--white" id="testimonials-preview" aria-labelledby="testimonials-heading">
   <div class="container">
     <div class="section-header fade-in" style="text-align:center;">
-      <span class="section-label">{{ $testimonialsHdr?->content['subheading'] ?? 'Client words' }}</span>
+      <span class="section-label">{{ $testimonialsHdr?->content['subheading'] ?? 'What Clients Say' }}</span>
       <h2 id="testimonials-heading" class="section-title">{{ $testimonialsHdr?->content['heading'] ?? 'What clients say' }}</h2>
     </div>
     <div class="testimonial-grid">

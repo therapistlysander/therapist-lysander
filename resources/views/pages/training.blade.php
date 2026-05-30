@@ -36,7 +36,7 @@
     <div class="container--narrow">
       <span class="page-hero__eyebrow">{{ $hero?->content['subheading'] ?? 'Professional background' }}</span>
       <h1 class="page-hero__title">{{ $hero?->content['heading'] ?? 'Clinical Training & Continued Education' }}</h1>
-      <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>Advanced clinical training in multiple evidence-based psychotherapy approaches, with a particular focus on trauma treatment, experiential therapies, and integrative psychotherapy.</p>' !!}</div>
+      <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>Effective therapy requires more than a degree alone. Over the years, I have continued to invest in advanced clinical training across multiple evidence-based psychotherapy approaches, with a particular focus on trauma treatment, experiential therapies, and integrative psychotherapy.</p><p>At the same time, meaningful change rarely comes from techniques alone. While training and expertise matter, therapy is ultimately a human process. A strong therapeutic relationship, genuine collaboration, and feeling understood are often just as important as the methods themselves.</p><p>My aim is to combine clinical knowledge with a thoughtful, individualized approach that is tailored to the person sitting in front of me.</p>' !!}</div>
     </div>
   </div>
 
@@ -48,7 +48,7 @@
           <h2 id="background-heading">{{ $background?->content['heading'] ?? 'MSc. Psychology' }}</h2>
           <div class="divider"></div>
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
-            {!! $background?->content['body'] ?? '<p>I hold an <strong>MSc in Psychology</strong>, with additional academic specialization in <strong>Social Psychology</strong> and <strong>Neurocognitive Science</strong>.</p><p>I have completed advanced clinical training in multiple evidence-based psychotherapy approaches, with a particular focus on trauma treatment, experiential therapies, and integrative psychotherapy.</p><p>I view continued professional development as an essential part of providing thoughtful, up-to-date, and effective psychological care.</p>' !!}
+            {!! $background?->content['body'] ?? '<p>I hold an <strong>MSc in Psychology</strong>, with additional academic specialization in <strong>Social Psychology</strong> and <strong>Neurocognitive Science</strong>.</p><p>I have completed advanced clinical training in multiple evidence-based psychotherapy approaches, with a particular focus on trauma treatment, experiential therapies, and integrative psychotherapy.</p><p>Psychology is a field that continues to evolve. I believe that effective therapy requires ongoing learning, reflection, and professional development. Continuing education allows me to integrate new insights, refine existing skills, and provide care that is both evidence-based and responsive to the individual needs of each client.</p>' !!}
           </div>
           @php $bgStats = $background?->content['stats'] ?? [['value'=>'MSc.','label'=>'Psychology'],['value'=>'EMDR','label'=>'Advanced certified'],['value'=>'10+','label'=>'Training programmes']]; @endphp
           <div class="stats">
@@ -133,7 +133,7 @@
           <h2 id="professional-heading">{{ $approach?->content['heading'] ?? 'Integrative, trauma-informed, individualized' }}</h2>
           <div class="divider"></div>
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
-            {!! $approach?->content['body'] ?? '<p>Alongside my clinical work, I have experience working with an international client population and with a broad range of psychological difficulties and treatment needs.</p><p>My work combines evidence-based practice with an integrative, trauma-informed, experiential, and individualized approach to psychological treatment. I view continued professional development as an essential part of providing thoughtful, up-to-date, and effective psychological care.</p>' !!}
+            {!! $approach?->content['body'] ?? '<p>My approach is shaped not only by formal training, but also by years of clinical experience working with people from diverse backgrounds and life circumstances. Rather than relying on a single model, I draw from different evidence-based approaches and tailor treatment to the individual.</p><p>Continued professional development remains an important part of my work, helping me refine existing skills, deepen my understanding, and stay up to date with developments in the field.</p>' !!}
           </div>
           <div style="display:flex;gap:var(--space-4);flex-wrap:wrap;">
             <a href="{{ $approach?->content['cta_primary_url'] ?? route('approach') }}" class="btn btn--outline">{{ $approach?->content['cta_primary_label'] ?? 'View Trauma & My Approach' }}</a>

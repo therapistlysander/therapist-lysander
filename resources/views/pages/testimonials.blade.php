@@ -19,26 +19,21 @@
     <div class="container--narrow">
       <span class="page-hero__eyebrow">{{ $hero?->content['subheading'] ?? 'Client experiences' }}</span>
       <h1 class="page-hero__title">{{ $hero?->content['heading'] ?? 'What clients say' }}</h1>
-      <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>Real words from real people. These testimonials reflect the lived experience of clients who chose to share their journey through therapy with Lysander.</p>' !!}</div>
+      <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>These testimonials are shared with permission and reflect genuine experiences from therapy.</p>' !!}</div>
     </div>
   </div>
 
   <!-- Featured quote -->
   <div style="background:var(--color-bg-dark);padding:var(--space-12) 0;">
     <div class="container--narrow" style="text-align:center;">
-      <p style="font-family:var(--font-heading);font-size:clamp(var(--size-xl),2.5vw,var(--size-2xl));color:var(--color-white);font-style:italic;line-height:1.5;">{!! $quote?->content['body'] ?? '"If he can help me, he can help you."' !!}</p>
-      <p style="color:var(--color-accent-light);font-size:var(--size-sm);letter-spacing:0.1em;text-transform:uppercase;margin-top:var(--space-4);">{{ $quote?->content['attribution'] ?? '— Rut' }}</p>
+      <p style="font-family:var(--font-heading);font-size:clamp(var(--size-xl),2.5vw,var(--size-2xl));color:var(--color-white);font-style:italic;line-height:1.5;">{!! $quote?->content['body'] ?? '"For the first time, I felt safe enough to face memories that used to control me."' !!}</p>
+      <p style="color:var(--color-accent-light);font-size:var(--size-sm);letter-spacing:0.1em;text-transform:uppercase;margin-top:var(--space-4);">{{ $quote?->content['attribution'] ?? '— Paul' }}</p>
     </div>
   </div>
 
   <!-- Long-form testimonials from DB -->
   <section class="section section--white" aria-labelledby="testimonials-heading">
     <div class="container">
-      <div class="section-header fade-in" style="text-align:center;">
-        <span class="section-label">Testimonials</span>
-        <h2 id="testimonials-heading">{{ $gridHdr?->content['heading'] ?? 'Stories of recovery & growth' }}</h2>
-        <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:580px;margin:0 auto;">{{ $gridHdr?->content['subheading'] ?? "Each person's experience is unique. These testimonials are shared with the permission of the clients and represent genuine experiences from therapy." }}</p>
-      </div>
 
       @foreach($testimonials as $i => $t)
       <div class="testimonial-long {{ $i % 2 !== 0 ? 'testimonial-long--reverse' : '' }} fade-in">
@@ -89,9 +84,9 @@
   <!-- CTA -->
   <div class="cta-section">
     <div class="container--narrow">
-      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Your story</span>
-      <h2>{{ $cta?->content['heading'] ?? 'Begin your own journey' }}</h2>
-      <p>{!! $cta?->content['body'] ?? 'Every story of recovery starts with a single step. Reach out and let\'s talk about what brings you here. The first conversation is free and without commitment.' !!}</p>
+      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Ready to take the next step?</span>
+      <h2>{{ $cta?->content['heading'] ?? 'Meaningful and lasting change' }}</h2>
+      <p>{!! $cta?->content['body'] ?? 'Whether you\'re struggling with trauma, anxiety, self-worth, or feeling stuck in recurring patterns, therapy can help create meaningful and lasting change. The first conversation is free and without obligation.' !!}</p>
       <div class="cta-section__actions">
         <a href="{{ $cta?->content['cta_primary_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
         <a href="{{ $cta?->content['cta_secondary_url'] ?? 'https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.' }}" target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp btn--lg">

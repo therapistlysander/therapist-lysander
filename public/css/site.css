@@ -169,6 +169,7 @@ strong { font-weight: 600; }
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
+  overflow: hidden;
 }
 .nav__logo {
   display: flex;
@@ -205,6 +206,8 @@ strong { font-weight: 600; }
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .nav__links {
   display: flex;
@@ -279,17 +282,24 @@ strong { font-weight: 600; }
   line-height: 1;
   margin-top: 1px;
 }
-.nav__burger span:not(.nav__burger-label) {
+.nav__burger-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.nav__burger-bars span {
   display: block;
   width: 24px;
   height: 1.5px;
   background: var(--color-text);
-  transition: transform var(--transition), opacity var(--transition);
-  transform-origin: center;
 }
-.nav__burger.open span:nth-child(1) { transform: rotate(45deg) translateY(4.75px); }
-.nav__burger.open span:nth-child(2) { opacity: 0; }
-.nav__burger.open span:nth-child(3) { transform: rotate(-45deg) translateY(-4.75px); }
+.nav__burger-close {
+  display: none;
+  color: var(--color-text);
+}
+.nav__burger.open .nav__burger-bars { display: none; }
+.nav__burger.open .nav__burger-close { display: block; }
+.nav__burger.open .nav__burger-label { display: none; }
 
 .nav__mobile {
   display: none;
@@ -827,7 +837,7 @@ strong { font-weight: 600; }
 .stats__item { text-align: left; }
 .stats__num {
   font-family: var(--font-heading);
-  font-size: var(--size-3xl);
+  font-size: var(--size-2xl);
   color: var(--color-teal);
   line-height: 1;
   margin-bottom: var(--space-1);
@@ -1316,14 +1326,15 @@ strong { font-weight: 600; }
   .nav__mobile.open { display: flex; }
 
   /* Identity fills space on mobile */
-  .nav__identity { flex: 1; min-width: 0; }
+  .nav__identity { flex: 1; min-width: 0; white-space: normal; overflow: visible; }
+  .nav__identity-title { white-space: nowrap; }
 
   /* Move logo to the left */
-  .nav__inner { height: 80px; padding: 0 var(--space-4) 0 var(--space-2); }
-  .nav__logo-img { height: 80px; }
-  .nav__mobile { top: 80px; }
-  .hero { padding-top: 80px; }
-  .page-hero { padding-top: calc(80px + var(--space-12)); }
+  .nav__inner { height: 90px; padding: 0 var(--space-4) 0 var(--space-2); }
+  .nav__logo-img { height: 90px; }
+  .nav__mobile { top: 90px; }
+  .hero { padding-top: 90px; }
+  .page-hero { padding-top: calc(90px + var(--space-12)); }
 }
 
 @media (max-width: 900px) {
@@ -1331,10 +1342,10 @@ strong { font-weight: 600; }
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
-    padding-top: 80px;
+    padding-top: 90px;
   }
   .hero__content {
-    padding: var(--space-6) var(--space-6) var(--space-8);
+    padding: var(--space-6) var(--space-8) var(--space-8);
     order: 2;
   }
   .hero__image {
@@ -1386,6 +1397,8 @@ strong { font-weight: 600; }
   .testimonial-grid { grid-template-columns: 1fr; }
   .stats { gap: var(--space-6); }
   .footer__grid { grid-template-columns: 1fr; }
+  .footer__brand-header { flex-direction: column; align-items: center; text-align: center; }
+  .footer__brand { text-align: center; }
   .time-slots { grid-template-columns: repeat(2, 1fr); }
   .hero__actions { flex-direction: column; }
   .hero__actions .btn { justify-content: center; width: 100%; }
@@ -1393,7 +1406,7 @@ strong { font-weight: 600; }
   .cta-section__actions .btn { width: 100%; max-width: 320px; justify-content: center; }
   .wa-float { bottom: 20px; right: 16px; width: 48px; height: 48px; }
   .btn--lg { padding: var(--space-4) var(--space-8); font-size: var(--size-sm); }
-  .page-hero { padding: calc(80px + var(--space-12)) 0 var(--space-12); }
+  .page-hero { padding: calc(90px + var(--space-12)) 0 var(--space-12); }
   .process-steps { grid-template-columns: 1fr; }
   .session-types { grid-template-columns: 1fr; }
   .process-cards { grid-template-columns: 1fr; }
@@ -1442,7 +1455,7 @@ strong { font-weight: 600; }
     margin: 0;
   }
   .hero__content {
-    padding: var(--space-4) var(--space-4) var(--space-6);
+    padding: var(--space-4) var(--space-6) var(--space-6);
   }
   .hero__subtitle {
     font-size: var(--size-sm);
@@ -1464,14 +1477,17 @@ strong { font-weight: 600; }
     height: 14px;
   }
 
-  /* Mobile nav logo */
-  .nav__inner { height: 70px; padding: 0 var(--space-3) 0 var(--space-2); }
-  .nav__logo-img { height: 70px; }
-  .nav__mobile { top: 70px; }
-  .hero { padding-top: 70px; }
-  .page-hero { padding-top: calc(70px + var(--space-12)); }
-  .nav__identity { font-size: 0.8rem; }
-  .nav__identity-title { font-size: 0.6rem; }
+  /* Mobile nav logo — larger */
+  .nav__inner { height: 80px; padding: 0 var(--space-4) 0 var(--space-2); }
+  .nav__logo-img { height: 80px; }
+  .nav__mobile { top: 80px; }
+  .hero { padding-top: 80px; }
+  .page-hero { padding-top: calc(80px + var(--space-12)); }
+  .nav__identity { font-size: 0.85rem; }
+  .nav__identity-title { font-size: 0.65rem; }
+
+  /* Stats smaller on mobile */
+  .stats__num { font-size: var(--size-2xl); }
 }
 
 /* Extra-small screens (< 380px) */
@@ -1480,18 +1496,17 @@ strong { font-weight: 600; }
   .hero__image { height: 40vw; min-height: 150px; max-height: 200px; }
   .hero__name-mobile { font-size: clamp(1.2rem, 5vw, 1.5rem); }
   .hero__title { font-size: clamp(1rem, 4vw, 1.2rem); }
-  .hero__content { padding: var(--space-3) var(--space-3) var(--space-4); }
+  .hero__content { padding: var(--space-3) var(--space-4) var(--space-4); }
   .hero__actions .btn { font-size: 0.65rem; }
   .hero__actions .btn--lg { font-size: 0.65rem; }
-  .nav__inner { height: 60px; }
-  .nav__logo-img { height: 60px; }
-  .nav__mobile { top: 60px; }
-  .hero { padding-top: 60px; }
-  .page-hero { padding-top: calc(60px + var(--space-8)); }
+  .nav__inner { height: 70px; padding: 0 var(--space-3) 0 var(--space-1); }
+  .nav__logo-img { height: 70px; }
+  .nav__mobile { top: 70px; }
+  .hero { padding-top: 70px; }
+  .page-hero { padding-top: calc(70px + var(--space-8)); }
   .wa-float { bottom: 14px; right: 12px; width: 44px; height: 44px; }
-  .nav__inner { padding: 0 var(--space-2) 0 var(--space-1); }
-  .nav__identity { font-size: 0.7rem; }
-  .nav__identity-title { font-size: 0.55rem; }
+  .nav__identity { font-size: 0.75rem; }
+  .nav__identity-title { font-size: 0.6rem; }
 }
 
 /* Landscape mobile — keep hero compact */
