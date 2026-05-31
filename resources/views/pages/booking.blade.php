@@ -94,12 +94,12 @@
     .step-section { margin-bottom: var(--space-6); }
     .step-section__label { font-size: var(--size-sm); }
 
-    .option-cards--2 { grid-template-columns: 1fr; }
+    .option-cards--2 { grid-template-columns: minmax(0, 1fr); }
     .option-card { padding: var(--space-4); gap: var(--space-3); }
     .option-card__label { font-size: var(--size-sm); }
     .option-card__desc { font-size: var(--size-xs); }
 
-    .time-slots { grid-template-columns: repeat(3, 1fr); }
+    .time-slots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .time-slot { padding: var(--space-3) var(--space-1); font-size: var(--size-xs); border-radius: var(--radius); }
 
     .summary-row { padding: var(--space-3); flex-direction: column; align-items: flex-start; gap: var(--space-1); }
@@ -112,7 +112,7 @@
   /* Tablet refinements */
   @media (min-width: 481px) and (max-width: 768px) {
     .booking-container { padding: var(--space-10) var(--space-6); }
-    .time-slots { grid-template-columns: repeat(3, 1fr); }
+    .time-slots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 
   /* Desktop */

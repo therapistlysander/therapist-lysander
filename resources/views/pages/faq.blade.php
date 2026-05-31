@@ -48,7 +48,7 @@
   .faq-cta p { color: rgba(255,255,255,0.65); font-size: var(--size-sm); margin: 0; }
 
   @media (max-width: 860px) {
-    .faq-page-grid { grid-template-columns: 1fr; }
+    .faq-page-grid { grid-template-columns: minmax(0, 1fr); }
     .faq-sidebar { display: none; }
     .faq-cta { flex-direction: column; text-align: center; }
   }

@@ -16,7 +16,7 @@
 
 @section('page_styles')
 <style>
-  .trauma-types { display: grid; grid-template-columns: 1fr; gap: 0; margin-top: var(--space-8); }
+  .trauma-types { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: var(--space-8); }
   .trauma-type-item { display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-sm); color: var(--color-text-muted); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border); line-height: 1.5; background: transparent; border: none; border-radius: 0; border-bottom: 1px solid var(--color-border); }
   .trauma-type-item:last-child { border-bottom: none; }
   .trauma-type-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0; margin-top: 5px; }

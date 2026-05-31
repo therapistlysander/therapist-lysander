@@ -24,7 +24,7 @@
   .training-list li:last-child { border-bottom: none; }
   .training-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0; margin-top: 5px; }
   .training-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); }
-  @media (max-width: 640px) { .training-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .training-grid { grid-template-columns: minmax(0, 1fr); } }
 </style>
 @endsection
 
