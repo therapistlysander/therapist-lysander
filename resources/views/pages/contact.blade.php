@@ -88,7 +88,6 @@
           @php $contactItems = $info?->content['items'] ?? [
             ['label'=>'Email','value'=>'therapistlysander@gmail.com'],
             ['label'=>'Online sessions','value'=>'Available worldwide via secure video call'],
-            ['label'=>'In-person sessions','value'=>'Amsterdam — limited availability, on request'],
             ['label'=>'Session duration','value'=>'60 minutes · Free introduction call (30 min)'],
             ['label'=>'Languages','value'=>'Dutch & English'],
           ]; @endphp

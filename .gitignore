@@ -50,3 +50,5 @@ cookies.txt
 # Documentation (keep prompts dir via .gitkeep)
 /docs/prompts/*
 !/docs/prompts/.gitkeep
+
+.vercel

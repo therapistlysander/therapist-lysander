@@ -77,7 +77,7 @@
       @php $groups = $categories?->content['groups'] ?? [
         ['title'=>'Trauma & EMDR','items'=>[['title'=>'EMDR Foundation Training'],['title'=>'EMDR Mastertraining'],['title'=>'Affect-Focused EMDR'],['title'=>'Exposure Therapy for EMDR Therapists'],['title'=>'Flash Technique 2.0'],['title'=>'Anger, Rage & Revenge Protocol'],['title'=>'Imagery Rescripting']]],
         ['title'=>'Schema Therapy & Experiential','items'=>[['title'=>'Fundamentals of Schema Therapy'],['title'=>'ACT & Schema Therapy Integration'],['title'=>'EMDR & Schema Therapy Integration'],['title'=>'Boxing-Based Psychotherapy']]],
-        ['title'=>'ACT & Cognitive Behavioural Therapy','items'=>[['title'=>'Fundamentals of ACT'],['title'=>'ACT Follow-Up Training'],['title'=>'ACT in Groups'],['title'=>'Cognitive Behavioral Therapy (CBT)'],['title'=>'Beck Institute CBT Training']]],
+        ['title'=>'ACT & CBT','items'=>[['title'=>'Fundamentals of ACT'],['title'=>'ACT Follow-Up Training'],['title'=>'ACT in Groups'],['title'=>'CBT'],['title'=>'Beck Institute CBT Training']]],
         ['title'=>'Professional Background','items'=>[['title'=>'MSc. in Psychology'],['title'=>'Academic specialization: Social Psychology'],['title'=>'Academic specialization: Neurocognitive Science'],['title'=>'International clinical experience across diverse populations'],['title'=>'Broad range of psychological difficulties and treatment needs']]],
       ]; @endphp
 
@@ -134,10 +134,6 @@
           <div class="divider"></div>
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
             {!! $approach?->content['body'] ?? '<p>My approach is shaped not only by formal training, but also by years of clinical experience working with people from diverse backgrounds and life circumstances. Rather than relying on a single model, I draw from different evidence-based approaches and tailor treatment to the individual.</p><p>Continued professional development remains an important part of my work, helping me refine existing skills, deepen my understanding, and stay up to date with developments in the field.</p>' !!}
-          </div>
-          <div style="display:flex;gap:var(--space-4);flex-wrap:wrap;">
-            <a href="{{ $approach?->content['cta_primary_url'] ?? route('approach') }}" class="btn btn--outline">{{ $approach?->content['cta_primary_label'] ?? 'View Trauma & My Approach' }}</a>
-            <a href="{{ $approach?->content['cta_secondary_url'] ?? route('booking') }}" class="btn btn--primary">{{ $approach?->content['cta_secondary_label'] ?? 'Book a Free Intro Call' }}</a>
           </div>
         </div>
       </div>

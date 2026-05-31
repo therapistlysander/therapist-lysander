@@ -18,10 +18,6 @@
 
 @section('page_styles')
 <style>
-  .intro-strip { background:var(--color-bg-dark); padding:var(--space-12) 0; }
-  .intro-strip .container { display:flex; align-items:center; gap:var(--space-12); flex-wrap:wrap; }
-  .intro-strip__text { font-family:var(--font-heading); font-size:clamp(var(--size-lg),2vw,var(--size-2xl)); color:var(--color-white); flex:1; min-width:260px; line-height:1.45; font-style:italic; }
-  .intro-strip__cta { flex-shrink:0; }
   .approach-tabs { display:flex; gap:var(--space-3); flex-wrap:wrap; margin-bottom:var(--space-10); }
   .approach-tab { padding:var(--space-2) var(--space-4); border:1.5px solid var(--color-accent-light); border-radius:40px; font-size:var(--size-sm); line-height:1.4; letter-spacing:0.05em; color:var(--color-accent-dark); cursor:pointer; transition:all var(--transition); background:transparent; }
   .approach-tab.active, .approach-tab:hover { background:var(--color-teal); border-color:var(--color-teal); color:var(--color-white); }
@@ -84,15 +80,11 @@
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
           {!! $intro?->content['body'] ?? '<p>I am a psychologist working with adults who feel emotionally overwhelmed, stuck in longstanding patterns, or disconnected from themselves and their lives.</p><p>Many of the people I work with struggle with the effects of trauma, anxiety, chronic self-criticism, emotional dysregulation, or difficulties related to self-worth and relationships.</p><p>Alongside my clinical training, my work is informed by <strong>personal experience with trauma, anxiety, and struggles with self-worth</strong>. My approach is warm, direct, collaborative, and focused on meaningful psychological change.</p>' !!}
         </div>
-        @php $introStats = $intro?->content['stats'] ?? [['value'=>'EMDR','label'=>'Advanced certified'],['value'=>'MSc.','label'=>'Psychology degree'],['value'=>'10+','label'=>'Evidence-based methods']]; @endphp
+        @php $introStats = $intro?->content['stats'] ?? [['value'=>'5','label'=>'Approaches — EMDR, CBT, ACT, Schema & Somatic']]; @endphp
         <div class="stats" style="margin-bottom:var(--space-8);">
           @foreach($introStats as $stat)
           <div class="stats__item"><div class="stats__num">{{ $stat['value'] }}</div><div class="stats__label">{{ $stat['label'] }}</div></div>
           @endforeach
-        </div>
-        <div style="display:flex;gap:var(--space-4);flex-wrap:wrap;">
-          <a href="{{ $intro?->content['cta_primary_url'] ?? route('approach') }}" class="btn btn--primary">{{ $intro?->content['cta_primary_label'] ?? 'Trauma & My Approach' }}</a>
-          <a href="{{ $intro?->content['cta_secondary_url'] ?? route('booking') }}" class="btn btn--outline">{{ $intro?->content['cta_secondary_label'] ?? 'Book a Free Intro Call' }}</a>
         </div>
       </div>
     </div>
@@ -124,15 +116,33 @@
   </div>
 </section>
 
-<!-- Online therapy strip -->
-<div class="intro-strip" aria-label="Online therapy information">
+<!-- What Therapy With Me Is Like -->
+<section class="section section--alt" aria-label="What therapy with me is like">
   <div class="container">
-    <p class="intro-strip__text">{!! $onlineStrip?->content['body'] ?? '"Online therapy has been consistently shown to be as effective as face-to-face therapy for anxiety, depression, trauma, and stress-related difficulties."' !!}</p>
-    <div class="intro-strip__cta">
-      <a href="{{ $onlineStrip?->content['cta_url'] ?? route('booking') }}" class="btn btn--outline-white">{{ $onlineStrip?->content['cta_label'] ?? 'Book a Free Intro Call' }}</a>
+    <div class="fade-in" style="max-width:var(--max-w-text);">
+      <span class="section-label">What therapy with me is like</span>
+      <h2>What Therapy With Me Is Like</h2>
+      <div class="divider"></div>
+      <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-10);">
+        {!! $onlineStrip?->content['body'] ?? '<p>Therapy with me is warm, direct, and practical. Together, we explore the patterns that keep you stuck, process difficult emotions, and build a life that feels more aligned with who you truly are.</p>' !!}
+      </div>
+    </div>
+    <div class="card-grid fade-in" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+      <div class="card">
+        <h3 class="card__title">Safe and non-judgmental</h3>
+        <p class="card__text">A space where you can speak openly, without fear of judgment or pressure to perform.</p>
+      </div>
+      <div class="card">
+        <h3 class="card__title">Evidence-based and practical</h3>
+        <p class="card__text">Grounded in proven therapeutic methods, applied in a way that makes sense for your life.</p>
+      </div>
+      <div class="card">
+        <h3 class="card__title">Focused on lasting change</h3>
+        <p class="card__text">Not just symptom relief — working toward meaningful, sustainable psychological change.</p>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- Therapeutic approaches -->
 <section class="section section--white" id="approaches" aria-labelledby="approaches-heading">
@@ -143,11 +153,11 @@
       <p class="text-muted" style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;">{!! $approaches?->content['body'] ?? 'I draw from a range of proven therapeutic approaches to help clients address the underlying patterns that contribute to emotional suffering, develop greater psychological flexibility, and create meaningful, lasting change.' !!}</p>
     </div>
     @php $approachItems = $approaches?->content['items'] ?? [
-      ['key'=>'cbt','title'=>'Cognitive Behavioral Therapy (CBT)','description'=>'CBT helps identify and change unhelpful thoughts, beliefs, and behavioural patterns that contribute to emotional distress. Together, we explore more balanced and helpful ways of thinking, leading to lasting improvements in mood, anxiety, and self-esteem.'],
-      ['key'=>'act','title'=>'Acceptance and Commitment Therapy (ACT)','description'=>'ACT helps people develop greater psychological flexibility by changing their relationship with difficult thoughts and emotions rather than struggling against them. By connecting with what truly matters and taking meaningful action, people can build a rich and fulfilling life.'],
+      ['key'=>'cbt','title'=>'CBT','description'=>'CBT helps identify and change unhelpful thoughts, beliefs, and behavioural patterns that contribute to emotional distress. Together, we explore more balanced and helpful ways of thinking, leading to lasting improvements in mood, anxiety, and self-esteem.'],
+      ['key'=>'act','title'=>'ACT','description'=>'ACT helps people develop greater psychological flexibility by changing their relationship with difficult thoughts and emotions rather than struggling against them. By connecting with what truly matters and taking meaningful action, people can build a rich and fulfilling life.'],
       ['key'=>'emdr','title'=>'EMDR','description'=>'EMDR is one of the most evidence-based treatments for trauma and PTSD. It helps the brain process distressing memories that continue to influence the present. EMDR can also be used to target anxiety-provoking future scenarios ("flashforwards"), reducing fear and helping people respond with greater confidence and flexibility.'],
-      ['key'=>'schema','title'=>'Schema Therapy','description'=>'Schema therapy focuses on deep-rooted emotional patterns that can contribute to recurring difficulties in relationships, self-esteem, and emotional wellbeing. Combined with parts work, it helps people better understand and care for the different parts of themselves, creating lasting change through greater self-awareness, self-compassion, and emotional flexibility.'],
-      ['key'=>'somatic','title'=>'Somatic Techniques','description'=>'Emotions, stress, and trauma are often experienced not only in our thoughts, but also in the body. Where relevant, I incorporate body awareness, nervous system regulation, and attention to physical sensations as part of the therapeutic process, helping clients develop a deeper understanding of their physical and emotional experiences.'],
+      ['key'=>'schema','title'=>'Schema Therapy','description'=>'Schema therapy focuses on deep-rooted emotional patterns that can contribute to recurring difficulties in relationships, self-esteem, and emotional wellbeing. It helps people better understand and care for the different parts of themselves, creating lasting change through greater self-awareness, self-compassion, and emotional flexibility.'],
+      ['key'=>'somatic','title'=>'Somatic Approaches','description'=>'Emotions, stress, and trauma are often experienced not only in our thoughts, but also in the body. Where relevant, I incorporate body awareness, nervous system regulation, and attention to physical sensations as part of the therapeutic process, helping clients develop a deeper understanding of their physical and emotional experiences.'],
     ]; @endphp
     <div class="approach-tabs" role="tablist" aria-label="Therapeutic approaches">
       @foreach($approachItems as $i => $approach)
@@ -177,7 +187,7 @@
       @php
         $steps = $process?->content['steps'] ?? [
           ['title' => 'Free Introduction Call',  'description' => 'A free 30-minute online introduction call to briefly explore your current situation, your goals for therapy, and whether we feel like a good fit to work together.'],
-          ['title' => 'Intake Session',           'description' => 'An in-depth 60-minute intake session exploring your background, current difficulties, relevant life experiences, and treatment goals in greater detail.'],
+          ['title' => 'Intake Session',           'description' => 'An in-depth 60-minute intake session exploring your background, current difficulties, relevant life experiences, and treatment goals in greater detail. A personalized treatment plan will be developed after the intake session.'],
           ['title' => 'Ongoing Sessions',         'description' => 'Follow-up sessions of 60 minutes, tailored to your individual needs. Sessions are active, collaborative, and adapted to your pace and needs.'],
         ];
       @endphp
@@ -227,7 +237,6 @@
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
           {!! $workingTogether?->content['body'] ?? '<p>Therapy is not about "fixing" who you are. Often, it involves understanding the patterns that developed in response to difficult life experiences — and gradually creating more freedom, flexibility, and self-trust in the present.</p><p>My role is to provide a space that is safe, thoughtful, collaborative, and focused on real psychological change.</p>' !!}
         </div>
-        <a href="{{ $workingTogether?->content['cta_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $workingTogether?->content['cta_label'] ?? 'Schedule a Free Introduction Call' }}</a>
       </div>
       <div class="grid-2__media">
         <img src="{{ $workingTogether?->content['image'] ?? '/images/1cea4c553e34803a-a3c153_bbf1019446e34069a3b96c18f172e810-mv2.jpg' }}" alt="Peaceful outdoor landscape" loading="lazy" width="600" height="750">
@@ -244,10 +253,6 @@
     <p>{!! $ctaBottom?->content['body'] ?? "Whether you're struggling with trauma, anxiety, depression, or simply feeling stuck — I'm here. The first conversation is free and without commitment." !!}</p>
     <div class="cta-section__actions">
       <a href="{{ $ctaBottom?->content['cta_primary_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $ctaBottom?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
-      <a href="{{ $ctaBottom?->content['cta_secondary_url'] ?? 'https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.' }}" target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp btn--lg">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        {{ $ctaBottom?->content['cta_secondary_label'] ?? 'WhatsApp me' }}
-      </a>
     </div>
   </div>
 </div>

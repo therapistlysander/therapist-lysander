@@ -30,16 +30,7 @@
         <h2 id="fees-heading">{{ $pricing?->content['heading'] ?? 'Fees & Availability' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
-          {!! $pricing?->content['body'] ?? '<p>Individual therapy sessions last <strong>60 minutes</strong> and are priced at <strong>€110 per session</strong>.</p><p>I currently maintain a limited caseload to ensure therapy remains thoughtful, personal, and attentive. Availability varies over time, but new clients can usually be accommodated within <strong>2–6 weeks</strong>.</p>' !!}
-        </div>
-        <div class="availability-block">
-          <div class="availability-block__text">
-            <h3>Current availability</h3>
-            <p>I currently maintain a limited caseload to ensure therapy remains thoughtful, personal, and attentive. Availability varies over time, but new clients can usually be accommodated within <strong>2–6 weeks</strong>.</p>
-          </div>
-          <div class="availability-block__cta">
-            <a href="{{ $pricing?->content['cta_url'] ?? route('booking') }}" class="btn btn--primary">{{ $pricing?->content['cta_label'] ?? 'Book a Free Intro Call' }}</a>
-          </div>
+          {!! $pricing?->content['body'] ?? '<p>Individual therapy sessions last <strong>60 minutes</strong>. The introductory call is free and without obligation.</p>' !!}
         </div>
       </div>
       <div>
@@ -52,10 +43,6 @@
             @foreach($includes as $item)
             <div class="fee-includes-item">{{ $item['title'] }}</div>
             @endforeach
-          </div>
-          <div style="margin-top:var(--space-6);padding-top:var(--space-6);border-top:1px solid var(--color-border);">
-            <div class="free-badge" style="margin-bottom:var(--space-3);">Free introductory call · 30 minutes</div>
-            <a href="{{ route('booking') }}" class="btn btn--primary" style="width:100%;justify-content:center;">Book a Free Introductory Call</a>
           </div>
         </div>
       </div>
@@ -99,7 +86,6 @@
     </div>
     @php $infoCards = $info?->content['cards'] ?? [
       ['title'=>'Online sessions','description'=>'Sessions take place in a secure, confidential online setting. Available to clients worldwide.'],
-      ['title'=>'In-person (Amsterdam)','description'=>'My practice currently focuses primarily on online therapy. In-person sessions in Amsterdam may be available on a limited basis and can be discussed during the introductory call.'],
       ['title'=>'Session duration','description'=>'Sessions are typically 60 minutes in length. Shorter or longer sessions can occasionally be arranged when clinically appropriate. As a general principle, therapy is kept as short as possible and as long as necessary.'],
       ['title'=>'Languages','description'=>'Sessions are conducted in Dutch or English. Both languages are equally available for all therapy modalities.'],
     ]; @endphp
@@ -110,6 +96,10 @@
         <p class="card__text" style="color:rgba(255,255,255,0.65);">{{ $card['description'] }}</p>
       </div>
       @endforeach
+    </div>
+    <div class="card fade-in" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:var(--space-8);">
+      <h3 class="card__title" style="color:var(--color-white);">Availability &amp; Waiting Times</h3>
+      <p class="card__text" style="color:rgba(255,255,255,0.65);">I currently maintain a limited caseload to ensure therapy remains thoughtful, personal, and attentive. Availability varies over time, but new clients can usually be accommodated within <strong style="color:rgba(255,255,255,0.85);">2–6 weeks</strong>.</p>
     </div>
   </div>
 </section>

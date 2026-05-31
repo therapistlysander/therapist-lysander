@@ -16,8 +16,9 @@
 
 @section('page_styles')
 <style>
-  .trauma-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-3); margin-top: var(--space-8); }
-  .trauma-type-item { display: flex; align-items: flex-start; gap: var(--space-3); font-size: var(--size-sm); color: var(--color-text-muted); padding: var(--space-4); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius); line-height: 1.5; }
+  .trauma-types { display: grid; grid-template-columns: 1fr; gap: 0; margin-top: var(--space-8); }
+  .trauma-type-item { display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-sm); color: var(--color-text-muted); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border); line-height: 1.5; background: transparent; border: none; border-radius: 0; border-bottom: 1px solid var(--color-border); }
+  .trauma-type-item:last-child { border-bottom: none; }
   .trauma-type-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0; margin-top: 5px; }
   .emdr-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); margin-top: var(--space-8); }
   .emdr-feature { padding: var(--space-6); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); border-left: 3px solid var(--color-accent); }
@@ -53,11 +54,19 @@
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
             {!! $understanding?->content['body'] ?? '<p>Difficult or overwhelming experiences can leave a lasting impact on how we think, feel, relate to others, and experience ourselves. The effects of trauma can show up in many different ways, including anxiety, panic, emotional numbness, hypervigilance, intrusive memories, shame, low self-worth, or persistent patterns of avoidance and control.</p><p>Sometimes the source of these difficulties is obvious. In other cases, the impact develops more gradually through repeated experiences of criticism, emotional neglect, instability, rejection, or chronic stress.</p><p>Whether the cause is a single overwhelming event or a series of smaller experiences over time, the effects can be profound. The good news is that these patterns are understandable, treatable, and do not have to define the rest of your life.</p><p>I work with both acute trauma <em>("big T" trauma)</em> and more cumulative or relational forms of trauma <em>("small t" trauma)</em>. Both can have a profound psychological impact, and both are highly treatable.</p>' !!}
           </div>
-          <a href="{{ $understanding?->content['cta_url'] ?? route('booking') }}" class="btn btn--primary">{{ $understanding?->content['cta_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
         </div>
         <div class="grid-2__media">
           <img src="{{ $understanding?->content['image'] ?? '/images/de8d235e4bd94eb8-a3c153_20122b9a32cc4e9a9faca835b9f82d14-mv2.jpg' }}" alt="Calm reflective outdoor landscape" loading="lazy" width="600" height="740">
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo placeholder - to be provided -->
+  <section class="section" aria-label="Therapist photo" style="text-align:center;">
+    <div class="container">
+      <div style="max-width:480px;margin:0 auto;aspect-ratio:4/5;background:var(--color-bg-alt);border-radius:var(--radius-md);overflow:hidden;">
+        <!-- Professional photo will be placed here -->
       </div>
     </div>
   </section>
@@ -142,8 +151,6 @@
             <p>{{ $why?->content['quote'] ?? 'Trauma therapy is ultimately about helping people move from survival-based patterns toward a greater sense of safety, flexibility, and trust — both in themselves and in life.' }}</p>
           </div>
           <div style="margin-top:var(--space-8);display:flex;gap:var(--space-4);flex-wrap:wrap;">
-            <a href="{{ $why?->content['cta_primary_url'] ?? route('training') }}" class="btn btn--outline">{{ $why?->content['cta_primary_label'] ?? 'View Clinical Training' }}</a>
-            <a href="{{ $why?->content['cta_secondary_url'] ?? route('booking') }}" class="btn btn--primary">{{ $why?->content['cta_secondary_label'] ?? 'Book a Free Intro Call' }}</a>
           </div>
         </div>
       </div>
@@ -157,10 +164,6 @@
       <p>{!! $cta?->content['body'] ?? 'Trauma can deeply affect the way a person experiences themselves, others, and the world around them. At the same time, meaningful recovery and psychological change are possible. Therapy offers the possibility to process unresolved experiences, reduce the grip of fear and avoidance, and create more space for emotional freedom and stability.' !!}</p>
       <div class="cta-section__actions">
         <a href="{{ $cta?->content['cta_primary_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
-        <a href="{{ $cta?->content['cta_secondary_url'] ?? 'https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.' }}" target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp btn--lg">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          {{ $cta?->content['cta_secondary_label'] ?? 'WhatsApp me' }}
-        </a>
       </div>
     </div>
   </div>
