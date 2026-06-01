@@ -62,15 +62,6 @@
     </div>
   </section>
 
-  <!-- Photo placeholder - to be provided -->
-  <section class="section" aria-label="Therapist photo" style="text-align:center;">
-    <div class="container">
-      <div style="max-width:480px;margin:0 auto;aspect-ratio:4/5;background:var(--color-bg-alt);border-radius:var(--radius-md);overflow:hidden;">
-        <!-- Professional photo will be placed here -->
-      </div>
-    </div>
-  </section>
-
   <section class="section section--alt" aria-labelledby="types-heading">
     <div class="container">
       <div class="section-header fade-in">
