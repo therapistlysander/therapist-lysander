@@ -794,9 +794,14 @@ strong { font-weight: 600; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-6);
+  align-items: stretch;
 }
 .t-carousel__slide {
   min-width: 0;
+  display: flex;
+}
+.t-carousel__slide > .testimonial {
+  width: 100%;
 }
 .t-carousel__nav {
   display: flex;
