@@ -4,6 +4,7 @@
       <img src="/images/logo.png" alt="Lysander Verschuur" class="footer__logo-img" style="margin:0 auto var(--space-4);">
       <strong class="footer__brand-name" style="text-align:center;">Lysander Verschuur</strong>
       <span class="footer__brand-title">Psychologist &amp; Trauma Therapist</span>
+      <span class="footer__brand-credentials" style="display:block;font-size:var(--size-sm);color:var(--color-text-muted);margin-top:var(--space-1);">MSc. Psychology</span>
       <p class="footer__brand-tagline">Evidence-based therapy with a personalised and client-centered approach</p>
     </div>
     <div class="footer__grid">
