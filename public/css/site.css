@@ -719,6 +719,10 @@ strong { font-weight: 600; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-6);
+  align-items: stretch;
+}
+.testimonial-grid > .testimonial {
+  width: 100%;
 }
 .testimonial {
   background: var(--color-white);

@@ -204,7 +204,7 @@
   </div>
 </section>
 
-<!-- Testimonials carousel -->
+<!-- Testimonials -->
 <section class="section section--white" id="testimonials-preview" aria-labelledby="testimonials-heading">
   <div class="container">
     <div class="section-header fade-in" style="text-align:center;">
@@ -217,28 +217,17 @@
       $gridCols = $tCount >= 3 ? 3 : ($tCount === 2 ? 2 : 1);
     @endphp
     @if($tCount > 0)
-    <div class="t-carousel" id="t-carousel">
-      <div class="t-carousel__track" style="grid-template-columns:repeat({{ $gridCols }}, minmax(0, 1fr));">
-        @foreach($validTestimonials as $i => $t)
-        <div class="t-carousel__slide">
-          <div class="testimonial testimonial--card {{ $t->is_featured ? 'testimonial--featured' : '' }}">
-            <span class="testimonial__icon" aria-hidden="true">&ldquo;</span>
-            <div class="testimonial__quote">{!! $t->body ?: $t->quote !!}</div>
-            <div class="testimonial__footer">
-              <p class="testimonial__name">{{ $t->client_name }}</p>
-              @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
-            </div>
-          </div>
+    <div class="testimonial-grid" style="grid-template-columns:repeat({{ $gridCols }}, minmax(0, 1fr));">
+      @foreach($validTestimonials as $i => $t)
+      <div class="testimonial testimonial--card {{ $t->is_featured ? 'testimonial--featured' : '' }} fade-in">
+        <span class="testimonial__icon" aria-hidden="true">&ldquo;</span>
+        <div class="testimonial__quote">{!! $t->body ?: $t->quote !!}</div>
+        <div class="testimonial__footer">
+          <p class="testimonial__name">{{ $t->client_name }}</p>
+          @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
         </div>
-        @endforeach
       </div>
-      @if($tCount > 3)
-      <div class="t-carousel__nav">
-        <button class="t-carousel__arrow t-carousel__prev" aria-label="Previous testimonials">&#8249;</button>
-        <div class="t-carousel__dots" id="t-carousel-dots"></div>
-        <button class="t-carousel__arrow t-carousel__next" aria-label="Next testimonials">&#8250;</button>
-      </div>
-      @endif
+      @endforeach
     </div>
     @endif
     <div style="text-align:center;margin-top:var(--space-12);">
@@ -294,78 +283,5 @@ document.querySelectorAll('.approach-tab').forEach(tab => {
     if (panel) panel.classList.add('active');
   });
 });
-
-// Testimonial carousel
-(function() {
-  const carousel = document.getElementById('t-carousel');
-  if (!carousel) return;
-  const track = carousel.querySelector('.t-carousel__track');
-  const slides = carousel.querySelectorAll('.t-carousel__slide');
-  const dotsContainer = document.getElementById('t-carousel-dots');
-  const prevBtn = carousel.querySelector('.t-carousel__prev');
-  const nextBtn = carousel.querySelector('.t-carousel__next');
-  if (!slides.length || !dotsContainer) return;
-
-  let perPage = 3;
-  let currentPage = 0;
-
-  function getPerPage() {
-    if (window.innerWidth <= 640) return 1;
-    if (window.innerWidth <= 900) return 2;
-    return 3;
-  }
-
-  function totalPages() {
-    return Math.max(1, Math.ceil(slides.length / perPage));
-  }
-
-  function renderDots() {
-    dotsContainer.innerHTML = '';
-    const pages = totalPages();
-    for (let i = 0; i < pages; i++) {
-      const dot = document.createElement('button');
-      dot.className = 't-carousel__dot' + (i === currentPage ? ' active' : '');
-      dot.setAttribute('aria-label', 'Page ' + (i + 1));
-      dot.addEventListener('click', () => goTo(i));
-      dotsContainer.appendChild(dot);
-    }
-  }
-
-  function updateVisibility() {
-    slides.forEach((slide, idx) => {
-      const page = Math.floor(idx / perPage);
-      slide.style.display = (page === currentPage) ? '' : 'none';
-    });
-    // Update dots
-    dotsContainer.querySelectorAll('.t-carousel__dot').forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === currentPage);
-    });
-    // Update arrows
-    if (prevBtn) prevBtn.disabled = currentPage === 0;
-    if (nextBtn) nextBtn.disabled = currentPage >= totalPages() - 1;
-  }
-
-  function goTo(page) {
-    currentPage = Math.max(0, Math.min(page, totalPages() - 1));
-    updateVisibility();
-  }
-
-  if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentPage - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentPage + 1));
-
-  function init() {
-    perPage = getPerPage();
-    if (currentPage >= totalPages()) currentPage = totalPages() - 1;
-    renderDots();
-    updateVisibility();
-  }
-
-  init();
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(init, 150);
-  });
-})();
 </script>
 @endsection
