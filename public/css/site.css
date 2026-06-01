@@ -1356,7 +1356,7 @@ strong { font-weight: 600; }
   }
   .grid-2 { grid-template-columns: minmax(0, 1fr); gap: var(--space-10); }
   .grid-2--reverse .grid-2__media { order: 0; }
-  .grid-2__media { aspect-ratio: 16/9; }
+  .grid-2__media { aspect-ratio: 4/5; }
   .contact-grid { grid-template-columns: minmax(0, 1fr); }
   .footer__grid { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
   .testimonial-long { grid-template-columns: minmax(0, 1fr); gap: var(--space-8); }
