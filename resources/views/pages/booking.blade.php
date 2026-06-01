@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Book a Session | Lysander Verschuur, MSc.')
-@section('meta_description', 'Book a therapy session with Lysander Verschuur — psychologist and trauma specialist. Free intake available. Primarily online, with limited in-person availability in Amsterdam.')
+@section('title', 'Book a Free Intro Call | Lysander Verschuur, MSc.')
+@section('meta_description', 'Book a free 30-minute introductory call with Lysander Verschuur — psychologist and trauma specialist. No commitment required. Online sessions available worldwide.')
 @section('canonical', 'https://www.therapistlysander.com/booking/')
 
 @section('page_styles')
@@ -164,31 +164,11 @@
 
       <div class="step-section">
         <label class="step-section__label">You're booking</label>
-        <div class="option-card option-card--radio selected" style="cursor:default;margin-bottom:var(--space-2);">
-          <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-          <span class="option-card__content">
-            <span class="option-card__label">Free introduction call <span style="font-size:0.75em;font-weight:500;color:var(--color-teal);background:var(--color-teal-light);padding:2px 8px;border-radius:20px;margin-left:6px;">Free · 30 min</span></span>
-            <span class="option-card__desc">A no-commitment video call to explore your situation and see if we're a good fit.</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="step-section">
-        <label class="step-section__label">Session type</label>
-        <div class="option-cards--2">
-          <div class="option-card option-card--radio selected" data-type="online" tabindex="0" role="radio" aria-checked="true">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">Online</span>
-              <span class="option-card__desc">Secure video call &mdash; available worldwide</span>
-            </span>
-          </div>
-          <div class="option-card option-card--radio option-card--disabled" data-type="in-person" tabindex="-1" role="radio" aria-checked="false" aria-disabled="true">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">In-person <span style="font-size:0.7em;font-weight:400;color:var(--color-text-light);vertical-align:middle;">Coming soon</span></span>
-              <span class="option-card__desc">Amsterdam &mdash; not yet available</span>
-            </span>
+        <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--space-6);background:var(--color-teal-light);border:1.5px solid var(--color-accent-light);border-radius:12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-teal)" stroke-width="2" width="22" height="22" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+          <div>
+            <span style="font-size:var(--size-base);font-weight:500;color:var(--color-text);display:block;">Free introduction call &middot; Online</span>
+            <span style="font-size:var(--size-sm);color:var(--color-text-muted);">30-minute video call &mdash; no commitment required</span>
           </div>
         </div>
       </div>
@@ -213,37 +193,16 @@
       </div>
     </div>
 
-    <!-- STEP 2: Pre-Intake Questionnaire -->
+    <!-- STEP 2: Simple Questionnaire -->
     <div id="step-2" class="step-content" style="display:none;">
-      <h1 class="step-heading">Your experience so far</h1>
-      <p class="step-subheading">Understanding your background helps me meet you where you are.</p>
+      <h1 class="step-heading">What brings you here today?</h1>
+      <p class="step-subheading">A few sentences are enough. What are you currently struggling with, and what would you like help with? This will help guide our first conversation.</p>
 
       <div class="step-section">
-        <label class="step-section__label">Have you worked with a therapist or coach before?</label>
-        <div class="option-cards">
-          @foreach([
-            ['yes-ongoing','Yes, I\'m currently in therapy','With this therapist or another professional'],
-            ['yes-past','Yes, in the past','I\'ve worked with a therapist or coach before'],
-            ['no','No, this is my first time','I\'m completely new to therapy or coaching'],
-            ['prefer-not','I prefer not to say','We can discuss this in our session instead'],
-          ] as [$val, $label, $desc])
-          <div class="option-card option-card--radio" data-value="{{ $val }}" tabindex="0" role="radio" aria-checked="false" onclick="piSelectSingle(this,'pi-therapy')">
-            <span class="option-card__indicator"><span class="option-card__indicator-dot"></span></span>
-            <span class="option-card__content">
-              <span class="option-card__label">{{ $label }}</span>
-              <span class="option-card__desc">{{ $desc }}</span>
-            </span>
-          </div>
-          @endforeach
-        </div>
-      </div>
-
-      <div class="step-section">
-        <label class="step-section__label">What are your main emotional challenges or goals <span style="color:var(--color-teal);font-weight:500;">right now</span>?</label>
         <div class="form-group">
-          <textarea class="form-textarea" id="pi-goals" placeholder="I'd like to feel more... / I struggle with..."></textarea>
+          <textarea class="form-textarea" id="pi-goals" placeholder="I'd like to feel more... / I struggle with..." style="min-height:160px;"></textarea>
         </div>
-        <p class="step-section__helper">A few sentences are enough. This will guide our first conversation.</p>
+        <p class="step-section__helper">This is optional. You can also discuss this during the call itself.</p>
       </div>
 
       <div class="step-nav">
@@ -278,8 +237,6 @@
           <label class="step-section__label">Review your booking</label>
           <div class="summary-card" id="summary-card">
             <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value" id="sum-name">—</span></div>
-            <div class="summary-row"><span class="summary-label">Session type</span><span class="summary-value" id="sum-type">—</span></div>
-            <div class="summary-row"><span class="summary-label">Format</span><span class="summary-value" id="sum-format">—</span></div>
             <div class="summary-row"><span class="summary-label">Date &amp; time</span><span class="summary-value" id="sum-datetime">—</span></div>
             <div class="summary-row"><span class="summary-label">Email</span><span class="summary-value" id="sum-email">—</span></div>
           </div>
@@ -328,7 +285,7 @@ function showToast(message, type) {
 const state = {
   type: 'online', format: 'intake', name: '', email: '',
   date: '', time: '',
-  'pi-therapy': '', piGoals: '',
+  piGoals: '',
 };
 
 let currentStep = 1;
@@ -343,27 +300,9 @@ fetch('/api/availability/schedule')
 
 // Format is always 'intake' (free intro call only)
 
-// Session type selection (online only — in-person is disabled via CSS)
-document.querySelectorAll('#step-1 .option-card[data-type]:not(.option-card--disabled)').forEach(el => {
-  function selectType() {
-    document.querySelectorAll('#step-1 .option-card[data-type]').forEach(t => {
-      t.classList.remove('selected'); t.setAttribute('aria-checked','false');
-    });
-    el.classList.add('selected'); el.setAttribute('aria-checked','true');
-    state.type = el.dataset.type;
-  }
-  el.addEventListener('click', selectType);
-  el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){e.preventDefault();selectType();} });
-});
+// Session type is always 'online' — no selection needed
 
-function piSelectSingle(el, group) {
-  const container = el.closest('.option-cards, .option-cards--2');
-  container.querySelectorAll('.option-card').forEach(opt => {
-    opt.classList.remove('selected'); opt.setAttribute('aria-checked', 'false');
-  });
-  el.classList.add('selected'); el.setAttribute('aria-checked', 'true');
-  state[group] = el.dataset.value;
-}
+
 
 function updateStepIndicators(step) {
   [1, 2, 3].forEach(s => {
@@ -482,10 +421,7 @@ function fetchAndRenderSlots(dateStr) {
 }
 
 function showSummary() {
-  const fmts = {'intake':'Free intake (30 min)','standard':'Standard therapy session (50 min)','emdr':'EMDR session (50 min)','initial':'Initial consultation (50 min)'};
   document.getElementById('sum-name').textContent = state.name;
-  document.getElementById('sum-type').textContent = state.type === 'online' ? 'Online (video call)' : 'In-person — Amsterdam (on request)';
-  document.getElementById('sum-format').textContent = fmts[state.format] || state.format;
   document.getElementById('sum-datetime').textContent = state.date + ' at ' + state.time;
   document.getElementById('sum-email').textContent = state.email;
   document.getElementById('summary-section').style.display = 'block';
@@ -505,7 +441,6 @@ function submitBooking() {
     date: state.date,
     time: state.time,
     notes: notes,
-    pi_therapy: state['pi-therapy'] || null,
     pi_brings: state.piGoals || null,
   };
 

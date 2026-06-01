@@ -10,8 +10,8 @@
       <a href="{{ route('training') }}" class="nav__link {{ request()->routeIs('training') ? 'active' : '' }}" role="menuitem">Clinical Training</a>
       <a href="{{ route('testimonials') }}" class="nav__link {{ request()->routeIs('testimonials') ? 'active' : '' }}" role="menuitem">Testimonials</a>
       <a href="{{ route('fees') }}" class="nav__link {{ request()->routeIs('fees') ? 'active' : '' }}" role="menuitem">Fees &amp; Process</a>
-      <a href="{{ route('contact') }}" class="nav__link {{ request()->routeIs('contact') ? 'active' : '' }}" role="menuitem">Contact</a>
       <a href="{{ route('faq') }}" class="nav__link {{ request()->routeIs('faq') ? 'active' : '' }}" role="menuitem">FAQ</a>
+      <a href="{{ route('contact') }}" class="nav__link {{ request()->routeIs('contact') ? 'active' : '' }}" role="menuitem">Contact</a>
     </div>
     <a href="{{ route('booking') }}" class="nav__cta">Book a Free 30-Min Intro Call</a>
     <button class="nav__burger" aria-label="Toggle menu" aria-expanded="false">
@@ -27,7 +27,7 @@
   <a href="{{ route('training') }}" class="nav__link" role="menuitem">Clinical Training</a>
   <a href="{{ route('testimonials') }}" class="nav__link" role="menuitem">Testimonials</a>
   <a href="{{ route('fees') }}" class="nav__link" role="menuitem">Fees &amp; Process</a>
-  <a href="{{ route('contact') }}" class="nav__link" role="menuitem">Contact</a>
   <a href="{{ route('faq') }}" class="nav__link" role="menuitem">FAQ</a>
+  <a href="{{ route('contact') }}" class="nav__link" role="menuitem">Contact</a>
   <a href="{{ route('booking') }}" class="nav__cta" role="menuitem">Book a Free 30-Min Intro Call</a>
 </div>
