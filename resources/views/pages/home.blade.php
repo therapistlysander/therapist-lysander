@@ -214,9 +214,9 @@
     <div class="testimonial-grid">
       @foreach($testimonials as $t)
       <div class="testimonial {{ $t->is_featured ? 'testimonial--featured' : '' }} fade-in">
-        <p class="testimonial__quote">{{ $t->quote }}</p>
+        <p class="testimonial__quote">{{ $t->body ?: $t->quote }}</p>
         <p class="testimonial__name">— {{ $t->client_name }}</p>
-        <p class="testimonial__tag">{{ $t->client_title }}</p>
+        @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
       </div>
       @endforeach
     </div>
