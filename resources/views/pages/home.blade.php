@@ -204,22 +204,35 @@
   </div>
 </section>
 
-<!-- Testimonials preview -->
+<!-- Testimonials carousel -->
 <section class="section section--white" id="testimonials-preview" aria-labelledby="testimonials-heading">
   <div class="container">
     <div class="section-header fade-in" style="text-align:center;">
       <span class="section-label">{{ $testimonialsHdr?->content['subheading'] ?? 'What Clients Say' }}</span>
       <h2 id="testimonials-heading" class="section-title">{{ $testimonialsHdr?->content['heading'] ?? 'What clients say' }}</h2>
     </div>
-    <div class="testimonial-grid">
-      @foreach($testimonials as $t)
-      <div class="testimonial {{ $t->is_featured ? 'testimonial--featured' : '' }} fade-in">
-        <p class="testimonial__quote">{{ $t->body ?: $t->quote }}</p>
-        <p class="testimonial__name">— {{ $t->client_name }}</p>
-        @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
+    @if($testimonials->count() > 0)
+    <div class="t-carousel" id="t-carousel">
+      <div class="t-carousel__track">
+        @foreach($testimonials as $t)
+        <div class="t-carousel__slide">
+          <div class="testimonial {{ $t->is_featured ? 'testimonial--featured' : '' }}">
+            <div class="testimonial__quote">{!! $t->body ?: $t->quote !!}</div>
+            <p class="testimonial__name">— {{ $t->client_name }}</p>
+            @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
+          </div>
+        </div>
+        @endforeach
       </div>
-      @endforeach
+      @if($testimonials->count() > 3)
+      <div class="t-carousel__nav">
+        <button class="t-carousel__arrow t-carousel__prev" aria-label="Previous testimonials">&#8249;</button>
+        <div class="t-carousel__dots" id="t-carousel-dots"></div>
+        <button class="t-carousel__arrow t-carousel__next" aria-label="Next testimonials">&#8250;</button>
+      </div>
+      @endif
     </div>
+    @endif
     <div style="text-align:center;margin-top:var(--space-12);">
       <a href="{{ $testimonialsHdr?->content['cta_url'] ?? route('testimonials') }}" class="btn btn--outline">{{ $testimonialsHdr?->content['cta_label'] ?? 'Read full testimonials' }}</a>
     </div>
@@ -261,6 +274,7 @@
 
 @section('page_scripts')
 <script>
+// Approach tabs
 document.querySelectorAll('.approach-tab').forEach(tab => {
   tab.addEventListener('click', () => {
     const panelId = tab.dataset.panel;
@@ -272,5 +286,78 @@ document.querySelectorAll('.approach-tab').forEach(tab => {
     if (panel) panel.classList.add('active');
   });
 });
+
+// Testimonial carousel
+(function() {
+  const carousel = document.getElementById('t-carousel');
+  if (!carousel) return;
+  const track = carousel.querySelector('.t-carousel__track');
+  const slides = carousel.querySelectorAll('.t-carousel__slide');
+  const dotsContainer = document.getElementById('t-carousel-dots');
+  const prevBtn = carousel.querySelector('.t-carousel__prev');
+  const nextBtn = carousel.querySelector('.t-carousel__next');
+  if (!slides.length || !dotsContainer) return;
+
+  let perPage = 3;
+  let currentPage = 0;
+
+  function getPerPage() {
+    if (window.innerWidth <= 640) return 1;
+    if (window.innerWidth <= 900) return 2;
+    return 3;
+  }
+
+  function totalPages() {
+    return Math.max(1, Math.ceil(slides.length / perPage));
+  }
+
+  function renderDots() {
+    dotsContainer.innerHTML = '';
+    const pages = totalPages();
+    for (let i = 0; i < pages; i++) {
+      const dot = document.createElement('button');
+      dot.className = 't-carousel__dot' + (i === currentPage ? ' active' : '');
+      dot.setAttribute('aria-label', 'Page ' + (i + 1));
+      dot.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(dot);
+    }
+  }
+
+  function updateVisibility() {
+    slides.forEach((slide, idx) => {
+      const page = Math.floor(idx / perPage);
+      slide.style.display = (page === currentPage) ? '' : 'none';
+    });
+    // Update dots
+    dotsContainer.querySelectorAll('.t-carousel__dot').forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === currentPage);
+    });
+    // Update arrows
+    if (prevBtn) prevBtn.disabled = currentPage === 0;
+    if (nextBtn) nextBtn.disabled = currentPage >= totalPages() - 1;
+  }
+
+  function goTo(page) {
+    currentPage = Math.max(0, Math.min(page, totalPages() - 1));
+    updateVisibility();
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', () => goTo(currentPage - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => goTo(currentPage + 1));
+
+  function init() {
+    perPage = getPerPage();
+    if (currentPage >= totalPages()) currentPage = totalPages() - 1;
+    renderDots();
+    updateVisibility();
+  }
+
+  init();
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(init, 150);
+  });
+})();
 </script>
 @endsection

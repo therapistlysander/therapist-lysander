@@ -32,6 +32,7 @@ class FrontendController extends Controller
     public function home()
     {
         $testimonials = Testimonial::where('is_active', true)
+            ->where('is_featured', true)
             ->orderBy('sort_order')
             ->orderBy('created_at', 'desc')
             ->get();
