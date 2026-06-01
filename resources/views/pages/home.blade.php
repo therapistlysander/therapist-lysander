@@ -217,7 +217,7 @@
       $gridCols = $tCount >= 3 ? 3 : ($tCount === 2 ? 2 : 1);
     @endphp
     @if($tCount > 0)
-    <div class="testimonial-grid" style="grid-template-columns:repeat({{ $gridCols }}, minmax(0, 1fr));">
+    <div class="testimonial-grid {{ $gridCols === 2 ? 'testimonial-grid--2' : ($gridCols === 1 ? 'testimonial-grid--1' : '') }}">
       @foreach($validTestimonials as $i => $t)
       <div class="testimonial testimonial--card {{ $t->is_featured ? 'testimonial--featured' : '' }} fade-in">
         <span class="testimonial__icon" aria-hidden="true">&ldquo;</span>

@@ -721,6 +721,8 @@ strong { font-weight: 600; }
   gap: var(--space-6);
   align-items: stretch;
 }
+.testimonial-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.testimonial-grid--1 { grid-template-columns: 1fr; }
 .testimonial-grid > .testimonial {
   width: 100%;
 }
