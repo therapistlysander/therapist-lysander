@@ -72,10 +72,13 @@
         <div class="t-carousel__track">
           @foreach($featuredTestimonials as $t)
           <div class="t-carousel__slide">
-            <div class="testimonial {{ $loop->iteration === 2 ? 'testimonial--featured' : '' }}">
+            <div class="testimonial testimonial--card {{ $loop->iteration === 2 ? 'testimonial--featured' : '' }}">
+              <span class="testimonial__icon" aria-hidden="true">&ldquo;</span>
               <div class="testimonial__quote">{!! $t->body !!}</div>
-              <p class="testimonial__name">— {{ $t->client_name }}</p>
-              @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@endif
+              <div class="testimonial__footer">
+                <p class="testimonial__name">{{ $t->client_name }}</p>
+                @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@endif
+              </div>
             </div>
           </div>
           @endforeach

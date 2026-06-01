@@ -211,20 +211,28 @@
       <span class="section-label">{{ $testimonialsHdr?->content['subheading'] ?? 'What Clients Say' }}</span>
       <h2 id="testimonials-heading" class="section-title">{{ $testimonialsHdr?->content['heading'] ?? 'What clients say' }}</h2>
     </div>
-    @if($testimonials->count() > 0)
+    @php
+      $validTestimonials = $testimonials->filter(fn($t) => !empty($t->body) || !empty($t->quote));
+      $tCount = $validTestimonials->count();
+      $gridCols = $tCount >= 3 ? 3 : ($tCount === 2 ? 2 : 1);
+    @endphp
+    @if($tCount > 0)
     <div class="t-carousel" id="t-carousel">
-      <div class="t-carousel__track">
-        @foreach($testimonials as $t)
+      <div class="t-carousel__track" style="grid-template-columns:repeat({{ $gridCols }}, minmax(0, 1fr));">
+        @foreach($validTestimonials as $i => $t)
         <div class="t-carousel__slide">
-          <div class="testimonial {{ $t->is_featured ? 'testimonial--featured' : '' }}">
+          <div class="testimonial testimonial--card {{ $t->is_featured ? 'testimonial--featured' : '' }}">
+            <span class="testimonial__icon" aria-hidden="true">&ldquo;</span>
             <div class="testimonial__quote">{!! $t->body ?: $t->quote !!}</div>
-            <p class="testimonial__name">— {{ $t->client_name }}</p>
-            @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
+            <div class="testimonial__footer">
+              <p class="testimonial__name">{{ $t->client_name }}</p>
+              @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
+            </div>
           </div>
         </div>
         @endforeach
       </div>
-      @if($testimonials->count() > 3)
+      @if($tCount > 3)
       <div class="t-carousel__nav">
         <button class="t-carousel__arrow t-carousel__prev" aria-label="Previous testimonials">&#8249;</button>
         <div class="t-carousel__dots" id="t-carousel-dots"></div>
