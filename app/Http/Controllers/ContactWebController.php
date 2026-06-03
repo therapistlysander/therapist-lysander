@@ -30,6 +30,6 @@ class ContactWebController extends Controller
         $notifications->alertAdminNewContact($submission);
 
         return redirect()->route('contact')
-            ->with('success', 'Your message has been sent! I will get back to you within 24 hours.');
+            ->with('success', "Thank you for your message. I've received it and will get back to you as soon as possible.");
     }
 }

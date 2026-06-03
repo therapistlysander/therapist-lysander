@@ -50,7 +50,7 @@
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
             {!! $background?->content['body'] ?? '<p>I hold an <strong>MSc in Psychology</strong>, with additional academic specialization in <strong>Social Psychology</strong> and <strong>Neurocognitive Science</strong>.</p><p>I have completed advanced clinical training in multiple evidence-based psychotherapy approaches, with a particular focus on trauma treatment, experiential therapies, and integrative psychotherapy.</p><p>Psychology is a field that continues to evolve. I believe that effective therapy requires ongoing learning, reflection, and professional development. Continuing education allows me to integrate new insights, refine existing skills, and provide care that is both evidence-based and responsive to the individual needs of each client.</p>' !!}
           </div>
-          @php $bgStats = $background?->content['stats'] ?? [['value'=>'MSc.','label'=>'Psychology'],['value'=>'EMDR','label'=>'Advanced certified'],['value'=>'10+','label'=>'Training programmes']]; @endphp
+          @php $bgStats = $background?->content['stats'] ?? [['value'=>'5','label'=>'Approaches — EMDR, CBT, ACT, Schema & Somatic']]; @endphp
           <div class="stats">
             @foreach($bgStats as $stat)
             <div class="stats__item">

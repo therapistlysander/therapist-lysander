@@ -56,9 +56,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         {{ $heroPrimaryLabel }}
       </a>
-      @if($heroSecLabel ?? true)
-      <a href="{{ $heroSecUrl }}" class="btn btn--outline">{{ $heroSecLabel ?? 'Trauma &amp; My Approach' }}</a>
-      @endif
     </div>
   </div>
   <div class="hero__image" role="img" aria-label="Lysander Verschuur — Psychologist and Trauma Therapist">
@@ -188,7 +185,6 @@
         $steps = $process?->content['steps'] ?? [
           ['title' => 'Free Introduction Call',  'description' => 'A free 30-minute online introduction call to briefly explore your current situation, your goals for therapy, and whether we feel like a good fit to work together.'],
           ['title' => 'Intake Session',           'description' => 'An in-depth 60-minute intake session exploring your background, current difficulties, relevant life experiences, and treatment goals in greater detail. A personalized treatment plan will be developed after the intake session.'],
-          ['title' => 'Ongoing Sessions',         'description' => 'Follow-up sessions of 60 minutes, tailored to your individual needs. Sessions are active, collaborative, and adapted to your pace and needs.'],
         ];
       @endphp
       @foreach($steps as $step)

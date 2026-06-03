@@ -1,4 +1,4 @@
-<footer class="footer" aria-label="Site footer">
+<footer class="footer" aria-label="Site-footer">
   <div class="container">
     <div class="footer__brand" style="text-align:center;margin-bottom:var(--space-12);">
       <img src="/images/logo.png" alt="Lysander Verschuur" class="footer__logo-img" style="margin:0 auto var(--space-4);">
@@ -15,8 +15,8 @@
         <a href="{{ route('training') }}">Clinical Training</a>
         <a href="{{ route('testimonials') }}">Testimonials</a>
         <a href="{{ route('fees') }}">Fees &amp; Process</a>
-        <a href="{{ route('contact') }}">Contact</a>
         <a href="{{ route('faq') }}">FAQ</a>
+        <a href="{{ route('contact') }}">Contact</a>
       </div>
       <div class="footer__col">
         <h4>Contact</h4>
