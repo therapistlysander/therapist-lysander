@@ -30,13 +30,13 @@
         <h2 id="fees-heading">{{ $pricing?->content['heading'] ?? 'Fees & Availability' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
-          {!! $pricing?->content['body'] ?? '<p>Individual therapy sessions last <strong>60 minutes</strong>. The introductory call is free and without obligation.</p>' !!}
+          <p>Individual therapy sessions last <strong>60 minutes</strong>. The introductory call is free and without obligation.</p>
         </div>
       </div>
       <div>
         <div class="fee-card">
-          <div class="fee-card__amount">{{ $pricing?->content['fee_amount'] ?? '€110' }}</div>
-          <div class="fee-card__duration">{{ $pricing?->content['fee_duration'] ?? 'Per session · 60 minutes' }}</div>
+          <div class="fee-card__amount">€110</div>
+          <div class="fee-card__duration">Per session · 60 minutes</div>
           @php $includes = $pricing?->content['items'] ?? [['title'=>'Reflection or e-health documents after sessions'],['title'=>'Exercises or therapeutic material between sessions'],['title'=>'Preparation and integration of therapeutic work'],['title'=>'Limited contact between sessions for practical questions']]; @endphp
           <div class="fee-card__includes">
             <h4>What is included</h4>
@@ -57,7 +57,7 @@
       <h2 id="process-heading" class="section-title">{{ $process?->content['heading'] ?? 'What to Expect' }}</h2>
       <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;margin:0 auto;">{{ $process?->content['subheading'] ?? 'Therapy begins with a free introductory call, followed by an intake session where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.' }}</p>
     </div>
-    @php $processSteps = $process?->content['steps'] ?? [
+    @php $processSteps = [
       ['title'=>'Free Introductory Call','description'=>'We briefly discuss what brings you to therapy, your goals, and whether we feel like a good fit to work together.','duration'=>'30 minutes · Free','badge'=>'Free'],
       ['title'=>'Intake Session','description'=>"An in-depth session exploring your background, current difficulties, relevant life experiences, and treatment goals. Prior to the session, you'll complete a questionnaire that helps guide the assessment process. Following the intake, you'll receive a personalized treatment plan outlining the main difficulties, therapeutic goals, and proposed treatment approach.",'duration'=>'60 minutes','badge'=>null],
       ['title'=>'Ongoing Sessions','description'=>'Sessions tailored to your individual needs, goals, and pace. Together we work toward meaningful and lasting psychological change.','duration'=>'60 minutes','badge'=>null],

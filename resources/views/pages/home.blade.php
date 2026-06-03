@@ -149,7 +149,7 @@
       <h2 id="approaches-heading" class="section-title">{{ $approaches?->content['heading'] ?? 'Evidence-Based Therapy, Tailored to the Individual' }}</h2>
       <p class="text-muted" style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;">{!! $approaches?->content['body'] ?? 'I draw from a range of proven therapeutic approaches to help clients address the underlying patterns that contribute to emotional suffering, develop greater psychological flexibility, and create meaningful, lasting change.' !!}</p>
     </div>
-    @php $approachItems = $approaches?->content['items'] ?? [
+    @php $approachItems = [
       ['key'=>'cbt','title'=>'CBT','description'=>'CBT helps identify and change unhelpful thoughts, beliefs, and behavioural patterns that contribute to emotional distress. Together, we explore more balanced and helpful ways of thinking, leading to lasting improvements in mood, anxiety, and self-esteem.'],
       ['key'=>'act','title'=>'ACT','description'=>'ACT helps people develop greater psychological flexibility by changing their relationship with difficult thoughts and emotions rather than struggling against them. By connecting with what truly matters and taking meaningful action, people can build a rich and fulfilling life.'],
       ['key'=>'emdr','title'=>'EMDR','description'=>'EMDR is one of the most evidence-based treatments for trauma and PTSD. It helps the brain process distressing memories that continue to influence the present. EMDR can also be used to target anxiety-provoking future scenarios ("flashforwards"), reducing fear and helping people respond with greater confidence and flexibility.'],
