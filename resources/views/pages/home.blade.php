@@ -117,11 +117,11 @@
 <section class="section section--alt" aria-label="What therapy with me is like">
   <div class="container">
     <div class="fade-in" style="max-width:var(--max-w-text);">
-      <span class="section-label">What therapy with me is like</span>
+      <span class="section-label">Therapy Approach</span>
       <h2>What Therapy With Me Is Like</h2>
       <div class="divider"></div>
       <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-10);">
-        {!! $onlineStrip?->content['body'] ?? '<p>Therapy with me is warm, direct, and practical. Together, we explore the patterns that keep you stuck, process difficult emotions, and build a life that feels more aligned with who you truly are.</p>' !!}
+        <p>Therapy with me is warm, direct, and practical. Together, we explore the patterns that keep you stuck, process difficult emotions, and build a life that feels more aligned with who you truly are.</p>
       </div>
     </div>
     <div class="card-grid fade-in" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">

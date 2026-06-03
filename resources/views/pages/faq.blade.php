@@ -17,7 +17,7 @@
     gap: var(--space-16);
     align-items: start;
   }
-  .faq-sidebar { position: sticky; top: 88px; }
+  .faq-sidebar { position: sticky; top: 104px; }
   .faq-sidebar__title { font-size: var(--size-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-light); margin-bottom: var(--space-4); }
   .faq-sidebar__link { display: block; font-size: var(--size-sm); color: var(--color-text-muted); padding: var(--space-2) 0; border-left: 2px solid transparent; padding-left: var(--space-3); transition: color 0.2s, border-color 0.2s; line-height: 1.4; }
   .faq-sidebar__link:hover, .faq-sidebar__link.active { color: var(--color-teal); border-left-color: var(--color-teal); }
@@ -128,11 +128,11 @@
           <!-- Bottom CTA -->
           <div class="faq-cta fade-in">
             <div>
-              <h3>{{ $ctaSec?->content['heading'] ?? 'Still have questions?' }}</h3>
-              <p>{!! $ctaSec?->content['body'] ?? "Feel free to reach out directly — I'm happy to answer any questions before you decide to book." !!}</p>
+              <h3>Still have questions?</h3>
+              <p>Feel free to reach out directly — I'm happy to answer any questions before you decide to book.</p>
             </div>
-            <a href="{{ $ctaSec?->content['cta_url'] ?? route('contact') }}" class="btn btn--primary btn--lg" style="white-space:nowrap;">
-              {{ $ctaSec?->content['cta_label'] ?? 'Contact Me' }}
+            <a href="{{ route('contact') }}" class="btn btn--primary btn--lg" style="white-space:nowrap;">
+              Contact Me
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
             </a>
           </div>

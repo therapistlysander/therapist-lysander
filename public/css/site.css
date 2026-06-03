@@ -165,11 +165,11 @@ strong { font-weight: 600; }
 .nav__inner {
   width: 100%;
   padding: 0 var(--space-8) 0 var(--space-3);
-  height: 110px;
+  height: 96px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-4);
   overflow: hidden;
 }
 .nav__logo {
@@ -180,7 +180,7 @@ strong { font-weight: 600; }
   margin-right: 0;
 }
 .nav__logo-img {
-  height: 120px;
+  height: 80px;
   width: auto;
   max-width: 200px;
   display: block;
@@ -188,17 +188,7 @@ strong { font-weight: 600; }
 }
 /* Nav identity text — name and title next to logo */
 .nav__identity {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--color-text);
-  line-height: 1.25;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex-shrink: 0;
-  margin-right: var(--space-4);
+  display: none;
 }
 .nav__identity-title {
   display: block;
@@ -214,9 +204,9 @@ strong { font-weight: 600; }
 .nav__links {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  gap: 1.4rem;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-end;
   min-width: 0;
 }
 .nav__link {
@@ -394,7 +384,7 @@ strong { font-weight: 600; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  padding-top: 110px;
+  padding-top: 96px;
   overflow: hidden;
   position: relative;
 }
@@ -567,7 +557,7 @@ strong { font-weight: 600; }
 /* --- Process Cards (Fees & Process page) --- */
 .process-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-6);
   align-items: start;
 }
@@ -1235,7 +1225,7 @@ strong { font-weight: 600; }
 
 /* --- Page hero (inner pages) --- */
 .page-hero {
-  padding: calc(110px + var(--space-20)) 0 var(--space-16);
+  padding: calc(96px + var(--space-20)) 0 var(--space-16);
   background: var(--color-bg-alt);
   text-align: center;
   position: relative;
@@ -1381,11 +1371,11 @@ strong { font-weight: 600; }
   .nav__identity { display: none; }
 
   /* Larger logo for brand presence */
-  .nav__inner { height: 90px; padding: 0 var(--space-4) 0 var(--space-4); }
-  .nav__logo-img { height: 110px; }
-  .nav__mobile { top: 90px; }
-  .hero { padding-top: 90px; }
-  .page-hero { padding-top: calc(90px + var(--space-12)); }
+  .nav__inner { height: 80px; padding: 0 var(--space-4) 0 var(--space-4); }
+  .nav__logo-img { height: 64px; }
+  .nav__mobile { top: 80px; }
+  .hero { padding-top: 80px; }
+  .page-hero { padding-top: calc(80px + var(--space-12)); }
 }
 
 @media (max-width: 900px) {
@@ -1394,7 +1384,7 @@ strong { font-weight: 600; }
   .hero {
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
-    padding-top: 90px;
+    padding-top: 80px;
   }
   .hero__content {
     padding: var(--space-6) var(--space-8) var(--space-8);
@@ -1459,7 +1449,7 @@ strong { font-weight: 600; }
   .cta-section__actions { flex-direction: column; align-items: center; }
   .cta-section__actions .btn { width: 100%; max-width: 320px; justify-content: center; }
   .btn--lg { padding: var(--space-4) var(--space-8); font-size: var(--size-sm); }
-  .page-hero { padding: calc(90px + var(--space-12)) 0 var(--space-12); }
+  .page-hero { padding: calc(72px + var(--space-12)) 0 var(--space-12); }
   .process-steps { grid-template-columns: minmax(0, 1fr); }
   .session-types { grid-template-columns: minmax(0, 1fr); }
   .process-cards { grid-template-columns: minmax(0, 1fr); }
@@ -1533,11 +1523,11 @@ strong { font-weight: 600; }
   }
 
   /* Mobile nav logo — larger */
-  .nav__inner { height: 80px; padding: 0 var(--space-4) 0 var(--space-4); }
-  .nav__logo-img { height: 110px; }
-  .nav__mobile { top: 80px; }
-  .hero { padding-top: 80px; }
-  .page-hero { padding-top: calc(80px + var(--space-12)); }
+  .nav__inner { height: 72px; padding: 0 var(--space-4) 0 var(--space-4); }
+  .nav__logo-img { height: 58px; }
+  .nav__mobile { top: 72px; }
+  .hero { padding-top: 72px; }
+  .page-hero { padding-top: calc(72px + var(--space-12)); }
 
   /* Stats smaller on mobile */
   .stats__num { font-size: var(--size-xl); }
@@ -1556,11 +1546,11 @@ strong { font-weight: 600; }
   .hero__content { padding: var(--space-3) var(--space-4) var(--space-4); }
   .hero__actions .btn { font-size: 0.65rem; }
   .hero__actions .btn--lg { font-size: 0.65rem; }
-  .nav__inner { height: 70px; padding: 0 var(--space-3) 0 var(--space-3); }
-  .nav__logo-img { height: 90px; }
-  .nav__mobile { top: 70px; }
-  .hero { padding-top: 70px; }
-  .page-hero { padding-top: calc(70px + var(--space-8)); }
+  .nav__inner { height: 64px; padding: 0 var(--space-3) 0 var(--space-3); }
+  .nav__logo-img { height: 52px; }
+  .nav__mobile { top: 64px; }
+  .hero { padding-top: 64px; }
+  .page-hero { padding-top: calc(64px + var(--space-8)); }
 }
 
 /* Landscape mobile — keep hero compact */

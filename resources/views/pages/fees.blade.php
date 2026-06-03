@@ -59,8 +59,8 @@
     </div>
     @php $processSteps = $process?->content['steps'] ?? [
       ['title'=>'Free Introductory Call','description'=>'We briefly discuss what brings you to therapy, your goals, and whether we feel like a good fit to work together.','duration'=>'30 minutes · Free','badge'=>'Free'],
-      ['title'=>'Intake Session','description'=>"An in-depth session exploring your background, current difficulties, relevant life experiences, and treatment goals. Prior to the session, you'll complete a questionnaire that helps guide the assessment process. Following the intake, you'll receive a personalized treatment plan outlining the main difficulties, therapeutic goals, and proposed treatment approach.",'duration'=>'60 minutes · €110','badge'=>null],
-      ['title'=>'Ongoing Sessions','description'=>'Sessions tailored to your individual needs, goals, and pace. Together we work toward meaningful and lasting psychological change.','duration'=>'60 minutes · €110','badge'=>null],
+      ['title'=>'Intake Session','description'=>"An in-depth session exploring your background, current difficulties, relevant life experiences, and treatment goals. Prior to the session, you'll complete a questionnaire that helps guide the assessment process. Following the intake, you'll receive a personalized treatment plan outlining the main difficulties, therapeutic goals, and proposed treatment approach.",'duration'=>'60 minutes','badge'=>null],
+      ['title'=>'Ongoing Sessions','description'=>'Sessions tailored to your individual needs, goals, and pace. Together we work toward meaningful and lasting psychological change.','duration'=>'60 minutes','badge'=>null],
     ]; @endphp
     <div class="process-cards fade-in">
       @foreach($processSteps as $i => $step)

@@ -13,7 +13,6 @@
       <a href="{{ route('faq') }}" class="nav__link {{ request()->routeIs('faq') ? 'active' : '' }}" role="menuitem">FAQ</a>
       <a href="{{ route('contact') }}" class="nav__link {{ request()->routeIs('contact') ? 'active' : '' }}" role="menuitem">Contact</a>
     </div>
-    <a href="{{ route('booking') }}" class="nav__cta">Book a Free 30-Min Intro Call</a>
     <button class="nav__burger" aria-label="Toggle menu" aria-expanded="false">
       <span class="nav__burger-bars"><span></span><span></span><span></span></span>
       <svg class="nav__burger-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="24" height="24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>

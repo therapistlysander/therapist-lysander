@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'About Lysander Verschuur, MSc. | Psychotherapy & Trauma Therapy')
-@section('meta_description', 'Learn about Lysander Verschuur, MSc. — a trained psychologist and trauma specialist using CBT, ACT, EMDR, and Schema Therapy. Primarily online sessions, with limited in-person availability in Amsterdam.')
+@section('meta_description', 'Learn about Lysander Verschuur, MSc. — a trained psychologist and trauma specialist using CBT, ACT, EMDR, Schema Therapy, and Somatic Approaches. Online sessions available worldwide.')
 @section('canonical', 'https://www.therapistlysander.com/about/')
 
 @php
@@ -82,7 +82,7 @@
         <h2>{{ $howIWork?->content['heading'] ?? 'Integrative & evidence-based' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.75;margin-bottom:var(--space-6);">{!! $howIWork?->content['body'] ?? '<p>I work integratively, drawing from evidence-based approaches that each serve a distinct therapeutic purpose.</p>' !!}</div>
-        @php $methods = $howIWork?->content['items'] ?? [['title'=>'Cognitive Behavioural Therapy (CBT)'],['title'=>'Acceptance & Commitment Therapy (ACT)'],['title'=>'EMDR'],['title'=>'Schema Therapy'],['title'=>'Somatic Psychotherapy'],['title'=>'Exposure Therapy'],['title'=>'Flash Technique'],['title'=>'Imagery Rescripting'],['title'=>'Parts Work'],['title'=>'Mindfulness-based approaches']]; @endphp
+        @php $methods = $howIWork?->content['items'] ?? [['title'=>'CBT'],['title'=>'ACT'],['title'=>'EMDR'],['title'=>'Schema Therapy'],['title'=>'Somatic Approaches']]; @endphp
         <div class="methods-list">
           @foreach($methods as $method)
           <div class="methods-list__item">{{ $method['title'] }}</div>
