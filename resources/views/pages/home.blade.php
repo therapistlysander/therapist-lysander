@@ -18,19 +18,19 @@
 
 @section('page_styles')
 <style>
-  .approach-tabs { display:flex; gap:var(--space-3); flex-wrap:wrap; margin-bottom:var(--space-10); }
+  .approach-tabs { display:flex; gap:var(--space-3); flex-wrap:wrap; margin-bottom:var(--space-6); }
   .approach-tab { padding:var(--space-2) var(--space-4); border:1.5px solid var(--color-accent-light); border-radius:40px; font-size:var(--size-sm); line-height:1.4; letter-spacing:0.05em; color:var(--color-accent-dark); cursor:pointer; transition:all var(--transition); background:transparent; }
   .approach-tab.active, .approach-tab:hover { background:var(--color-teal); border-color:var(--color-teal); color:var(--color-white); }
   .approach-panel { display:none; }
   .approach-panel.active { display:block; }
   .approach-panel h3 { font-size:var(--size-xl); margin-bottom:var(--space-4); }
   .approach-panel p { font-size:var(--size-md); color:var(--color-text-muted); line-height:1.8; }
-  .process-steps { counter-reset:steps; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:var(--space-8); }
-  .process-step { counter-increment:steps; position:relative; padding-top:var(--space-12); }
+  .process-steps { counter-reset:steps; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:var(--space-6); }
+  .process-step { counter-increment:steps; position:relative; padding-top:var(--space-10); }
   .process-step::before { content:counter(steps); position:absolute; top:0; left:0; width:40px; height:40px; background:var(--color-teal); color:var(--color-white); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-size:var(--size-base); }
   .process-step h4 { font-size:var(--size-lg); margin-bottom:var(--space-3); color:var(--color-white); }
   .process-step p { font-size:var(--size-sm); color:rgba(255,255,255,0.65); }
-  .areas-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:0; margin-top:var(--space-8); }
+  .areas-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:0; margin-top:var(--space-6); }
   .areas-list__item { display:flex; align-items:center; gap:var(--space-3); font-size:var(--size-sm); color:var(--color-text-muted); padding:var(--space-2) 0; border-bottom:1px solid var(--color-border); }
   .areas-list__item::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--color-accent); flex-shrink:0; }
 </style>
@@ -74,11 +74,11 @@
         <span class="section-label">Who I am</span>
         <h2 id="intro-heading">{{ $intro?->content['heading'] ?? 'A psychologist who has walked the path himself' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
+        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
           {!! $intro?->content['body'] ?? '<p>I am a psychologist working with adults who feel emotionally overwhelmed, stuck in longstanding patterns, or disconnected from themselves and their lives.</p><p>Many of the people I work with struggle with the effects of trauma, anxiety, chronic self-criticism, emotional dysregulation, or difficulties related to self-worth and relationships.</p><p>Alongside my clinical training, my work is informed by <strong>personal experience with trauma, anxiety, and struggles with self-worth</strong>. My approach is warm, direct, collaborative, and focused on meaningful psychological change.</p>' !!}
         </div>
         @php $introStats = $intro?->content['stats'] ?? [['value'=>'5','label'=>'Approaches — EMDR, CBT, ACT, Schema & Somatic']]; @endphp
-        <div class="stats" style="margin-bottom:var(--space-8);">
+        <div class="stats" style="margin-bottom:var(--space-6);">
           @foreach($introStats as $stat)
           <div class="stats__item"><div class="stats__num">{{ $stat['value'] }}</div><div class="stats__label">{{ $stat['label'] }}</div></div>
           @endforeach
@@ -96,7 +96,7 @@
         <span class="section-label">What I work with</span>
         <h2 id="areas-heading">{{ $areas?->content['heading'] ?? 'Individualized & Goal-Oriented Therapy' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
+        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-4);">
           {!! $areas?->content['body'] ?? '<p>Therapy is most effective when it is adapted to the person rather than forcing the person to fit a particular method or protocol.</p><p>I take time to understand your story, your strengths, your struggles, and the patterns that may be contributing to your difficulties. From there, we work collaboratively toward the goals that matter most to you, combining practical strategies with deeper emotional work where needed.</p>' !!}
         </div>
         @php $areaItems = $areas?->content['items'] ?? [['title'=>'Trauma and PTSD'],['title'=>'Anxiety disorders and panic'],['title'=>'Depression and grief'],['title'=>'Self-esteem and self-worth difficulties'],['title'=>'Perfectionism and control-related patterns'],['title'=>'Emotional regulation and anger-related difficulties'],['title'=>'Burnout and chronic stress'],['title'=>'Compulsive or avoidance-based coping patterns']]; @endphp
@@ -120,11 +120,11 @@
       <span class="section-label">Therapy Approach</span>
       <h2>What Therapy With Me Is Like</h2>
       <div class="divider"></div>
-      <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-10);">
+      <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
         <p>Therapy with me is warm, direct, and practical. Together, we explore the patterns that keep you stuck, process difficult emotions, and build a life that feels more aligned with who you truly are.</p>
       </div>
     </div>
-    <div class="card-grid fade-in" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+    <div class="card-grid fade-in" style="grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));">
       <div class="card">
         <h3 class="card__title">Safe and non-judgmental</h3>
         <p class="card__text">A space where you can speak openly, without fear of judgment or pressure to perform.</p>
@@ -167,7 +167,7 @@
       <p>{{ $approach['description'] }}</p>
     </div>
     @endforeach
-    <div style="margin-top:var(--space-10);">
+    <div style="margin-top:var(--space-6);">
       <a href="{{ $approaches?->content['cta_url'] ?? route('approach') }}" class="btn btn--outline">{{ $approaches?->content['cta_label'] ?? 'View Trauma & My Approach' }}</a>
     </div>
   </div>
@@ -182,7 +182,7 @@
     </div>
     <div class="process-steps">
       @php
-        $steps = $process?->content['steps'] ?? [
+        $steps = [
           ['title' => 'Free Introduction Call',  'description' => 'A free 30-minute online introduction call to briefly explore your current situation, your goals for therapy, and whether we feel like a good fit to work together.'],
           ['title' => 'Intake Session',           'description' => 'An in-depth 60-minute intake session exploring your background, current difficulties, relevant life experiences, and treatment goals in greater detail. A personalized treatment plan will be developed after the intake session.'],
         ];
@@ -194,7 +194,7 @@
       </div>
       @endforeach
     </div>
-    <div style="margin-top:var(--space-12);text-align:left;">
+    <div style="margin-top:var(--space-8);text-align:left;">
       <a href="{{ $process?->content['cta_url'] ?? route('fees') }}" class="btn btn--outline-white">{{ $process?->content['cta_label'] ?? 'View Fees & Process' }}</a>
     </div>
   </div>
@@ -226,7 +226,7 @@
       @endforeach
     </div>
     @endif
-    <div style="text-align:center;margin-top:var(--space-12);">
+    <div style="text-align:center;margin-top:var(--space-8);">
       <a href="{{ $testimonialsHdr?->content['cta_url'] ?? route('testimonials') }}" class="btn btn--outline">{{ $testimonialsHdr?->content['cta_label'] ?? 'Read full testimonials' }}</a>
     </div>
   </div>
@@ -240,7 +240,7 @@
         <span class="section-label">Working together</span>
         <h2 id="working-heading">{{ $workingTogether?->content['heading'] ?? 'A space that is safe, thoughtful, and collaborative' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
+        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
           {!! $workingTogether?->content['body'] ?? '<p>Therapy is not about "fixing" who you are. Often, it involves understanding the patterns that developed in response to difficult life experiences — and gradually creating more freedom, flexibility, and self-trust in the present.</p><p>My role is to provide a space that is safe, thoughtful, collaborative, and focused on real psychological change.</p>' !!}
         </div>
       </div>

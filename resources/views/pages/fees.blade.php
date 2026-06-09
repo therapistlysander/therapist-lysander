@@ -29,7 +29,7 @@
         <span class="section-label">Session fee</span>
         <h2 id="fees-heading">{{ $pricing?->content['heading'] ?? 'Fees & Availability' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
+        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
           <p>Individual therapy sessions last <strong>60 minutes</strong>. The introductory call is free and without obligation.</p>
         </div>
       </div>
@@ -97,7 +97,7 @@
       </div>
       @endforeach
     </div>
-    <div class="card fade-in" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:var(--space-8);">
+    <div class="card fade-in" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:var(--space-6);">
       <h3 class="card__title" style="color:var(--color-white);">Availability &amp; Waiting Times</h3>
       <p class="card__text" style="color:rgba(255,255,255,0.65);">I currently maintain a limited caseload to ensure therapy remains thoughtful, personal, and attentive. Availability varies over time, but new clients can usually be accommodated within <strong style="color:rgba(255,255,255,0.85);">2–6 weeks</strong>.</p>
     </div>

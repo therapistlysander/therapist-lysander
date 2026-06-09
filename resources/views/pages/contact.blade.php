@@ -15,28 +15,28 @@
   .whatsapp-cta {
     background: linear-gradient(135deg, #075e54, #128c7e);
     border-radius: var(--radius-md);
-    padding: var(--space-8);
+    padding: var(--space-6);
     color: white;
     text-align: center;
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-6);
   }
   .whatsapp-cta h3 { color: white; margin-bottom: var(--space-3); }
-  .whatsapp-cta p { color: rgba(255,255,255,0.8); font-size: var(--size-sm); margin: 0 auto var(--space-6); }
+  .whatsapp-cta p { color: rgba(255,255,255,0.8); font-size: var(--size-sm); margin: 0 auto var(--space-4); }
 
   .booking-cta-card {
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: var(--space-8);
+    padding: var(--space-6);
     text-align: center;
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-6);
     box-shadow: var(--shadow-md);
   }
   .booking-cta-card h3 { font-size: var(--size-xl); margin-bottom: var(--space-3); }
   .booking-cta-card p {
     font-size: var(--size-sm);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-4);
     max-width: 360px;
     margin-left: auto;
     margin-right: auto;
@@ -46,10 +46,17 @@
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: var(--space-8);
+    padding: var(--space-6);
   }
   .inquiry-form h3 { font-size: var(--size-xl); margin-bottom: var(--space-2); }
-  .inquiry-form > p { font-size: var(--size-sm); color: var(--color-text-muted); margin-bottom: var(--space-6); }
+  .inquiry-form > p { font-size: var(--size-sm); color: var(--color-text-muted); margin-bottom: var(--space-4); }
+
+  @media (max-width: 480px) {
+    .whatsapp-cta { padding: var(--space-6) var(--space-4); }
+    .booking-cta-card { padding: var(--space-6) var(--space-4); }
+    .inquiry-form { padding: var(--space-6) var(--space-4); }
+    .contact-grid { gap: var(--space-6); }
+  }
 </style>
 @endsection
 
@@ -86,15 +93,15 @@
 
           <!-- Contact details -->
           @php $contactItems = [
-            ['label'=>'Email','value'=>'therapistlysander@gmail.com'],
-            ['label'=>'Online sessions','value'=>'Available worldwide via secure video call'],
-            ['label'=>'Session duration','value'=>'60 minutes · Free introduction call (30 min)'],
-            ['label'=>'Languages','value'=>'Dutch & English'],
+            ['label'=>'Email','value'=>'therapistlysander@gmail.com','icon'=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>'],
+            ['label'=>'Online sessions','value'=>'Available worldwide via secure video call','icon'=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/></svg>'],
+            ['label'=>'Session duration','value'=>'60 minutes · Free introduction call (30 min)','icon'=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'],
+            ['label'=>'Languages','value'=>'Dutch & English','icon'=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802"/></svg>'],
           ]; @endphp
           @foreach($contactItems as $item)
           <div class="contact-info__item">
             <div class="contact-info__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              {!! $item['icon'] !!}
             </div>
             <div>
               <p class="contact-info__label">{{ $item['label'] }}</p>
@@ -104,21 +111,14 @@
           @endforeach
 
           <!-- FAQ link -->
-          <div style="margin-top:var(--space-10);padding-top:var(--space-8);border-top:1px solid var(--color-border);">
-            <p style="font-size:var(--size-sm);color:var(--color-text-muted);margin-bottom:var(--space-4);">Have more questions before booking?</p>
+          <div style="margin-top:var(--space-6);padding-top:var(--space-6);border-top:1px solid var(--color-border);">
+            <p style="font-size:var(--size-sm);color:var(--color-text-muted);margin-bottom:var(--space-3);">Have more questions before booking?</p>
             <a href="{{ route('faq') }}" class="btn btn--outline">
               View all FAQs
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
             </a>
           </div>
 
-          <!-- Contact Me CTA -->
-          <div style="margin-top:var(--space-8);">
-            <a href="{{ route('contact') }}" class="btn btn--primary btn--lg" style="width:100%;justify-content:center;">
-              Contact Me
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-            </a>
-          </div>
         </div>
 
         <!-- Right column: Booking CTA + Inquiry form -->
@@ -127,7 +127,7 @@
           <!-- Prominent booking CTA -->
           <div class="booking-cta-card">
             <h3>{{ $booking?->content['heading'] ?? 'Book a Free 30-Minute Intro Call' }}</h3>
-            <p>{!! $booking?->content['body'] ?? "A free online introductory call to discuss your situation, ask questions, and explore whether we are a good fit to work together." !!}</p>
+            <p>A free online introductory call to discuss your situation, ask questions, and explore whether we are a good fit to work together. Online sessions available worldwide.</p>
             <a href="{{ $booking?->content['cta_url'] ?? route('booking') }}" class="btn btn--primary btn--lg" style="width:100%;justify-content:center;">
               {{ $booking?->content['cta_label'] ?? 'Start booking' }}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>

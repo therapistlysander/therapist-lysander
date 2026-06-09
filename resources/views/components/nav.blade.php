@@ -3,7 +3,7 @@
     <a href="{{ route('home') }}" class="nav__logo" aria-label="Therapist Lysander — Home">
       <img src="/images/logo.png" alt="Lysander Verschuur" class="nav__logo-img">
     </a>
-    <span class="nav__identity">Lysander Verschuur <span class="nav__identity-title">Psychologist &amp; Trauma Therapist</span></span>
+    <a href="{{ route('home') }}" class="nav__identity" aria-label="Therapist Lysander — Home">Lysander Verschuur <span class="nav__identity-title">Psychologist &amp; Trauma Therapist</span></a>
     <div class="nav__links" role="menubar">
       <a href="{{ route('home') }}" class="nav__link {{ request()->routeIs('home') ? 'active' : '' }}" role="menuitem">Home</a>
       <a href="{{ route('approach') }}" class="nav__link {{ request()->routeIs('approach') ? 'active' : '' }}" role="menuitem">Trauma &amp; My Approach</a>

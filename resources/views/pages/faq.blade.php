@@ -14,7 +14,7 @@
   .faq-page-grid {
     display: grid;
     grid-template-columns: 220px 1fr;
-    gap: var(--space-16);
+    gap: var(--space-12);
     align-items: start;
   }
   .faq-sidebar { position: sticky; top: 104px; }
@@ -22,9 +22,9 @@
   .faq-sidebar__link { display: block; font-size: var(--size-sm); color: var(--color-text-muted); padding: var(--space-2) 0; border-left: 2px solid transparent; padding-left: var(--space-3); transition: color 0.2s, border-color 0.2s; line-height: 1.4; }
   .faq-sidebar__link:hover, .faq-sidebar__link.active { color: var(--color-teal); border-left-color: var(--color-teal); }
 
-  .faq-category { margin-bottom: var(--space-16); }
+  .faq-category { margin-bottom: var(--space-10); }
   .faq-category:last-child { margin-bottom: 0; }
-  .faq-category__header { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6); padding-bottom: var(--space-4); border-bottom: 2px solid var(--color-teal-light); }
+  .faq-category__header { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 2px solid var(--color-teal-light); }
   .faq-category__icon { width: 40px; height: 40px; background: var(--color-teal-light); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; color: var(--color-teal); flex-shrink: 0; }
   .faq-category__icon svg { width: 20px; height: 20px; }
   .faq-category__title { font-family: var(--font-heading); font-size: var(--size-xl); color: var(--color-text); margin: 0; }
@@ -43,7 +43,7 @@
   .faq-body p { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.8; max-width: none; margin-bottom: var(--space-3); }
   .faq-body p:last-child { margin-bottom: 0; }
 
-  .faq-cta { background: var(--color-bg-dark); border-radius: var(--radius-md); padding: var(--space-10) var(--space-12); display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); margin-top: var(--space-16); max-width: 100%; overflow: hidden; }
+  .faq-cta { background: var(--color-bg-dark); border-radius: var(--radius-md); padding: var(--space-6) var(--space-8); display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); margin-top: var(--space-10); max-width: 100%; overflow: hidden; }
   .faq-cta h3 { color: var(--color-white); margin-bottom: var(--space-2); }
   .faq-cta p { color: rgba(255,255,255,0.65); font-size: var(--size-sm); margin: 0; }
 
@@ -79,9 +79,9 @@
             $categoryLabels = [
               'general' => 'Getting started',
               'booking' => 'Booking',
-              'fees' => 'Fees &amp; Insurance',
-              'sessions' => 'Sessions &amp; format',
-              'approach' => 'Therapy approaches',
+              'fees' => 'Fees & Insurance',
+              'sessions' => 'Sessions & Format',
+              'approach' => 'Therapy Approaches',
             ];
           @endphp
           @foreach($faqCategories as $cat)
@@ -117,7 +117,7 @@
                   <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
                 </button>
                 <div class="faq-body"><div class="faq-body__inner">
-                  <p>{{ $faq->answer }}</p>
+                  {!! $faq->answer !!}
                 </div></div>
               </div>
               @endforeach

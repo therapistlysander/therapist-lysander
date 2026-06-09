@@ -13,9 +13,9 @@
 
 @section('page_styles')
 <style>
-  .training-section { margin-bottom: var(--space-12); }
+  .training-section { margin-bottom: var(--space-8); }
   .training-section:last-child { margin-bottom: 0; }
-  .training-header { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); padding-bottom: var(--space-4); border-bottom: 1px solid var(--color-border); }
+  .training-header { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
   .training-header__icon { width: 44px; height: 44px; background: var(--color-teal-light); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--color-teal); }
   .training-header__icon svg { width: 22px; height: 22px; }
   .training-header__title { font-family: var(--font-heading); font-size: var(--size-xl); color: var(--color-text); }
@@ -23,7 +23,7 @@
   .training-list li { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-4) 0; border-bottom: 1px solid var(--color-border); font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.5; }
   .training-list li:last-child { border-bottom: none; }
   .training-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0; margin-top: 5px; }
-  .training-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-12); }
+  .training-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
   @media (max-width: 640px) { .training-grid { grid-template-columns: minmax(0, 1fr); } }
 </style>
 @endsection
@@ -47,7 +47,7 @@
           <span class="section-label">Academic background</span>
           <h2 id="background-heading">{{ $background?->content['heading'] ?? 'MSc. Psychology' }}</h2>
           <div class="divider"></div>
-          <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
+          <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
             {!! $background?->content['body'] ?? '<p>I hold an <strong>MSc in Psychology</strong>, with additional academic specialization in <strong>Social Psychology</strong> and <strong>Neurocognitive Science</strong>.</p><p>I have completed advanced clinical training in multiple evidence-based psychotherapy approaches, with a particular focus on trauma treatment, experiential therapies, and integrative psychotherapy.</p><p>Psychology is a field that continues to evolve. I believe that effective therapy requires ongoing learning, reflection, and professional development. Continuing education allows me to integrate new insights, refine existing skills, and provide care that is both evidence-based and responsive to the individual needs of each client.</p>' !!}
           </div>
           @php $bgStats = $background?->content['stats'] ?? [['value'=>'5','label'=>'Approaches — EMDR, CBT, ACT, Schema & Somatic']]; @endphp
@@ -132,7 +132,7 @@
           <span class="section-label">Approach</span>
           <h2 id="professional-heading">{{ $approach?->content['heading'] ?? 'Integrative, trauma-informed, individualized' }}</h2>
           <div class="divider"></div>
-          <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-8);">
+          <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
             {!! $approach?->content['body'] ?? '<p>My approach is shaped not only by formal training, but also by years of clinical experience working with people from diverse backgrounds and life circumstances. Rather than relying on a single model, I draw from different evidence-based approaches and tailor treatment to the individual.</p><p>Continued professional development remains an important part of my work, helping me refine existing skills, deepen my understanding, and stay up to date with developments in the field.</p>' !!}
           </div>
         </div>

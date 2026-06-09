@@ -15,16 +15,16 @@
 
 @section('page_styles')
 <style>
-  .credential-list { list-style:none; margin-top:var(--space-6); }
+  .credential-list { list-style:none; margin-top:var(--space-4); }
   .credential-list li { display:flex; align-items:flex-start; gap:var(--space-3); padding:var(--space-4) 0; border-bottom:1px solid var(--color-border); font-size:var(--size-sm); color:var(--color-text-muted); }
   .credential-list li:last-child { border-bottom:none; }
   .credential-list li::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--color-accent); flex-shrink:0; margin-top:6px; }
   .credential-list li strong { color:var(--color-text); display:block; margin-bottom:2px; }
-  .values-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:var(--space-6); margin-top:var(--space-8); }
-  .value-item { padding:var(--space-6); background:var(--color-white); border:1px solid var(--color-border); border-radius:var(--radius-md); border-top:3px solid var(--color-accent); }
+  .values-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:var(--space-4); margin-top:var(--space-6); }
+  .value-item { padding:var(--space-4); background:var(--color-white); border:1px solid var(--color-border); border-radius:var(--radius-md); border-top:3px solid var(--color-accent); }
   .value-item h4 { font-size:var(--size-lg); margin-bottom:var(--space-3); }
   .value-item p { font-size:var(--size-sm); color:var(--color-text-muted); line-height:1.7; }
-  .personal-section { padding:var(--space-10); border-left:3px solid var(--color-accent); background:var(--color-teal-light); border-radius:0 var(--radius-md) var(--radius-md) 0; margin:var(--space-12) 0; }
+  .personal-section { padding:var(--space-8); border-left:3px solid var(--color-accent); background:var(--color-teal-light); border-radius:0 var(--radius-md) var(--radius-md) 0; margin:var(--space-8) 0; }
   .personal-section p { font-size:var(--size-md); color:var(--color-text-muted); line-height:1.8; }
   .personal-section p + p { margin-top:var(--space-4); }
 </style>
@@ -47,7 +47,7 @@
         <span class="section-label">Who I am</span>
         <h2>{{ $who?->content['heading'] ?? 'Lysander Verschuur, MSc.' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.8;margin-bottom:var(--space-8);">
+        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.8;margin-bottom:var(--space-6);">
           {!! $who?->content['body'] ?? '<p>I am a trained psychologist working with individuals experiencing <strong>psychological and emotional difficulties such as trauma, anxiety, depression, and self-esteem issues</strong>. I am here to support people through some of life\'s hardest chapters.</p><p>My work is focused on the <strong>treatment and reduction of mental health complaints of individual clients</strong>, using evidence-based therapeutic methods. I work with both Dutch-speaking and English-speaking clients.</p><p>I help clients move from states of <strong>overwhelm, constriction, and emotional distress</strong> toward <strong>greater stability, clarity, and psychological flexibility</strong>.</p>' !!}
         </div>
         <div style="display:flex;gap:var(--space-4);flex-wrap:wrap;">

@@ -24,7 +24,7 @@
   </div>
 
   <!-- Featured quote -->
-  <div style="background:var(--color-bg-dark);padding:var(--space-12) 0;">
+  <div style="background:var(--color-bg-dark);padding:var(--space-8) 0;">
     <div class="container--narrow" style="text-align:center;">
       <p style="font-family:var(--font-heading);font-size:clamp(var(--size-xl),2.5vw,var(--size-2xl));color:var(--color-white);font-style:italic;line-height:1.5;">{!! $quote?->content['body'] ?? '"For the first time, I felt safe enough to face memories that used to control me."' !!}</p>
       <p style="color:var(--color-accent-light);font-size:var(--size-sm);letter-spacing:0.1em;text-transform:uppercase;margin-top:var(--space-4);">{{ $quote?->content['attribution'] ?? '— Paul' }}</p>
