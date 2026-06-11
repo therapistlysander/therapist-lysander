@@ -1629,3 +1629,6 @@ strong { font-weight: 600; }
   .nav__mobile .nav__link { padding: var(--space-4) 0; min-height: 44px; display: flex; align-items: center; }
   .approach-tab { min-height: 44px; }
 }
+
+/* Force left-align on all Quill rich-text content (overrides saved alignment classes) */
+.ql-align-center, .ql-align-right, .ql-align-justify { text-align: left !important; }

@@ -384,9 +384,22 @@ document.querySelectorAll('[data-editor]').forEach(function(wrap) {
     quill.root.innerHTML = hiddenEl.value;
   }
 
+  // Strip alignment classes and normalize <br> to <p> before saving
+  function cleanEditorHtml(html) {
+    // Remove alignment classes (force left-align)
+    html = html.replace(/\s*class\s*=\s*"ql-align-(center|right|justify)"/gi, '');
+    // Convert <br><br> (or <br> with whitespace) to paragraph breaks
+    html = html.replace(/(<br\s*\/?>\s*){2,}/gi, '</p><p>');
+    // Wrap loose text in <p> if needed
+    if (html && !html.startsWith('<p>') && !html.startsWith('<h')) {
+      html = '<p>' + html + '</p>';
+    }
+    return html;
+  }
+
   // Sync editor content to hidden input on change
   quill.on('text-change', function() {
-    const html = quill.root.innerHTML;
+    const html = cleanEditorHtml(quill.root.innerHTML);
     hiddenEl.value = (html === '<p><br></p>') ? '' : html;
   });
 
@@ -394,7 +407,7 @@ document.querySelectorAll('[data-editor]').forEach(function(wrap) {
   const form = wrap.closest('form');
   if (form) {
     form.addEventListener('submit', function() {
-      const html = quill.root.innerHTML;
+      const html = cleanEditorHtml(quill.root.innerHTML);
       hiddenEl.value = (html === '<p><br></p>') ? '' : html;
     });
   }

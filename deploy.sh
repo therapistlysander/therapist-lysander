@@ -17,30 +17,34 @@ echo ""
 cd "$APP_DIR"
 
 # Pull latest changes
-echo "[1/8] Pulling latest changes from git..."
+echo "[1/9] Pulling latest changes from git..."
 git pull origin main
 
 # Install/update PHP dependencies
-echo "[2/8] Installing Composer dependencies..."
+echo "[2/9] Installing Composer dependencies..."
 composer install --optimize-autoloader --no-dev --no-interaction
 
 # Install/update Node dependencies & build assets
-echo "[3/8] Installing Node dependencies..."
+echo "[3/9] Installing Node dependencies..."
 npm install --ignore-scripts
 
-echo "[4/8] Building frontend assets..."
+echo "[4/9] Building frontend assets..."
 npm run build
 
 # Run database migrations
-echo "[5/8] Running migrations..."
+echo "[5/9] Running migrations..."
 php artisan migrate --force
 
 # Populate Dutch translations
-echo "[6/8] Populating Dutch translations..."
+echo "[6/9] Populating Dutch translations..."
 php artisan dutch:populate
 
+# Fix rich-text alignment in existing content
+echo "[7/9] Fixing rich-text alignment..."
+php artisan content:fix-alignment
+
 # Clear and rebuild caches
-echo "[7/8] Clearing and rebuilding caches..."
+echo "[8/9] Clearing and rebuilding caches..."
 php artisan view:clear
 php artisan config:clear
 php artisan cache:clear
@@ -50,7 +54,7 @@ php artisan view:cache
 php artisan event:cache
 
 # Restart queue worker
-echo "[8/8] Restarting queue worker..."
+echo "[9/9] Restarting queue worker..."
 php artisan queue:restart
 
 echo ""
