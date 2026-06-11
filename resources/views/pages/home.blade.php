@@ -26,7 +26,7 @@
   .approach-panel h3 { font-size:var(--size-xl); margin-bottom:var(--space-4); }
   .approach-panel p { font-size:var(--size-md); color:var(--color-text-muted); line-height:1.8; }
   .process-steps { counter-reset:steps; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:var(--space-6); }
-  .process-step { counter-increment:steps; position:relative; padding-top:var(--space-10); }
+  .process-step { counter-increment:steps; position:relative; padding-top:3.5rem; }
   .process-step::before { content:counter(steps); position:absolute; top:0; left:0; width:40px; height:40px; background:var(--color-teal); color:var(--color-white); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-size:var(--size-base); }
   .process-step h4 { font-size:var(--size-lg); margin-bottom:var(--space-3); color:var(--color-white); }
   .process-step p { font-size:var(--size-sm); color:rgba(255,255,255,0.65); }

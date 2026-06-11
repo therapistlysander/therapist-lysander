@@ -36,12 +36,7 @@
     <div class="container">
 
       @foreach($testimonials as $i => $t)
-      <div class="testimonial-long {{ $i % 2 !== 0 ? 'testimonial-long--reverse' : '' }} fade-in">
-        @if($i % 2 !== 0)
-        <div class="testimonial-long__media">
-          <img src="/images/de8d235e4bd94eb8-a3c153_20122b9a32cc4e9a9faca835b9f82d14-mv2.jpg" alt="Calm reflective landscape" loading="lazy" width="600" height="520">
-        </div>
-        @endif
+      <div class="testimonial-long fade-in">
         <div class="testimonial-long__content">
           <p class="testimonial-long__headline">{{ $t->headline ?? Str::limit(strip_tags($t->body), 80) }}</p>
           <div class="testimonial-long__text">
@@ -49,11 +44,9 @@
           </div>
           <p class="testimonial-long__sig">— {{ $t->client_name }}</p>
         </div>
-        @if($i % 2 === 0)
         <div class="testimonial-long__media">
-          <img src="/images/1cea4c553e34803a-a3c153_bbf1019446e34069a3b96c18f172e810-mv2.jpg" alt="Scenic peaceful landscape" loading="lazy" width="600" height="520">
+          <img src="{{ $i % 2 !== 0 ? '/images/de8d235e4bd94eb8-a3c153_20122b9a32cc4e9a9faca835b9f82d14-mv2.jpg' : '/images/1cea4c553e34803a-a3c153_bbf1019446e34069a3b96c18f172e810-mv2.jpg' }}" alt="Calm reflective landscape" loading="lazy" width="600" height="520">
         </div>
-        @endif
       </div>
       @endforeach
 
