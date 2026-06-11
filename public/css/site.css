@@ -187,7 +187,7 @@ strong { font-weight: 600; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: 0.5rem;
   overflow: hidden;
 }
 .nav__logo {
@@ -614,7 +614,7 @@ strong { font-weight: 600; }
   justify-content: center;
   font-family: var(--font-heading);
   font-size: var(--size-lg);
-  margin-bottom: var(--space-4);
+  margin-bottom: 1.25rem;
   flex-shrink: 0;
 }
 .process-card__duration {
@@ -622,10 +622,11 @@ strong { font-weight: 600; }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-accent);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3, 0.75rem);
 }
 .process-card h3 {
   font-size: var(--size-xl);
+  margin-top: var(--space-2, 0.5rem);
   margin-bottom: var(--space-4);
   line-height: 1.25;
 }
@@ -1417,11 +1418,14 @@ strong { font-weight: 600; }
     flex-shrink: 1;
     min-width: 0;
     overflow: hidden;
+    white-space: nowrap;
   }
   .nav__identity-title {
     font-size: 0.74rem;
     font-weight: 500;
     letter-spacing: 0.05em;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .nav__burger { margin-left: auto; }
   .nav__mobile { top: 88px; }
@@ -1469,8 +1473,8 @@ strong { font-weight: 600; }
   .footer__grid { grid-template-columns: 1fr 1fr; gap: var(--space-6); }
   .footer__col { text-align: center; }
   .testimonial-long { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); }
-  .testimonial-long--reverse .testimonial-long__media { order: 0; }
-  .testimonial-long--reverse .testimonial-long__content { order: 0; }
+  .testimonial-long__media { order: -1; }
+  .testimonial-long__content { order: 0; }
   .testimonial-long__media img { height: 280px; }
   .process-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -1504,6 +1508,9 @@ strong { font-weight: 600; }
   .process-steps { grid-template-columns: minmax(0, 1fr); }
   .session-types { grid-template-columns: minmax(0, 1fr); }
   .process-cards { grid-template-columns: minmax(0, 1fr); }
+    .process-card { padding: var(--space-5, 1.25rem); }
+        .process-card__number { margin-bottom: 0.75rem; }
+    .process-card h3 { margin-top: var(--space-3, 0.75rem); margin-bottom: var(--space-3, 0.75rem); }
   h1 { font-size: clamp(1.65rem, 7vw, 2.2rem); }
   h2 { font-size: clamp(1.35rem, 5vw, 1.75rem); }
   h3 { font-size: clamp(1.1rem, 3.5vw, 1.4rem); }
@@ -1602,8 +1609,8 @@ strong { font-weight: 600; }
   .cta-section__actions .btn { font-size: 0.68rem; padding: var(--space-3) var(--space-4); white-space: normal; text-align: center; line-height: 1.3; }
   .nav__inner { height: 72px; padding: 0 8px 0 8px; gap: 8px; }
   .nav__logo-img { height: 64px; }
-  .nav__identity { font-size: 0.78rem; }
-  .nav__identity-title { font-size: 0.68rem; letter-spacing: 0.04em; }
+  .nav__identity { font-size: 0.78rem; white-space: normal; flex-shrink: 1; min-width: 0; }
+  .nav__identity-title { font-size: 0.68rem; letter-spacing: 0.04em; white-space: normal; overflow: visible; text-overflow: unset; }
   .nav__mobile { top: 72px; }
   .hero { padding-top: 72px; }
   .page-hero { padding-top: calc(72px + var(--space-6)); }

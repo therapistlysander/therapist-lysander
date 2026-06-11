@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', isset($seo, $seo->title) ? '' : 'Therapist Lysander | Psychologist & Trauma Therapist')
-@section('meta_description', isset($seo, $seo->meta_description) ? '' : 'Online therapy for adults struggling with trauma, PTSD, anxiety, self-worth difficulties, and emotional overwhelm. Integrative, evidence-based, and tailored to the individual.')
+@section('title', isset($seo, $seo->title) ? '' : __('ui.layout.default_title'))
+@section('meta_description', isset($seo, $seo->meta_description) ? '' : __('ui.layout.default_description'))
 @section('canonical', 'https://www.therapistlysander.com/')
 
 @php
@@ -26,7 +26,7 @@
   .approach-panel h3 { font-size:var(--size-xl); margin-bottom:var(--space-4); }
   .approach-panel p { font-size:var(--size-md); color:var(--color-text-muted); line-height:1.8; }
   .process-steps { counter-reset:steps; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:var(--space-6); }
-  .process-step { counter-increment:steps; position:relative; padding-top:var(--space-10); }
+  .process-step { counter-increment:steps; position:relative; padding-top:3.5rem; }
   .process-step::before { content:counter(steps); position:absolute; top:0; left:0; width:40px; height:40px; background:var(--color-teal); color:var(--color-white); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-size:var(--size-base); }
   .process-step h4 { font-size:var(--size-lg); margin-bottom:var(--space-3); color:var(--color-white); }
   .process-step p { font-size:var(--size-sm); color:rgba(255,255,255,0.65); }
@@ -48,9 +48,9 @@
     <div class="hero__actions">
       @php
         $heroPrimaryLabel = $hero?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call';
-        $heroPrimaryUrl   = $hero?->content['cta_primary_url']   ?? route('booking');
+        $heroPrimaryUrl   = \App\Providers\AppServiceProvider::localizeUrl($hero?->content['cta_primary_url'] ?? null);
         $heroSecLabel     = $hero?->content['cta_secondary_label'] ?? null;
-        $heroSecUrl       = $hero?->content['cta_secondary_url']   ?? route('approach');
+        $heroSecUrl       = \App\Providers\AppServiceProvider::localizeUrl($hero?->content['cta_secondary_url'] ?? null);
       @endphp
       <a href="{{ $heroPrimaryUrl }}" class="btn btn--primary btn--lg">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -71,7 +71,7 @@
         <img src="{{ $intro?->content['image'] ?? '/images/ff96a9dc8ea72c2c-11062b_aa33e58c18774e7db74c68e74a6c231e-mv2.jpg' }}" alt="Lysander Verschuur, MSc." loading="lazy" width="600" height="750">
       </div>
       <div>
-        <span class="section-label">Who I am</span>
+        <span class="section-label">{{ __('ui.home.who_i_am_label') }}</span>
         <h2 id="intro-heading">{{ $intro?->content['heading'] ?? 'A psychologist who has walked the path himself' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
@@ -93,7 +93,7 @@
   <div class="container">
     <div class="grid-2 fade-in">
       <div>
-        <span class="section-label">What I work with</span>
+        <span class="section-label">{{ __('ui.home.what_i_work_with') }}</span>
         <h2 id="areas-heading">{{ $areas?->content['heading'] ?? 'Individualized & Goal-Oriented Therapy' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-4);">
@@ -117,25 +117,25 @@
 <section class="section section--alt" aria-label="What therapy with me is like">
   <div class="container">
     <div class="fade-in" style="max-width:var(--max-w-text);">
-      <span class="section-label">Therapy Approach</span>
-      <h2>What Therapy With Me Is Like</h2>
+      <span class="section-label">{{ __('ui.home.therapy_approach_label') }}</span>
+      <h2>{{ __('ui.home.therapy_with_me') }}</h2>
       <div class="divider"></div>
       <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
-        <p>Therapy with me is warm, direct, and practical. Together, we explore the patterns that keep you stuck, process difficult emotions, and build a life that feels more aligned with who you truly are.</p>
+        <p>{{ __('ui.home.therapy_desc') }}</p>
       </div>
     </div>
     <div class="card-grid fade-in" style="grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));">
       <div class="card">
-        <h3 class="card__title">Safe and non-judgmental</h3>
-        <p class="card__text">A space where you can speak openly, without fear of judgment or pressure to perform.</p>
+        <h3 class="card__title">{{ __('ui.home.safe_title') }}</h3>
+        <p class="card__text">{{ __('ui.home.safe_desc') }}</p>
       </div>
       <div class="card">
-        <h3 class="card__title">Evidence-based and practical</h3>
-        <p class="card__text">Grounded in proven therapeutic methods, applied in a way that makes sense for your life.</p>
+        <h3 class="card__title">{{ __('ui.home.evidence_title') }}</h3>
+        <p class="card__text">{{ __('ui.home.evidence_desc') }}</p>
       </div>
       <div class="card">
-        <h3 class="card__title">Focused on lasting change</h3>
-        <p class="card__text">Not just symptom relief — working toward meaningful, sustainable psychological change.</p>
+        <h3 class="card__title">{{ __('ui.home.lasting_title') }}</h3>
+        <p class="card__text">{{ __('ui.home.lasting_desc') }}</p>
       </div>
     </div>
   </div>
@@ -145,7 +145,7 @@
 <section class="section section--white" id="approaches" aria-labelledby="approaches-heading">
   <div class="container">
     <div class="section-header fade-in">
-      <span class="section-label">Therapeutic methods</span>
+      <span class="section-label">{{ __('ui.home.methods_label') }}</span>
       <h2 id="approaches-heading" class="section-title">{{ $approaches?->content['heading'] ?? 'Evidence-Based Therapy, Tailored to the Individual' }}</h2>
       <p class="text-muted" style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;">{!! $approaches?->content['body'] ?? 'I draw from a range of proven therapeutic approaches to help clients address the underlying patterns that contribute to emotional suffering, develop greater psychological flexibility, and create meaningful, lasting change.' !!}</p>
     </div>
@@ -157,7 +157,7 @@
         ['key'=>'schema','title'=>'Schema Therapy','description'=>'Schema therapy focuses on deep-rooted emotional patterns that can contribute to recurring difficulties in relationships, self-esteem, and emotional wellbeing. It helps people better understand and care for the different parts of themselves, creating lasting change through greater self-awareness, self-compassion, and emotional flexibility.'],
         ['key'=>'somatic','title'=>'Somatic Approaches','description'=>'Emotions, stress, and trauma are often experienced not only in our thoughts, but also in the body. Where relevant, I incorporate body awareness, nervous system regulation, and attention to physical sensations as part of the therapeutic process, helping clients develop a deeper understanding of their physical and emotional experiences.'],
       ];
-      $tabLabels = ['cbt'=>'CBT','act'=>'ACT','emdr'=>'EMDR','schema'=>'Schema Therapy','somatic'=>'Somatic Approaches'];
+      $tabLabels = ['cbt'=>__('ui.home.tab_cbt'),'act'=>__('ui.home.tab_act'),'emdr'=>__('ui.home.tab_emdr'),'schema'=>__('ui.home.tab_schema'),'somatic'=>__('ui.home.tab_somatic')];
     @endphp
     <div class="approach-tabs" role="tablist" aria-label="Therapeutic approaches">
       @foreach($approachItems as $i => $approach)
@@ -171,7 +171,7 @@
     </div>
     @endforeach
     <div style="margin-top:var(--space-6);">
-      <a href="{{ $approaches?->content['cta_url'] ?? route('approach') }}" class="btn btn--outline">{{ $approaches?->content['cta_label'] ?? 'View Trauma & My Approach' }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($approaches?->content['cta_url'] ?? null) }}" class="btn btn--outline">{{ $approaches?->content['cta_label'] ?? __('ui.home.view_approach') }}</a>
     </div>
   </div>
 </section>
@@ -180,7 +180,7 @@
 <section class="section section--dark" id="process" aria-labelledby="process-heading">
   <div class="container">
     <div class="section-header fade-in">
-      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">How it works</span>
+      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.home.how_it_works') }}</span>
       <h2 id="process-heading" style="color:var(--color-white);">{{ $process?->content['heading'] ?? 'Starting therapy — what to expect' }}</h2>
     </div>
     <div class="process-steps">
@@ -204,7 +204,7 @@
       @endforeach
     </div>
     <div style="margin-top:var(--space-8);text-align:left;">
-      <a href="{{ $process?->content['cta_url'] ?? route('fees') }}" class="btn btn--outline-white">{{ $process?->content['cta_label'] ?? 'View Fees & Process' }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($process?->content['cta_url'] ?? null) }}" class="btn btn--outline-white">{{ $process?->content['cta_label'] ?? __('ui.home.view_fees') }}</a>
     </div>
   </div>
 </section>
@@ -236,7 +236,7 @@
     </div>
     @endif
     <div style="text-align:center;margin-top:var(--space-8);">
-      <a href="{{ $testimonialsHdr?->content['cta_url'] ?? route('testimonials') }}" class="btn btn--outline">{{ $testimonialsHdr?->content['cta_label'] ?? 'Read full testimonials' }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($testimonialsHdr?->content['cta_url'] ?? null) }}" class="btn btn--outline">{{ $testimonialsHdr?->content['cta_label'] ?? __('ui.home.read_testimonials') }}</a>
     </div>
   </div>
 </section>
@@ -246,7 +246,7 @@
   <div class="container">
     <div class="grid-2 fade-in">
       <div>
-        <span class="section-label">Working together</span>
+        <span class="section-label">{{ __('ui.home.working_together') }}</span>
         <h2 id="working-heading">{{ $workingTogether?->content['heading'] ?? 'A space that is safe, thoughtful, and collaborative' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
@@ -263,11 +263,11 @@
 <!-- Final CTA -->
 <div class="cta-section" aria-label="Call to action">
   <div class="container--narrow">
-    <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Ready to begin?</span>
+    <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.common.ready_to_begin') }}</span>
     <h2>{{ $ctaBottom?->content['heading'] ?? 'Take the first step toward change' }}</h2>
     <p>{!! $ctaBottom?->content['body'] ?? "Whether you're struggling with trauma, anxiety, depression, or simply feeling stuck — I'm here. The first conversation is free and without commitment." !!}</p>
     <div class="cta-section__actions">
-      <a href="{{ $ctaBottom?->content['cta_primary_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $ctaBottom?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($ctaBottom?->content['cta_primary_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $ctaBottom?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
     </div>
   </div>
 </div>

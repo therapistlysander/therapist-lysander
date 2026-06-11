@@ -17,22 +17,35 @@ class AdminFaqController extends Controller
     public function create()
     {
         $categories = $this->getCategoriesFromCms();
-        return view('admin.pages.faqs.form', ['faq' => new Faq(), 'categories' => $categories]);
+        $locales = config('app.supported_locales', ['en', 'nl']);
+        return view('admin.pages.faqs.form', ['faq' => new Faq(), 'categories' => $categories, 'locales' => $locales]);
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'question'   => 'required|string|max:500',
-            'answer'     => 'required|string',
+        $request->validate([
             'category'   => 'required|string|max:100',
             'sort_order' => 'nullable|integer',
             'is_active'  => 'boolean',
+            'translations' => 'nullable|array',
         ]);
 
-        $validated['is_active'] = $request->boolean('is_active');
+        $faq = new Faq();
+        $faq->category   = $request->input('category');
+        $faq->sort_order = $request->input('sort_order', 0);
+        $faq->is_active  = $request->boolean('is_active');
 
-        Faq::create($validated);
+        $translations = $request->input('translations', []);
+        foreach ($translations as $locale => $data) {
+            if (!empty($data['question'])) {
+                $faq->setTranslation('question', $locale, $data['question']);
+            }
+            if (!empty($data['answer'])) {
+                $faq->setTranslation('answer', $locale, $data['answer']);
+            }
+        }
+
+        $faq->save();
 
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ created.');
     }
@@ -40,22 +53,34 @@ class AdminFaqController extends Controller
     public function edit(Faq $faq)
     {
         $categories = $this->getCategoriesFromCms();
-        return view('admin.pages.faqs.form', compact('faq', 'categories'));
+        $locales = config('app.supported_locales', ['en', 'nl']);
+        return view('admin.pages.faqs.form', compact('faq', 'categories', 'locales'));
     }
 
     public function update(Request $request, Faq $faq)
     {
-        $validated = $request->validate([
-            'question'   => 'required|string|max:500',
-            'answer'     => 'required|string',
+        $request->validate([
             'category'   => 'required|string|max:100',
             'sort_order' => 'nullable|integer',
             'is_active'  => 'boolean',
+            'translations' => 'nullable|array',
         ]);
 
-        $validated['is_active'] = $request->boolean('is_active');
+        $faq->category   = $request->input('category');
+        $faq->sort_order = $request->input('sort_order', 0);
+        $faq->is_active  = $request->boolean('is_active');
 
-        $faq->update($validated);
+        $translations = $request->input('translations', []);
+        foreach ($translations as $locale => $data) {
+            if (!empty($data['question'])) {
+                $faq->setTranslation('question', $locale, $data['question']);
+            }
+            if (!empty($data['answer'])) {
+                $faq->setTranslation('answer', $locale, $data['answer']);
+            }
+        }
+
+        $faq->save();
 
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ updated.');
     }

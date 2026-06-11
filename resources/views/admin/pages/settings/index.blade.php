@@ -46,9 +46,26 @@
               id="setting-{{ $setting->key }}"
               name="settings[{{ $setting->key }}]"
               value="1"
-              {{ $setting->getRawOriginal('value') ? 'checked' : '' }}>
+              {{ $setting->getRawOriginal('value') ? 'checked' : '' }}
+              @if($setting->key === 'multilingual_enabled') onchange="toggleLanguageSection(this.checked)" @endif>
             <span>Enabled</span>
           </label>
+
+        @elseif($setting->key === 'language')
+          {{-- Language checkboxes — only shown when multilingual is enabled --}}
+          <div id="language-section" style="{{ ($settings['general']->firstWhere('key','multilingual_enabled')?->getRawOriginal('value') === '0') ? 'display:none;' : '' }}">
+            <div style="display:flex;gap:16px;flex-wrap:wrap;">
+              @php $currentLangs = explode(',', $setting->getRawOriginal('value') ?? ''); @endphp
+              @foreach(['nl' => 'Dutch', 'en' => 'English'] as $code => $name)
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+                <input type="checkbox" name="settings[language][]" value="{{ $code }}" {{ in_array($code, $currentLangs) ? 'checked' : '' }}>
+                <span>{{ $name }} ({{ strtoupper($code) }})</span>
+              </label>
+              @endforeach
+            </div>
+            <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Select one or more languages for the site.</p>
+          </div>
+          <input type="hidden" name="settings[language]" id="language-hidden" value="{{ old('settings.language', $setting->getRawOriginal('value')) }}">
 
         @elseif($setting->type === 'text')
           <textarea name="settings[{{ $setting->key }}]"
@@ -74,8 +91,6 @@
           <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Format: GTM-XXXXXXX</p>
         @elseif($setting->key === 'calendly_url')
           <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Full Calendly URL, e.g. https://calendly.com/yourname</p>
-        @elseif($setting->key === 'language')
-          <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Comma-separated language codes, e.g. nl,en</p>
         @endif
       </div>
       @endforeach
@@ -110,4 +125,18 @@
     </button>
   </div>
 </form>
+
+<script>
+function toggleLanguageSection(enabled) {
+  document.getElementById('language-section').style.display = enabled ? '' : 'none';
+}
+
+// Sync language checkboxes to hidden field before submit
+document.querySelector('form').addEventListener('submit', function() {
+  var checks = document.querySelectorAll('input[name="settings[language][]"]');
+  var vals = [];
+  checks.forEach(function(c) { if (c.checked) vals.push(c.value); });
+  document.getElementById('language-hidden').value = vals.join(',');
+});
+</script>
 @endsection

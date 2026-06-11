@@ -48,7 +48,7 @@
     <div class="container">
       <div class="grid-2 fade-in">
         <div>
-          <span class="section-label">Understanding trauma</span>
+          <span class="section-label">{{ __('ui.approach.understanding_label') }}</span>
           <h2 id="trauma-heading">{{ $understanding?->content['heading'] ?? 'How trauma affects the present' }}</h2>
           <div class="divider"></div>
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
@@ -65,7 +65,7 @@
   <section class="section section--alt" aria-labelledby="types-heading">
     <div class="container">
       <div class="section-header fade-in">
-        <span class="section-label">Types of trauma</span>
+        <span class="section-label">{{ __('ui.approach.types_label') }}</span>
         <h2 id="types-heading" class="section-title">{{ $types?->content['heading'] ?? 'Types of Trauma I Work With' }}</h2>
         <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;">{!! $types?->content['body'] ?? 'Trauma can take many different forms, but its effects often touch the same areas of life: safety, relationships, emotional wellbeing, and self-trust. Therapy can help people process these experiences and move toward greater freedom, stability, and resilience.' !!}</p>
       </div>
@@ -81,7 +81,7 @@
   <section class="section section--white" aria-labelledby="treatment-heading">
     <div class="container">
       <div class="section-header fade-in" style="text-align:center;">
-        <span class="section-label">Treatment</span>
+        <span class="section-label">{{ __('ui.approach.treatment_label') }}</span>
         <h2 id="treatment-heading" class="section-title">{{ $treatments?->content['heading'] ?? 'Trauma-focused treatment' }}</h2>
         <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:640px;margin:0 auto;">{!! $treatments?->content['body'] ?? 'Trauma treatment is not about simply reducing symptoms. It is about helping people process difficult experiences, make sense of what happened, and develop a greater sense of safety, flexibility, and self-trust in the present.<br><br>Depending on the nature of the difficulties involved, I draw from a range of evidence-based trauma-focused approaches.<br><br>While therapeutic methods matter, meaningful change rarely comes from techniques alone. A strong therapeutic relationship, genuine collaboration, and feeling understood are often just as important as the interventions themselves.<br><br>My aim is to combine evidence-based treatment with a human, thoughtful, and individualized approach.' !!}</p>
       </div>
@@ -102,7 +102,7 @@
     <div class="container">
       <div class="grid-2 fade-in">
         <div>
-          <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">About EMDR</span>
+          <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.approach.about_emdr_label') }}</span>
           <h2 id="emdr-heading" style="color:var(--color-white);">{{ $emdr?->content['heading'] ?? 'EMDR is not only about the past' }}</h2>
           <div class="divider"></div>
           <div style="color:rgba(255,255,255,0.75);font-size:var(--size-md);line-height:1.85;margin-bottom:var(--space-4);">
@@ -132,7 +132,7 @@
           <img src="{{ $why?->content['image'] ?? '/images/24946176bc4178fd-d0220c_d40feae8ad4e4961b519d527fe1eb369-mv2_d_1440_1920_s_2.jpg' }}" alt="Lysander Verschuur, Psychologist" loading="lazy" width="600" height="750">
         </div>
         <div>
-          <span class="section-label">My perspective</span>
+          <span class="section-label">{{ __('ui.approach.my_perspective') }}</span>
           <h2 id="why-heading">{{ $why?->content['heading'] ?? 'Why I specialize in trauma treatment' }}</h2>
           <div class="divider"></div>
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-4);">
@@ -150,11 +150,11 @@
 
   <div class="cta-section">
     <div class="container--narrow">
-      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Begin recovery</span>
+      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.approach.begin_recovery') }}</span>
       <h2>{{ $cta?->content['heading'] ?? 'Meaningful recovery is possible' }}</h2>
       <p>{!! $cta?->content['body'] ?? 'Trauma can deeply affect the way a person experiences themselves, others, and the world around them. At the same time, meaningful recovery and psychological change are possible. Therapy offers the possibility to process unresolved experiences, reduce the grip of fear and avoidance, and create more space for emotional freedom and stability.' !!}</p>
       <div class="cta-section__actions">
-        <a href="{{ $cta?->content['cta_primary_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
+        <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($cta?->content['cta_primary_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_primary_label'] ?? __('ui.common.book_intro_call') }}</a>
       </div>
     </div>
   </div>

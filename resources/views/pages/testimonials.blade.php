@@ -36,12 +36,7 @@
     <div class="container">
 
       @foreach($testimonials as $i => $t)
-      <div class="testimonial-long {{ $i % 2 !== 0 ? 'testimonial-long--reverse' : '' }} fade-in">
-        @if($i % 2 !== 0)
-        <div class="testimonial-long__media">
-          <img src="/images/de8d235e4bd94eb8-a3c153_20122b9a32cc4e9a9faca835b9f82d14-mv2.jpg" alt="Calm reflective landscape" loading="lazy" width="600" height="520">
-        </div>
-        @endif
+      <div class="testimonial-long fade-in">
         <div class="testimonial-long__content">
           <p class="testimonial-long__headline">{{ $t->headline ?? Str::limit(strip_tags($t->body), 80) }}</p>
           <div class="testimonial-long__text">
@@ -49,11 +44,9 @@
           </div>
           <p class="testimonial-long__sig">— {{ $t->client_name }}</p>
         </div>
-        @if($i % 2 === 0)
         <div class="testimonial-long__media">
-          <img src="/images/1cea4c553e34803a-a3c153_bbf1019446e34069a3b96c18f172e810-mv2.jpg" alt="Scenic peaceful landscape" loading="lazy" width="600" height="520">
+          <img src="{{ $i % 2 !== 0 ? '/images/de8d235e4bd94eb8-a3c153_20122b9a32cc4e9a9faca835b9f82d14-mv2.jpg' : '/images/1cea4c553e34803a-a3c153_bbf1019446e34069a3b96c18f172e810-mv2.jpg' }}" alt="Calm reflective landscape" loading="lazy" width="600" height="520">
         </div>
-        @endif
       </div>
       @endforeach
 
@@ -62,11 +55,11 @@
 
   <!-- Featured quotes -->
   @if($featuredTestimonials->count() > 0)
-  <section class="section section--alt" aria-label="Additional client quotes">
+  <section class="section section--alt" aria-label="{{ __('ui.testimonials.additional_quotes') }}">
     <div class="container">
       <div class="section-header fade-in" style="text-align:center;">
-        <span class="section-label">More voices</span>
-        <h2>Further reflections</h2>
+        <span class="section-label">{{ __('ui.testimonials.more_voices') }}</span>
+        <h2>{{ __('ui.testimonials.further_reflections') }}</h2>
       </div>
       <div class="testimonial-grid">
         @foreach($featuredTestimonials as $t)
@@ -87,11 +80,11 @@
   <!-- CTA -->
   <div class="cta-section">
     <div class="container--narrow">
-      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Ready to take the next step?</span>
+      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.common.ready_next_step') }}</span>
       <h2>{{ $cta?->content['heading'] ?? 'Meaningful and lasting change' }}</h2>
       <p>{!! $cta?->content['body'] ?? 'Whether you\'re struggling with trauma, anxiety, self-worth, or feeling stuck in recurring patterns, therapy can help create meaningful and lasting change. The first conversation is free and without obligation.' !!}</p>
       <div class="cta-section__actions">
-        <a href="{{ $cta?->content['cta_primary_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
+        <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($cta?->content['cta_primary_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_primary_label'] ?? __('ui.common.book_intro_call') }}</a>
       </div>
     </div>
   </div>

@@ -26,6 +26,38 @@
 
     {{-- Left: Content --}}
     <div style="display:flex;flex-direction:column;gap:20px;">
+
+      {{-- Locale Tabs --}}
+      <div class="locale-tabs" style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;">
+        @foreach($locales as $locale)
+        <button type="button" class="locale-tab {{ $loop->first ? 'locale-tab--active' : '' }}" data-locale="{{ $locale }}" onclick="switchLocale('{{ $locale }}')">
+          {{ strtoupper($locale) }}
+        </button>
+        @endforeach
+      </div>
+
+      @foreach($locales as $locale)
+      <div class="locale-panel" data-locale="{{ $locale }}" style="{{ !$loop->first ? 'display:none;' : 'display:flex;' }}flex-direction:column;gap:20px;">
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Content — {{ strtoupper($locale) }}</div>
+            <div class="admin-field">
+              <label class="admin-label">Headline (short pull quote)</label>
+              <input type="text" name="translations[{{ $locale }}][headline]" class="admin-input" value="{{ old("translations.$locale.headline", $testimonial->exists ? ($testimonial->getTranslation('headline', $locale) ?? '') : '') }}" placeholder="A short memorable line">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label">Full testimonial body <span style="color:#dc2626;">*</span></label>
+              <input type="hidden" id="body-{{ $locale }}-input" name="translations[{{ $locale }}][body]" value="{{ old("translations.$locale.body", $testimonial->exists ? ($testimonial->getTranslation('body', $locale) ?? '') : '') }}">
+              <div class="admin-editor-wrap" data-editor="body-{{ $locale }}-input" data-placeholder="Write the full testimonial text...">
+                <div class="ql-editor-area"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @endforeach
+
+      {{-- Non-translatable client info (shown once) --}}
       <div class="admin-form">
         <div class="admin-form__section">
           <div class="admin-form__section-title">Client Information</div>
@@ -37,23 +69,6 @@
             <div class="admin-field">
               <label class="admin-label">Tag / therapy type</label>
               <input type="text" name="tag" class="admin-input" value="{{ old('tag', $testimonial->tag) }}" placeholder="e.g. EMDR Therapy">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Content</div>
-          <div class="admin-field">
-            <label class="admin-label">Headline (short pull quote)</label>
-            <input type="text" name="headline" class="admin-input" value="{{ old('headline', $testimonial->headline) }}" placeholder="A short memorable line">
-          </div>
-          <div class="admin-field">
-            <label class="admin-label">Full testimonial body <span style="color:#dc2626;">*</span></label>
-            <input type="hidden" id="body-input" name="body" value="{{ old('body', $testimonial->body) }}">
-            <div class="admin-editor-wrap" data-editor="body-input" data-placeholder="Write the full testimonial text...">
-              <div class="ql-editor-area"></div>
             </div>
           </div>
         </div>
@@ -90,4 +105,25 @@
     </div>
   </div>
 </form>
+@endsection
+
+@section('page_styles')
+<style>
+  .locale-tab {
+    padding: 8px 20px; font-size: 13px; font-weight: 500; cursor: pointer;
+    border: none; background: none; color: #6b7280; border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.15s;
+  }
+  .locale-tab:hover { color: #374151; }
+  .locale-tab--active { color: #5a9e97; border-bottom-color: #5a9e97; }
+</style>
+@endsection
+
+@section('page_scripts')
+<script>
+function switchLocale(locale) {
+  document.querySelectorAll('.locale-tab').forEach(t => t.classList.toggle('locale-tab--active', t.dataset.locale === locale));
+  document.querySelectorAll('.locale-panel').forEach(p => p.style.display = p.dataset.locale === locale ? '' : 'none');
+}
+</script>
 @endsection

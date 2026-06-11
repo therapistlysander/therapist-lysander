@@ -20,32 +20,81 @@ use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminPasswordController;
 use App\Http\Controllers\Admin\AdminForgotPasswordController;
 use App\Http\Controllers\BookingAvailabilityApiController;
+use App\Http\Controllers\SitemapController;
 
 /*
 |--------------------------------------------------------------------------
-| Public site routes
+| Locale redirect — root "/" redirects to detected locale
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [FrontendController::class, 'home'])->name('home');
-Route::get('/about', [FrontendController::class, 'about'])->name('about');
-Route::get('/trauma-approach', [FrontendController::class, 'approach'])->name('approach');
-Route::get('/clinical-training', [FrontendController::class, 'training'])->name('training');
-Route::get('/testimonials', [FrontendController::class, 'testimonials'])->name('testimonials');
-Route::get('/fees-process', [FrontendController::class, 'fees'])->name('fees');
-Route::get('/faq', [FrontendController::class, 'faq'])->name('faq');
-Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
-Route::get('/booking', [FrontendController::class, 'booking'])->name('booking');
+Route::get('/', function () {
+    $locale = app()->getLocale();
+    return redirect("/{$locale}");
+})->name('root');
 
-// Contact form POST (web)
-Route::post('/contact', [ContactWebController::class, 'submit'])->name('contact.submit');
+/*
+|--------------------------------------------------------------------------
+| Locale switch endpoint
+|--------------------------------------------------------------------------
+*/
 
-// Booking submission (public)
-Route::post('/booking', [BookingSubmitController::class, 'store'])->name('booking.store');
+Route::get('/lang/{locale}', function (string $locale) {
+    $supported = config('app.supported_locales', ['en', 'nl']);
+    if (!in_array($locale, $supported, true)) {
+        abort(404);
+    }
+    session()->put('locale', $locale);
+    app()->setLocale($locale);
+
+    // Redirect back to the referring page with the new locale
+    $referer = request()->header('referer');
+    if ($referer) {
+        $path = ltrim(parse_url($referer, PHP_URL_PATH) ?? '/', '/');
+        $segments = explode('/', $path);
+        if (in_array($segments[0] ?? '', $supported, true)) {
+            $segments[0] = $locale;
+        } else {
+            array_unshift($segments, $locale);
+        }
+        return redirect('/' . implode('/', $segments));
+    }
+
+    return redirect("/{$locale}");
+})->name('lang.switch');
+
+/*
+|--------------------------------------------------------------------------
+| Public site routes (locale-prefixed)
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('{locale}')
+    ->where(['locale' => 'en|nl'])
+    ->group(function () {
+        Route::get('/', [FrontendController::class, 'home'])->name('home');
+        Route::get('/about', [FrontendController::class, 'about'])->name('about');
+        Route::get('/trauma-approach', [FrontendController::class, 'approach'])->name('approach');
+        Route::get('/clinical-training', [FrontendController::class, 'training'])->name('training');
+        Route::get('/testimonials', [FrontendController::class, 'testimonials'])->name('testimonials');
+        Route::get('/fees-process', [FrontendController::class, 'fees'])->name('fees');
+        Route::get('/faq', [FrontendController::class, 'faq'])->name('faq');
+        Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
+        Route::get('/booking', [FrontendController::class, 'booking'])->name('booking');
+
+        // Contact form POST (web)
+        Route::post('/contact', [ContactWebController::class, 'submit'])->name('contact.submit');
+
+        // Booking submission (public)
+        Route::post('/booking', [BookingSubmitController::class, 'store'])->name('booking.store');
+    });
 
 // Booking availability API (public, no auth needed)
 Route::get('/api/availability/slots', [BookingAvailabilityApiController::class, 'slots'])->name('api.availability.slots');
 Route::get('/api/availability/schedule', [BookingAvailabilityApiController::class, 'schedule'])->name('api.availability.schedule');
+
+// Dynamic XML sitemap
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 /*
 |--------------------------------------------------------------------------

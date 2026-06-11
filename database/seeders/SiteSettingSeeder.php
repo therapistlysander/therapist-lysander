@@ -13,6 +13,7 @@ class SiteSettingSeeder extends Seeder
             // General
             ['group' => 'general', 'key' => 'site_name',        'value' => 'Therapist Lysander',                    'type' => 'string', 'label' => 'Site Name'],
             ['group' => 'general', 'key' => 'tagline',          'value' => 'Psychologist & Trauma Therapist',        'type' => 'string', 'label' => 'Tagline'],
+            ['group' => 'general', 'key' => 'multilingual_enabled', 'value' => '1',                              'type' => 'boolean', 'label' => 'Enable Multilingual'],
             ['group' => 'general', 'key' => 'language',         'value' => 'nl,en',                                  'type' => 'string', 'label' => 'Supported Languages'],
             ['group' => 'general', 'key' => 'timezone',         'value' => 'Europe/Amsterdam',                       'type' => 'string', 'label' => 'Timezone'],
             // Contact

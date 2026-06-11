@@ -44,7 +44,7 @@
     <div class="container">
       <div class="grid-2 fade-in">
         <div>
-          <span class="section-label">Academic background</span>
+          <span class="section-label">{{ __('ui.training.academic_label') }}</span>
           <h2 id="background-heading">{{ $background?->content['heading'] ?? 'MSc. Psychology' }}</h2>
           <div class="divider"></div>
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
@@ -70,7 +70,7 @@
   <section class="section section--alt" aria-labelledby="training-heading">
     <div class="container">
       <div class="section-header fade-in">
-        <span class="section-label">Training &amp; education</span>
+        <span class="section-label">{!! __('ui.training.training_education') !!}</span>
         <h2 id="training-heading" class="section-title">{{ $categories?->content['heading'] ?? 'Specialized clinical training' }}</h2>
       </div>
 
@@ -129,7 +129,7 @@
     <div class="container">
       <div class="container--narrow" style="margin:0 auto;">
         <div class="fade-in">
-          <span class="section-label">Approach</span>
+          <span class="section-label">{{ __('ui.training.approach_label') }}</span>
           <h2 id="professional-heading">{{ $approach?->content['heading'] ?? 'Integrative, trauma-informed, individualized' }}</h2>
           <div class="divider"></div>
           <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">

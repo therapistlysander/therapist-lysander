@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'About Lysander Verschuur, MSc. | Psychotherapy & Trauma Therapy')
-@section('meta_description', 'Learn about Lysander Verschuur, MSc. — a trained psychologist and trauma specialist using CBT, ACT, EMDR, Schema Therapy, and Somatic Approaches. Online sessions available worldwide.')
+@section('title', __('ui.about.page_title'))
+@section('meta_description', __('ui.about.meta_description'))
 @section('canonical', 'https://www.therapistlysander.com/about/')
 
 @php
@@ -44,15 +44,15 @@
   <div class="container">
     <div class="grid-2 fade-in">
       <div>
-        <span class="section-label">Who I am</span>
+        <span class="section-label">{{ __('ui.about.who_i_am') }}</span>
         <h2>{{ $who?->content['heading'] ?? 'Lysander Verschuur, MSc.' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.8;margin-bottom:var(--space-6);">
           {!! $who?->content['body'] ?? '<p>I am a trained psychologist working with individuals experiencing <strong>psychological and emotional difficulties such as trauma, anxiety, depression, and self-esteem issues</strong>. I am here to support people through some of life\'s hardest chapters.</p><p>My work is focused on the <strong>treatment and reduction of mental health complaints of individual clients</strong>, using evidence-based therapeutic methods. I work with both Dutch-speaking and English-speaking clients.</p><p>I help clients move from states of <strong>overwhelm, constriction, and emotional distress</strong> toward <strong>greater stability, clarity, and psychological flexibility</strong>.</p>' !!}
         </div>
         <div style="display:flex;gap:var(--space-4);flex-wrap:wrap;">
-          <a href="{{ $who?->content['cta_primary_url'] ?? route('booking') }}" class="btn btn--primary">{{ $who?->content['cta_primary_label'] ?? 'Book a session' }}</a>
-          <a href="{{ $who?->content['cta_secondary_url'] ?? route('contact') }}" class="btn btn--outline">{{ $who?->content['cta_secondary_label'] ?? 'Contact Me' }}</a>
+          <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($who?->content['cta_primary_url'] ?? null) }}" class="btn btn--primary">{{ $who?->content['cta_primary_label'] ?? __('ui.common.book_session') }}</a>
+          <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($who?->content['cta_secondary_url'] ?? null) }}" class="btn btn--outline">{{ $who?->content['cta_secondary_label'] ?? __('ui.common.contact_me') }}</a>
         </div>
       </div>
       <div class="grid-2__media" style="order:-1;">
@@ -64,7 +64,7 @@
 
 <section class="section section--alt">
   <div class="container">
-    <div class="fade-in"><span class="section-label">Personal journey</span><h2>{{ $personal?->content['heading'] ?? 'A therapist who has been there' }}</h2></div>
+    <div class="fade-in"><span class="section-label">{{ __('ui.about.personal_journey') }}</span><h2>{{ $personal?->content['heading'] ?? 'A therapist who has been there' }}</h2></div>
     <div class="personal-section fade-in">
       {!! $personal?->content['body'] ?? '<p>For years, I struggled with <strong>trauma, anxiety, and a harsh inner critic</strong>. I know firsthand how deeply these patterns can affect your life — the way they shape your relationships, your sense of self, and your ability to feel at home in the world. This personal experience informs my work — not as a replacement for clinical methods, but as something that <strong>deepens empathy, understanding, and precision in therapy</strong>.</p><p>Everything I offer in therapy — from EMDR and ACT to mindfulness and values-based living — I have lived myself. I have practised it, wrestled with it, and integrated it. This personal experience shapes how I work: <strong>compassionate, pragmatic, non-judgmental, and fully committed to your growth</strong>.</p><p>Therapy with me is not just about symptom relief — it is about <strong>finding your way back to yourself</strong>, grounded in self-understanding, self-worth, and personal empowerment.</p>' !!}
     </div>
@@ -78,11 +78,11 @@
         <img src="{{ $howIWork?->content['image'] ?? '/images/8d05ae73f3a7dbe5-11062b_a417184e892349f89eb10b97fd3d5a91-mv2.jpg' }}" alt="Calm therapy room" loading="lazy" width="600" height="740">
       </div>
       <div>
-        <span class="section-label">How I work</span>
+        <span class="section-label">{{ __('ui.about.how_i_work') }}</span>
         <h2>{{ $howIWork?->content['heading'] ?? 'Integrative & evidence-based' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.75;margin-bottom:var(--space-6);">{!! $howIWork?->content['body'] ?? '<p>I work integratively, drawing from evidence-based approaches that each serve a distinct therapeutic purpose.</p>' !!}</div>
-        @php $methods = [['title'=>'CBT'],['title'=>'ACT'],['title'=>'EMDR'],['title'=>'Schema Therapy'],['title'=>'Somatic Approaches']]; @endphp
+        @php $methods = [['title'=>__('ui.about.method_cbt')],['title'=>__('ui.about.method_act')],['title'=>__('ui.about.method_emdr')],['title'=>__('ui.about.method_schema')],['title'=>__('ui.about.method_somatic')]]; @endphp
         <div class="methods-list">
           @foreach($methods as $method)
           <div class="methods-list__item">{{ $method['title'] }}</div>
@@ -95,7 +95,7 @@
 
 <section class="section section--dark">
   <div class="container">
-    <div class="section-header fade-in"><span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">My approach</span><h2 style="color:white;">{{ $values?->content['heading'] ?? 'Tailored, collaborative, direct' }}</h2></div>
+    <div class="section-header fade-in"><span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.about.my_approach') }}</span><h2 style="color:white;">{{ $values?->content['heading'] ?? 'Tailored, collaborative, direct' }}</h2></div>
     <div class="grid-2 fade-in">
       <div>
         <div style="color:rgba(255,255,255,0.75);font-size:var(--size-md);line-height:1.8;margin-bottom:var(--space-6);">
@@ -119,7 +119,7 @@
     <h2>{{ $cta?->content['heading'] ?? 'Ready to take the first step?' }}</h2>
     <p>{!! $cta?->content['body'] ?? 'A short message is all it takes to start. The first intake conversation is free and without obligation.' !!}</p>
     <div class="cta-section__actions">
-      <a href="{{ $cta?->content['cta_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_label'] ?? 'Book a session' }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($cta?->content['cta_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_label'] ?? __('ui.common.book_session') }}</a>
     </div>
   </div>
 </div>

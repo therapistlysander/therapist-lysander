@@ -26,20 +26,20 @@
   <div class="container">
     <div class="grid-2 fade-in" style="align-items:start;">
       <div>
-        <span class="section-label">Session fee</span>
+        <span class="section-label">{{ __('ui.fees.session_fee') }}</span>
         <h2 id="fees-heading">{{ $pricing?->content['heading'] ?? 'Fees & Availability' }}</h2>
         <div class="divider"></div>
         <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
-          <p>Individual therapy sessions last <strong>60 minutes</strong>. The introductory call is free and without obligation.</p>
+          <p>{{ __('ui.fees.session_duration_note') }}</p>
         </div>
       </div>
       <div>
         <div class="fee-card">
           <div class="fee-card__amount">€110</div>
-          <div class="fee-card__duration">Per session · 60 minutes</div>
+          <div class="fee-card__duration">{{ __('ui.fees.per_session_duration') }}</div>
           @php $includes = $pricing?->content['items'] ?? [['title'=>'Reflection or e-health documents after sessions'],['title'=>'Exercises or therapeutic material between sessions'],['title'=>'Preparation and integration of therapeutic work'],['title'=>'Limited contact between sessions for practical questions']]; @endphp
           <div class="fee-card__includes">
-            <h4>What is included</h4>
+            <h4>{{ __('ui.fees.what_included') }}</h4>
             @foreach($includes as $item)
             <div class="fee-includes-item">{{ $item['title'] }}</div>
             @endforeach
@@ -53,7 +53,7 @@
 <section class="section section--white" aria-labelledby="process-heading">
   <div class="container">
     <div class="section-header fade-in" style="text-align:center;">
-      <span class="section-label">What to expect</span>
+      <span class="section-label">{{ __('ui.fees.what_to_expect') }}</span>
       <h2 id="process-heading" class="section-title">{{ $process?->content['heading'] ?? 'What to Expect' }}</h2>
       <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;margin:0 auto;">{{ $process?->content['subheading'] ?? 'Therapy begins with a free introductory call, followed by an intake session where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.' }}</p>
     </div>
@@ -81,7 +81,7 @@
 <section class="section section--dark" aria-labelledby="practical-heading">
   <div class="container">
     <div class="section-header fade-in">
-      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Practical details</span>
+      <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.fees.practical_details') }}</span>
       <h2 id="practical-heading" style="color:var(--color-white);">{{ $info?->content['heading'] ?? 'Session information' }}</h2>
     </div>
     @php $infoCards = $info?->content['cards'] ?? [
@@ -98,19 +98,19 @@
       @endforeach
     </div>
     <div class="card fade-in" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:var(--space-6);">
-      <h3 class="card__title" style="color:var(--color-white);">Availability &amp; Waiting Times</h3>
-      <p class="card__text" style="color:rgba(255,255,255,0.65);">I currently maintain a limited caseload to ensure therapy remains thoughtful, personal, and attentive. Availability varies over time, but new clients can usually be accommodated within <strong style="color:rgba(255,255,255,0.85);">2–6 weeks</strong>.</p>
+      <h3 class="card__title" style="color:var(--color-white);">{{ __('ui.fees.availability_heading') }}</h3>
+      <p class="card__text" style="color:rgba(255,255,255,0.65);">{{ __('ui.fees.availability_text') }} <strong style="color:rgba(255,255,255,0.85);">{{ __('ui.fees.availability_weeks') }}</strong>.</p>
     </div>
   </div>
 </section>
 
 <div class="cta-section">
   <div class="container--narrow">
-    <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">Ready to begin?</span>
+    <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.common.ready_to_begin') }}</span>
     <h2>{{ $cta?->content['heading'] ?? 'Take the first step' }}</h2>
     <p>{{ $cta?->content['subheading'] ?? 'The introductory call offers an opportunity to discuss what brings you here, ask questions, and explore whether we feel like a good fit to work together.' }}</p>
     <div class="cta-section__actions">
-      <a href="{{ $cta?->content['cta_url'] ?? route('booking') }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($cta?->content['cta_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_label'] ?? __('ui.common.book_intro_call') }}</a>
     </div>
   </div>
 </div>

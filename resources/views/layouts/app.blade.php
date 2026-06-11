@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>{{ isset($seo) && $seo?->title ? $seo->title : '' }}@yield('title', 'Therapist Lysander | Psychologist &amp; Trauma Therapist')</title>
-  <meta name="description" content="{{ isset($seo) && $seo?->meta_description ? $seo->meta_description : '' }}@yield('meta_description', 'Online therapy for adults struggling with trauma, PTSD, anxiety, self-worth difficulties, and emotional overwhelm.')">
+  <title>{{ isset($seo) && $seo?->title ? $seo->title : '' }}@yield('title', __('ui.layout.default_title'))</title>
+  <meta name="description" content="{{ isset($seo) && $seo?->meta_description ? $seo->meta_description : '' }}@yield('meta_description', __('ui.layout.default_description'))">
   @if(isset($seo) && $seo?->og_title)
   <meta property="og:title" content="{{ $seo->og_title }}">
   @endif
@@ -19,6 +19,15 @@
   <link rel="canonical" href="@yield('canonical')">
   @endif
   @endif
+  {{-- Hreflang tags for both locales --}}
+  @php
+    $supportedLocales = config('app.supported_locales', ['en','nl']);
+    $pathWithoutLocale = preg_replace('#^/(' . implode('|', $supportedLocales) . ')#', '', request()->getPathInfo()) ?: '/';
+  @endphp
+  @foreach($supportedLocales as $loc)
+  <link rel="alternate" hreflang="{{ $loc }}" href="{{ url('/' . $loc . $pathWithoutLocale) }}">
+  @endforeach
+  <link rel="alternate" hreflang="x-default" href="{{ url('/en' . $pathWithoutLocale) }}">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
