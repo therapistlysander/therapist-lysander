@@ -13,17 +13,15 @@
       <a href="{{ route('faq') }}" class="nav__link {{ request()->routeIs('faq') ? 'active' : '' }}" role="menuitem">{{ __('ui.nav.faq') }}</a>
       <a href="{{ route('contact') }}" class="nav__link {{ request()->routeIs('contact') ? 'active' : '' }}" role="menuitem">{{ __('ui.nav.contact') }}</a>
     </div>
-    {{-- Language switcher --}}
+    {{-- Language switcher — dropdown --}}
     @php
       $currentLocale = app()->getLocale();
-      $altLocale = $currentLocale === 'en' ? 'nl' : 'en';
       $pathWithoutLocale = preg_replace('#^/(' . implode('|', config('app.supported_locales', ['en','nl'])) . ')#', '', request()->getPathInfo()) ?: '/';
     @endphp
-    <div class="nav__lang-switch" style="display:flex;align-items:center;gap:4px;margin-left:var(--space-3);font-size:var(--size-xs);font-weight:500;">
-      <a href="{{ url('/en' . $pathWithoutLocale) }}" style="padding:2px 6px;border-radius:4px;text-decoration:none;color:{{ $currentLocale === 'en' ? 'var(--color-teal)' : 'var(--color-text-muted)' }};background:{{ $currentLocale === 'en' ? 'var(--color-teal-light)' : 'transparent' }};">{{ __('ui.language.en') }}</a>
-      <span style="color:var(--color-border);">|</span>
-      <a href="{{ url('/nl' . $pathWithoutLocale) }}" style="padding:2px 6px;border-radius:4px;text-decoration:none;color:{{ $currentLocale === 'nl' ? 'var(--color-teal)' : 'var(--color-text-muted)' }};background:{{ $currentLocale === 'nl' ? 'var(--color-teal-light)' : 'transparent' }};">{{ __('ui.language.nl') }}</a>
-    </div>
+    <select class="nav__lang-select" onchange="window.location.href=this.value" style="margin-left:var(--space-3);padding:4px 8px;border:1px solid var(--color-border);border-radius:4px;font-size:var(--size-xs);font-weight:500;background:var(--color-white);color:var(--color-text);cursor:pointer;">
+      <option value="{{ url('/en' . $pathWithoutLocale) }}" {{ $currentLocale === 'en' ? 'selected' : '' }}>EN</option>
+      <option value="{{ url('/nl' . $pathWithoutLocale) }}" {{ $currentLocale === 'nl' ? 'selected' : '' }}>NL</option>
+    </select>
     <button class="nav__burger" aria-label="{{ __('ui.nav.toggle_menu') }}" aria-expanded="false">
       <span class="nav__burger-bars"><span></span><span></span><span></span></span>
       <svg class="nav__burger-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="24" height="24"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
@@ -45,9 +43,8 @@
     $currentLocale = app()->getLocale();
     $pathWithoutLocale = preg_replace('#^/(' . implode('|', config('app.supported_locales', ['en','nl'])) . ')#', '', request()->getPathInfo()) ?: '/';
   @endphp
-  <div style="display:flex;align-items:center;gap:8px;padding:var(--space-3) 0;">
-    <a href="{{ url('/en' . $pathWithoutLocale) }}" style="padding:4px 10px;border-radius:4px;text-decoration:none;font-size:var(--size-sm);font-weight:500;color:{{ $currentLocale === 'en' ? 'var(--color-teal)' : 'var(--color-text-muted)' }};background:{{ $currentLocale === 'en' ? 'var(--color-teal-light)' : 'transparent' }};">{{ __('ui.language.en') }}</a>
-    <span style="color:var(--color-border);">|</span>
-    <a href="{{ url('/nl' . $pathWithoutLocale) }}" style="padding:4px 10px;border-radius:4px;text-decoration:none;font-size:var(--size-sm);font-weight:500;color:{{ $currentLocale === 'nl' ? 'var(--color-teal)' : 'var(--color-text-muted)' }};background:{{ $currentLocale === 'nl' ? 'var(--color-teal-light)' : 'transparent' }};">{{ __('ui.language.nl') }}</a>
-  </div>
+  <select class="nav__lang-select" onchange="window.location.href=this.value" style="margin-top:var(--space-3);padding:6px 10px;border:1px solid var(--color-border);border-radius:4px;font-size:var(--size-sm);font-weight:500;background:var(--color-white);color:var(--color-text);cursor:pointer;width:100%;">
+    <option value="{{ url('/en' . $pathWithoutLocale) }}" {{ $currentLocale === 'en' ? 'selected' : '' }}>English</option>
+    <option value="{{ url('/nl' . $pathWithoutLocale) }}" {{ $currentLocale === 'nl' ? 'selected' : '' }}>Nederlands</option>
+  </select>
 </div>
