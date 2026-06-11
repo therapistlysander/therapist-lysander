@@ -173,14 +173,12 @@
           <div class="repeater" data-field="steps">
             @foreach($section->content['steps'] ?? [] as $i => $step)
             <div class="repeater-row" style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+              <div style="display:grid;grid-template-columns:1fr 1fr 120px;gap:8px;margin-bottom:8px;">
                 <input type="text" name="steps[{{ $i }}][title]" class="admin-input" value="{{ $step['title'] ?? '' }}" placeholder="Step title">
                 <input type="text" name="steps[{{ $i }}][duration]" class="admin-input" value="{{ $step['duration'] ?? '' }}" placeholder="Duration (optional)">
+                <input type="text" name="steps[{{ $i }}][badge]" class="admin-input" value="{{ $step['badge'] ?? '' }}" placeholder="Badge (optional)">
               </div>
               <textarea name="steps[{{ $i }}][description]" class="admin-input" rows="2" placeholder="Step description" style="resize:vertical;">{{ $step['description'] ?? '' }}</textarea>
-              @if(!empty($step['badge'] ?? ''))
-              <input type="hidden" name="steps[{{ $i }}][badge]" value="{{ $step['badge'] }}">
-              @endif
               <button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove">&times;</button>
             </div>
             @endforeach
@@ -408,9 +406,10 @@ document.querySelectorAll('.repeater-add-step').forEach(btn => {
     const row = document.createElement('div');
     row.className = 'repeater-row';
     row.style.cssText = 'border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;';
-    row.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">' +
+    row.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr 120px;gap:8px;margin-bottom:8px;">' +
       '<input type="text" name="steps[' + idx + '][title]" class="admin-input" placeholder="Step title">' +
       '<input type="text" name="steps[' + idx + '][duration]" class="admin-input" placeholder="Duration (optional)">' +
+      '<input type="text" name="steps[' + idx + '][badge]" class="admin-input" placeholder="Badge (optional)">' +
       '</div>' +
       '<textarea name="steps[' + idx + '][description]" class="admin-input" rows="2" placeholder="Step description" style="resize:vertical;"></textarea>' +
       '<button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove">&times;</button>';

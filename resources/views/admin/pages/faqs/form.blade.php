@@ -52,8 +52,8 @@
           <div class="admin-field">
             <label class="admin-label">Category <span style="color:#dc2626;">*</span></label>
             <select name="category" class="admin-select" required>
-              @foreach(['general','booking','fees','sessions','approach'] as $cat)
-                <option value="{{ $cat }}" {{ old('category', $faq->category) === $cat ? 'selected' : '' }}>{{ ucfirst($cat) }}</option>
+              @foreach($categories ?? ['therapy_emdr'=>'Therapy & EMDR','starting_therapy'=>'Starting Therapy','practical'=>'Practical Information','sessions_progress'=>'Sessions & Progress'] as $cat => $label)
+                <option value="{{ $cat }}" {{ old('category', $faq->category) === $cat ? 'selected' : '' }}>{{ $label }}</option>
               @endforeach
             </select>
           </div>

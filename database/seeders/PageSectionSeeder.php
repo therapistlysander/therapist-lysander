@@ -582,13 +582,12 @@ class PageSectionSeeder extends Seeder
                 'label' => 'Therapy Process',
                 'sort_order' => 3,
                 'content' => [
-                    'heading' => 'The therapy process',
-                    'subheading' => 'Therapy begins with a free, no-commitment introduction call. There is no pressure to continue at any step.',
+                    'heading' => 'What to Expect',
+                    'subheading' => 'Therapy begins with a free introductory call, followed by an intake session where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.',
                     'steps' => [
-                        ['title' => 'Free Introduction Call', 'description' => 'We begin with a free online introduction call to briefly explore your current situation, your goals for therapy, and whether we feel like a good fit. No commitment required.', 'duration' => '30 minutes · Online', 'badge' => 'Free'],
-                        ['title' => 'Pre-Intake Questionnaire', 'description' => "After our introduction call, you'll complete a short, confidential questionnaire to help me understand your needs and goals before our first formal session.", 'duration' => '5 minutes · Free', 'badge' => 'Online'],
-                        ['title' => 'Intake Session', 'description' => 'An in-depth intake session exploring your background, current difficulties, relevant life experiences, and treatment goals. A treatment plan is developed following this session.', 'duration' => '60 minutes · €110', 'badge' => null],
-                        ['title' => 'Ongoing Sessions', 'description' => 'Follow-up sessions tailored to your individual needs and therapeutic goals.', 'duration' => '60 minutes · €110', 'badge' => null],
+                        ['title' => 'Free Introductory Call', 'description' => 'We briefly discuss what brings you to therapy, your goals, and whether we feel like a good fit to work together.', 'duration' => '30 minutes · Free', 'badge' => 'Free'],
+                        ['title' => 'Intake Session', 'description' => "An in-depth session exploring your background, current difficulties, relevant life experiences, and treatment goals. Prior to the session, you'll complete a questionnaire that helps guide the assessment process. Following the intake, you'll receive a personalized treatment plan outlining the main difficulties, therapeutic goals, and proposed treatment approach.", 'duration' => '60 minutes', 'badge' => null],
+                        ['title' => 'Ongoing Sessions', 'description' => 'Sessions tailored to your individual needs, goals, and pace. Together we work toward meaningful and lasting psychological change.', 'duration' => '60 minutes', 'badge' => null],
                     ],
                 ],
             ],
@@ -640,12 +639,26 @@ class PageSectionSeeder extends Seeder
                 'page' => 'faq',
                 'section_key' => 'faq_cta',
                 'label' => 'Bottom CTA',
-                'sort_order' => 2,
+                'sort_order' => 3,
                 'content' => [
                     'heading' => 'Still have questions?',
                     'body' => "Feel free to reach out directly — I'm happy to answer any questions before you decide to book.",
                     'cta_label' => 'Book a Free Intro Call',
                     'cta_url' => '/booking',
+                ],
+            ],
+            [
+                'page' => 'faq',
+                'section_key' => 'faq_categories',
+                'label' => 'FAQ Categories',
+                'sort_order' => 2,
+                'content' => [
+                    'categories' => [
+                        ['key' => 'therapy_emdr', 'label' => 'Therapy & EMDR'],
+                        ['key' => 'starting_therapy', 'label' => 'Starting Therapy'],
+                        ['key' => 'practical', 'label' => 'Practical Information'],
+                        ['key' => 'sessions_progress', 'label' => 'Sessions & Progress'],
+                    ],
                 ],
             ],
         ];

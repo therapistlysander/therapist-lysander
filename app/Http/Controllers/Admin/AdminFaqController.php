@@ -16,7 +16,8 @@ class AdminFaqController extends Controller
 
     public function create()
     {
-        return view('admin.pages.faqs.form', ['faq' => new Faq()]);
+        $categories = $this->getCategoriesFromCms();
+        return view('admin.pages.faqs.form', ['faq' => new Faq(), 'categories' => $categories]);
     }
 
     public function store(Request $request)
@@ -38,7 +39,8 @@ class AdminFaqController extends Controller
 
     public function edit(Faq $faq)
     {
-        return view('admin.pages.faqs.form', compact('faq'));
+        $categories = $this->getCategoriesFromCms();
+        return view('admin.pages.faqs.form', compact('faq', 'categories'));
     }
 
     public function update(Request $request, Faq $faq)
@@ -62,5 +64,28 @@ class AdminFaqController extends Controller
     {
         $faq->delete();
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ deleted.');
+    }
+
+    private function getCategoriesFromCms(): array
+    {
+        $section = \App\Models\PageSection::where('page', 'faq')
+            ->where('section_key', 'faq_categories')
+            ->first();
+
+        $cmsCategories = $section?->content['categories'] ?? [];
+
+        if (!empty($cmsCategories)) {
+            return collect($cmsCategories)->mapWithKeys(function ($cat) {
+                return [$cat['key'] => $cat['label']];
+            })->toArray();
+        }
+
+        // Fallback if CMS section doesn't exist yet
+        return [
+            'therapy_emdr' => 'Therapy & EMDR',
+            'starting_therapy' => 'Starting Therapy',
+            'practical' => 'Practical Information',
+            'sessions_progress' => 'Sessions & Progress',
+        ];
     }
 }
