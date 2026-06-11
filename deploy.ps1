@@ -37,7 +37,7 @@ echo '[5/8] Running migrations...'
 php artisan migrate --force
 
 echo '[6/8] Populating Dutch translations...'
-php artisan dutch:populate --force
+php artisan dutch:populate
 
 echo '[7/8] Clearing and rebuilding caches...'
 php artisan view:clear

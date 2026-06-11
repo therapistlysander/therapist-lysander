@@ -37,7 +37,7 @@ php artisan migrate --force
 
 # Populate Dutch translations
 echo "[6/8] Populating Dutch translations..."
-php artisan dutch:populate --force
+php artisan dutch:populate
 
 # Clear and rebuild caches
 echo "[7/8] Clearing and rebuilding caches..."

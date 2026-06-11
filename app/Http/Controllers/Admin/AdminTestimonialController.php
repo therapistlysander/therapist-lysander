@@ -42,9 +42,9 @@ class AdminTestimonialController extends Controller
 
         $translations = $request->input('translations', []);
         foreach ($translations as $locale => $data) {
-            if (!empty($data['headline'])) $t->setTranslation('headline', $locale, $data['headline']);
-            if (!empty($data['body']))     $t->setTranslation('body', $locale, $data['body']);
-            if (!empty($data['quote']))    $t->setTranslation('quote', $locale, $data['quote']);
+            $t->setTranslation('headline', $locale, $data['headline'] ?? '');
+            $t->setTranslation('body', $locale, $data['body'] ?? '');
+            $t->setTranslation('quote', $locale, $data['quote'] ?? '');
         }
 
         $t->save();
@@ -79,9 +79,9 @@ class AdminTestimonialController extends Controller
 
         $translations = $request->input('translations', []);
         foreach ($translations as $locale => $data) {
-            if (!empty($data['headline'])) $testimonial->setTranslation('headline', $locale, $data['headline']);
-            if (!empty($data['body']))     $testimonial->setTranslation('body', $locale, $data['body']);
-            if (!empty($data['quote']))    $testimonial->setTranslation('quote', $locale, $data['quote']);
+            $testimonial->setTranslation('headline', $locale, $data['headline'] ?? '');
+            $testimonial->setTranslation('body', $locale, $data['body'] ?? '');
+            $testimonial->setTranslation('quote', $locale, $data['quote'] ?? '');
         }
 
         $testimonial->save();
