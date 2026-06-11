@@ -29,7 +29,7 @@ class FrontendController extends Controller
         return SeoSetting::where('page_key', $pageKey)->first();
     }
 
-    public function home()
+    public function home(string $locale)
     {
         $testimonials = Testimonial::where('is_active', true)
             ->where('is_featured', true)
@@ -43,28 +43,28 @@ class FrontendController extends Controller
         return view('pages.home', compact('testimonials', 'sections', 'seo'));
     }
 
-    public function about()
+    public function about(string $locale)
     {
         $sections = $this->sections('about');
         $seo      = $this->seo('about');
         return view('pages.about', compact('sections', 'seo'));
     }
 
-    public function approach()
+    public function approach(string $locale)
     {
         $sections = $this->sections('approach');
         $seo      = $this->seo('approach');
         return view('pages.approach', compact('sections', 'seo'));
     }
 
-    public function training()
+    public function training(string $locale)
     {
         $sections = $this->sections('training');
         $seo      = $this->seo('training');
         return view('pages.training', compact('sections', 'seo'));
     }
 
-    public function testimonials()
+    public function testimonials(string $locale)
     {
         $testimonials = Testimonial::where('is_active', true)
             ->orderBy('sort_order')
@@ -78,14 +78,14 @@ class FrontendController extends Controller
         return view('pages.testimonials', compact('testimonials', 'featuredTestimonials', 'sections', 'seo'));
     }
 
-    public function fees()
+    public function fees(string $locale)
     {
         $sections = $this->sections('fees');
         $seo      = $this->seo('fees');
         return view('pages.fees', compact('sections', 'seo'));
     }
 
-    public function faq()
+    public function faq(string $locale)
     {
         $faqs = Faq::where('is_active', true)
             ->orderBy('category')
@@ -99,14 +99,14 @@ class FrontendController extends Controller
         return view('pages.faq', compact('faqs', 'sections', 'seo'));
     }
 
-    public function contact()
+    public function contact(string $locale)
     {
         $sections = $this->sections('contact');
         $seo      = $this->seo('contact');
         return view('pages.contact', compact('sections', 'seo'));
     }
 
-    public function booking()
+    public function booking(string $locale)
     {
         $sections = $this->sections('booking');
         $seo      = $this->seo('booking');

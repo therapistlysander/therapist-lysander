@@ -18,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
             EnsureFrontendRequestsAreStateful::class,
         ]);
 
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocale::class,
+        ]);
+
         $middleware->alias([
             'admin'      => \App\Http\Middleware\AdminMiddleware::class,
             'admin.web'  => \App\Http\Middleware\AdminWebMiddleware::class,

@@ -148,7 +148,7 @@
     <!-- Progress bar -->
     <div class="progress-bar-wrap">
       <div class="progress-bar-labels">
-        <span class="progress-bar-label" id="progress-label">Step 1 of 3</span>
+        <span class="progress-bar-label" id="progress-label">{{ __('ui.booking.step_of', ['step' => 1, 'total' => 3]) }}</span>
         <span class="progress-bar-pct" id="progress-pct">0%</span>
       </div>
       <div class="progress-bar-track">
@@ -163,31 +163,31 @@
       <p class="step-subheading">{{ $bookingHero?->content['subheading'] ?? 'Book a free 30-minute introduction call. No commitment required.' }}</p>
 
       <div class="step-section">
-        <label class="step-section__label">You're booking</label>
+        <label class="step-section__label">{{ __('ui.booking.youre_booking') }}</label>
         <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--space-6);background:var(--color-teal-light);border:1.5px solid var(--color-accent-light);border-radius:12px;">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-teal)" stroke-width="2" width="22" height="22" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
           <div>
-            <span style="font-size:var(--size-base);font-weight:500;color:var(--color-text);display:block;">Free introduction call &middot; Online</span>
-            <span style="font-size:var(--size-sm);color:var(--color-text-muted);">30-minute video call &mdash; no commitment required</span>
+            <span style="font-size:var(--size-base);font-weight:500;color:var(--color-text);display:block;">{!! __('ui.booking.free_call_label') !!}</span>
+            <span style="font-size:var(--size-sm);color:var(--color-text-muted);">{!! __('ui.booking.free_call_desc') !!}</span>
           </div>
         </div>
       </div>
 
       <div class="step-section">
-        <label class="step-section__label">Your details</label>
+        <label class="step-section__label">{{ __('ui.booking.your_details') }}</label>
         <div class="form-group">
-          <label class="form-label" for="b-name">Full name</label>
-          <input type="text" class="form-input" id="b-name" placeholder="Your name" autocomplete="name">
+          <label class="form-label" for="b-name">{{ __('ui.booking.full_name') }}</label>
+          <input type="text" class="form-input" id="b-name" placeholder="{{ __('ui.booking.name_placeholder') }}" autocomplete="name">
         </div>
         <div class="form-group" style="margin-top:var(--space-4);">
-          <label class="form-label" for="b-email">Email address</label>
+          <label class="form-label" for="b-email">{{ __('ui.contact.email_address') }}</label>
           <input type="email" class="form-input" id="b-email" placeholder="your@email.com" autocomplete="email">
         </div>
       </div>
 
       <div class="step-nav step-nav--end">
         <button class="btn btn--primary" onclick="goStep(2)">
-          Continue
+          {{ __('ui.common.continue') }}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
         </button>
       </div>
@@ -195,23 +195,23 @@
 
     <!-- STEP 2: Simple Questionnaire -->
     <div id="step-2" class="step-content" style="display:none;">
-      <h1 class="step-heading">What brings you here today?</h1>
-      <p class="step-subheading">A few sentences are enough. What are you currently struggling with, and what would you like help with? This will help guide our first conversation.</p>
+      <h1 class="step-heading">{{ __('ui.booking.what_brings_you') }}</h1>
+      <p class="step-subheading">{{ __('ui.booking.what_brings_desc') }}</p>
 
       <div class="step-section">
         <div class="form-group">
-          <textarea class="form-textarea" id="pi-goals" placeholder="I'd like to feel more... / I struggle with..." style="min-height:160px;"></textarea>
+          <textarea class="form-textarea" id="pi-goals" placeholder="{{ __('ui.booking.goals_placeholder') }}" style="min-height:160px;"></textarea>
         </div>
-        <p class="step-section__helper">This is optional. You can also discuss this during the call itself.</p>
+        <p class="step-section__helper">{{ __('ui.booking.optional_helper') }}</p>
       </div>
 
       <div class="step-nav">
         <button class="btn--ghost" onclick="goStep(1)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
-          Back
+          {{ __('ui.common.back') }}
         </button>
         <button class="btn btn--primary" onclick="goStep(3)">
-          Continue
+          {{ __('ui.common.continue') }}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
         </button>
       </div>
@@ -219,33 +219,33 @@
 
     <!-- STEP 3: Schedule & Confirm -->
     <div id="step-3" class="step-content" style="display:none;">
-      <h1 class="step-heading">Choose a time</h1>
-      <p class="step-subheading">Weekday sessions only. Tap a day to see available time slots.</p>
+      <h1 class="step-heading">{{ __('ui.booking.choose_time') }}</h1>
+      <p class="step-subheading">{{ __('ui.booking.choose_time_desc') }}</p>
 
       <div class="step-section">
-        <label class="step-section__label">Select a date</label>
+        <label class="step-section__label">{{ __('ui.booking.select_date') }}</label>
         <div id="inline-calendar"></div>
       </div>
 
       <div class="step-section" id="slots-wrap" style="display:none;">
-        <label class="step-section__label">Available times</label>
+        <label class="step-section__label">{{ __('ui.booking.available_times') }}</label>
         <div class="time-slots" id="time-slots"></div>
       </div>
 
       <div id="summary-section" style="display:none;">
         <div class="step-section" style="margin-top:var(--space-8);">
-          <label class="step-section__label">Review your booking</label>
+          <label class="step-section__label">{{ __('ui.booking.review_booking') }}</label>
           <div class="summary-card" id="summary-card">
-            <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value" id="sum-name">—</span></div>
-            <div class="summary-row"><span class="summary-label">Date &amp; time</span><span class="summary-value" id="sum-datetime">—</span></div>
-            <div class="summary-row"><span class="summary-label">Email</span><span class="summary-value" id="sum-email">—</span></div>
+            <div class="summary-row"><span class="summary-label">{{ __('ui.booking.name_summary') }}</span><span class="summary-value" id="sum-name">&mdash;</span></div>
+            <div class="summary-row"><span class="summary-label">{!! __('ui.booking.datetime_summary') !!}</span><span class="summary-value" id="sum-datetime">&mdash;</span></div>
+            <div class="summary-row"><span class="summary-label">{{ __('ui.contact.email_address') }}</span><span class="summary-value" id="sum-email">&mdash;</span></div>
           </div>
         </div>
 
         <div class="step-section" style="margin-top:var(--space-6);">
-          <label class="step-section__label">Additional notes <span>(optional)</span></label>
+          <label class="step-section__label">{{ __('ui.booking.additional_notes') }} <span>{{ __('ui.booking.optional') }}</span></label>
           <div class="form-group">
-            <textarea class="form-textarea" id="b-notes" placeholder="Briefly share what brings you here — this helps me prepare for our first conversation."></textarea>
+            <textarea class="form-textarea" id="b-notes" placeholder="{{ __('ui.booking.notes_placeholder') }}"></textarea>
           </div>
         </div>
       </div>
@@ -253,14 +253,14 @@
       <div class="step-nav">
         <button class="btn--ghost" onclick="goStep(2)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
-          Back
+          {{ __('ui.common.back') }}
         </button>
         <button class="btn btn--primary" id="btn-submit" style="opacity:0.5;pointer-events:none;" onclick="submitBooking()">
-          Send booking request
+          {{ __('ui.booking.send_request') }}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
         </button>
       </div>
-      <p style="font-size:var(--size-xs);color:var(--color-text-light);margin-top:var(--space-4);text-align:center;">Your booking request will be sent to Lysander. You'll receive a confirmation via email or WhatsApp within 24 hours.</p>
+      <p style="font-size:var(--size-xs);color:var(--color-text-light);margin-top:var(--space-4);text-align:center;">{{ __('ui.booking.booking_disclaimer') }}</p>
     </div>
 
   </div>
@@ -270,6 +270,29 @@
 @section('page_scripts')
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+window.__translations = {
+  booking: {
+    stepOf: '{{ __('ui.booking.step_of', ['step' => ':step', 'total' => ':total']) }}',
+    complete: '{{ __('ui.booking.complete') }}',
+    sending: '{{ __('ui.booking.sending') }}',
+    sendRequest: '{{ __('ui.booking.send_request') }}',
+    successTitle: '{{ __('ui.booking.success_title') }}',
+    successDesc: '{{ __('ui.booking.success_desc') }}',
+    alsoWhatsapp: '{{ __('ui.booking.also_whatsapp') }}',
+    backToHome: '{{ __('ui.booking.back_to_home') }}',
+    successToast: '{{ __('ui.booking.success_toast') }}',
+    noSlots: '{{ __('ui.booking.no_slots') }}',
+    loadError: '{{ __('ui.booking.load_error') }}',
+    loading: '{{ __('ui.booking.loading') }}',
+    toastNameEmail: '{{ __('ui.booking.toast_name_email') }}',
+    toastValidEmail: '{{ __('ui.booking.toast_valid_email') }}',
+    toastSelectTime: '{{ __('ui.booking.toast_select_time') }}',
+    toastError: '{{ __('ui.booking.toast_error') }}',
+    waTypeOnline: '{{ __('ui.booking.wa_type_online') }}',
+    waTypeInperson: '{{ __('ui.booking.wa_type_inperson') }}',
+  }
+};
+const __t = window.__translations.booking;
 function showToast(message, type) {
   const existing = document.getElementById('toast-notification');
   if (existing) existing.remove();
@@ -332,8 +355,8 @@ function goStep(step) {
   if (step === 2) {
     const name = document.getElementById('b-name').value.trim();
     const email = document.getElementById('b-email').value.trim();
-    if (!name || !email) { showToast('Please enter your name and email before continuing.','info'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email address.','info'); return; }
+    if (!name || !email) { showToast(__t.toastNameEmail,'info'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast(__t.toastValidEmail,'info'); return; }
     state.name = name; state.email = email;
   }
   if (step === 3) {
@@ -345,7 +368,7 @@ function goStep(step) {
   const totalSteps = 3;
   const fillPct = Math.round(((step - 1) / (totalSteps - 1)) * 100);
   document.getElementById('progress-fill').style.width = fillPct + '%';
-  document.getElementById('progress-label').textContent = 'Step ' + step + ' of ' + totalSteps;
+  document.getElementById('progress-label').textContent = __t.stepOf.replace(':step', step).replace(':total', totalSteps);
   document.getElementById('progress-pct').textContent = fillPct + '%';
 
   updateStepIndicators(step);
@@ -390,14 +413,14 @@ function initInlinePicker() {
 
 function fetchAndRenderSlots(dateStr) {
   const grid = document.getElementById('time-slots');
-  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">Loading...</div>';
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">' + __t.loading + '</div>';
 
   fetch('/api/availability/slots?date=' + encodeURIComponent(dateStr))
     .then(r => r.json())
     .then(data => {
       grid.innerHTML = '';
       if (!data.available || !data.slots.length) {
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">No available slots for this date.</div>';
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">' + __t.noSlots + '</div>';
         return;
       }
       data.slots.forEach(slot => {
@@ -416,7 +439,7 @@ function fetchAndRenderSlots(dateStr) {
       });
     })
     .catch(() => {
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#dc2626;font-size:13px;padding:12px;">Failed to load availability. Please try again.</div>';
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#dc2626;font-size:13px;padding:12px;">' + __t.loadError + '</div>';
     });
 }
 
@@ -428,10 +451,10 @@ function showSummary() {
 }
 
 function submitBooking() {
-  if (!state.date || !state.time) { showToast('Please select a date and time.','info'); return; }
+  if (!state.date || !state.time) { showToast(__t.toastSelectTime,'info'); return; }
   const notes = document.getElementById('b-notes').value.trim();
   const btn = document.getElementById('btn-submit');
-  btn.disabled = true; btn.textContent = 'Sending...';
+  btn.disabled = true; btn.textContent = __t.sending;
 
   const payload = {
     name: state.name,
@@ -461,7 +484,7 @@ function submitBooking() {
     const msg = encodeURIComponent(
       'Hi Lysander,\n\nI\'d like to book a session:\n\n' +
       'Name: ' + state.name + '\n' +
-      'Type: ' + (state.type === 'online' ? 'Online' : 'In-person') + '\n' +
+      'Type: ' + (state.type === 'online' ? __t.waTypeOnline : __t.waTypeInperson) + '\n' +
       'Format: ' + state.format + '\n' +
       'Date: ' + state.date + ' at ' + state.time + '\n' +
       (notes ? '\nNotes: ' + notes : '') +
@@ -473,25 +496,25 @@ function submitBooking() {
         <div class="success-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-teal)" stroke-width="2" width="34" height="34"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
         </div>
-        <h2 style="margin-bottom:var(--space-3);">Booking request sent!</h2>
+        <h2 style="margin-bottom:var(--space-3);">${__t.successTitle}</h2>
         <p style="color:var(--color-text-muted);font-size:var(--size-sm);margin:0 auto var(--space-8);max-width:380px;">
-          Thank you, ${state.name}. Lysander will confirm your session for <strong>${state.date} at ${state.time}</strong> via email or WhatsApp within 24 hours.
+          ${__t.successDesc.replace(':name', state.name).replace(':datetime', '<strong>' + state.date + ' at ' + state.time + '</strong>')}
         </p>
         <a href="https://wa.me/66935309052?text=${msg}" target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp" style="margin:0 auto;">
           <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          Also send via WhatsApp
+          ${__t.alsoWhatsapp}
         </a>
-        <a href="{{ route('home') }}" class="btn btn--outline" style="display:block;margin:var(--space-4) auto 0;max-width:200px;justify-content:center;">Back to home</a>
+        <a href="{{ route('home') }}" class="btn btn--outline" style="display:block;margin:var(--space-4) auto 0;max-width:200px;justify-content:center;">${__t.backToHome}</a>
       </div>`;
-    showToast('Booking request submitted!', 'success');
+    showToast(__t.successToast, 'success');
     document.getElementById('progress-fill').style.width = '100%';
     document.getElementById('progress-pct').textContent = '100%';
-    document.getElementById('progress-label').textContent = 'Complete';
+    document.getElementById('progress-label').textContent = __t.complete;
     updateStepIndicators(4);
   })
   .catch(err => {
-    btn.disabled = false; btn.textContent = 'Send booking request';
-    showToast('Something went wrong. Please try again.', 'error');
+    btn.disabled = false; btn.textContent = __t.sendRequest;
+    showToast(__t.toastError, 'error');
   });
 }
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,34 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDynamicMail();
+        $this->registerBladeDirectives();
+    }
+
+    /**
+     * Register custom Blade directives.
+     */
+    private function registerBladeDirectives(): void
+    {
+        // @localize('/path') — prepends current locale to local URLs
+        Blade::directive('localize', function ($expression) {
+            return "<?php echo e(\App\Providers\AppServiceProvider::localizeUrl($expression)); ?>";
+        });
+    }
+
+    /**
+     * Prepend current locale to a local URL path.
+     */
+    public static function localizeUrl(?string $url): string
+    {
+        if (empty($url)) return '#';
+        // Only prefix local URLs starting with /
+        if (!str_starts_with($url, '/') || str_starts_with($url, '//')) return $url;
+        $locale = app()->getLocale();
+        $supported = config('app.supported_locales', ['en', 'nl']);
+        // Don't double-prefix if already has locale
+        $segments = explode('/', ltrim($url, '/'));
+        if (in_array($segments[0] ?? '', $supported, true)) return $url;
+        return '/' . $locale . $url;
     }
 
     /**

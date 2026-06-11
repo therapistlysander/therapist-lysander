@@ -16,52 +16,75 @@ class AdminTestimonialController extends Controller
 
     public function create()
     {
-        return view('admin.pages.testimonials.form', ['testimonial' => new Testimonial()]);
+        $locales = config('app.supported_locales', ['en', 'nl']);
+        return view('admin.pages.testimonials.form', ['testimonial' => new Testimonial(), 'locales' => $locales]);
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'client_name' => 'required|string|max:255',
-            'headline'    => 'nullable|string|max:255',
-            'body'        => 'required|string',
-            'tag'         => 'nullable|string|max:100',
-            'rating'      => 'nullable|integer|min:1|max:5',
-            'sort_order'  => 'nullable|integer',
-            'is_featured' => 'boolean',
-            'is_active'   => 'boolean',
+        $request->validate([
+            'client_name'  => 'required|string|max:255',
+            'tag'          => 'nullable|string|max:100',
+            'rating'       => 'nullable|integer|min:1|max:5',
+            'sort_order'   => 'nullable|integer',
+            'is_featured'  => 'boolean',
+            'is_active'    => 'boolean',
+            'translations' => 'nullable|array',
         ]);
 
-        $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['is_active']   = $request->boolean('is_active');
+        $t = new Testimonial();
+        $t->client_name = $request->input('client_name');
+        $t->tag         = $request->input('tag');
+        $t->rating      = $request->input('rating', 5);
+        $t->sort_order  = $request->input('sort_order', 0);
+        $t->is_featured = $request->boolean('is_featured');
+        $t->is_active   = $request->boolean('is_active');
 
-        Testimonial::create($validated);
+        $translations = $request->input('translations', []);
+        foreach ($translations as $locale => $data) {
+            if (!empty($data['headline'])) $t->setTranslation('headline', $locale, $data['headline']);
+            if (!empty($data['body']))     $t->setTranslation('body', $locale, $data['body']);
+            if (!empty($data['quote']))    $t->setTranslation('quote', $locale, $data['quote']);
+        }
+
+        $t->save();
 
         return redirect()->route('admin.testimonials.index')->with('success', 'Testimonial created.');
     }
 
     public function edit(Testimonial $testimonial)
     {
-        return view('admin.pages.testimonials.form', compact('testimonial'));
+        $locales = config('app.supported_locales', ['en', 'nl']);
+        return view('admin.pages.testimonials.form', compact('testimonial', 'locales'));
     }
 
     public function update(Request $request, Testimonial $testimonial)
     {
-        $validated = $request->validate([
-            'client_name' => 'required|string|max:255',
-            'headline'    => 'nullable|string|max:255',
-            'body'        => 'required|string',
-            'tag'         => 'nullable|string|max:100',
-            'rating'      => 'nullable|integer|min:1|max:5',
-            'sort_order'  => 'nullable|integer',
-            'is_featured' => 'boolean',
-            'is_active'   => 'boolean',
+        $request->validate([
+            'client_name'  => 'required|string|max:255',
+            'tag'          => 'nullable|string|max:100',
+            'rating'       => 'nullable|integer|min:1|max:5',
+            'sort_order'   => 'nullable|integer',
+            'is_featured'  => 'boolean',
+            'is_active'    => 'boolean',
+            'translations' => 'nullable|array',
         ]);
 
-        $validated['is_featured'] = $request->boolean('is_featured');
-        $validated['is_active']   = $request->boolean('is_active');
+        $testimonial->client_name = $request->input('client_name');
+        $testimonial->tag         = $request->input('tag');
+        $testimonial->rating      = $request->input('rating', 5);
+        $testimonial->sort_order  = $request->input('sort_order', 0);
+        $testimonial->is_featured = $request->boolean('is_featured');
+        $testimonial->is_active   = $request->boolean('is_active');
 
-        $testimonial->update($validated);
+        $translations = $request->input('translations', []);
+        foreach ($translations as $locale => $data) {
+            if (!empty($data['headline'])) $testimonial->setTranslation('headline', $locale, $data['headline']);
+            if (!empty($data['body']))     $testimonial->setTranslation('body', $locale, $data['body']);
+            if (!empty($data['quote']))    $testimonial->setTranslation('quote', $locale, $data['quote']);
+        }
+
+        $testimonial->save();
 
         return redirect()->route('admin.testimonials.index')->with('success', 'Testimonial updated.');
     }

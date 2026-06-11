@@ -30,6 +30,6 @@ class ContactWebController extends Controller
         $notifications->alertAdminNewContact($submission);
 
         return redirect()->route('contact')
-            ->with('success', "Thank you for your message. I've received it and will get back to you as soon as possible.");
+            ->with('success', __('ui.contact.success_message'));
     }
 }

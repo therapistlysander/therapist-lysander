@@ -36,11 +36,12 @@ class AdminPageSectionController extends Controller
 
     public function pages()
     {
+        $pageOrder = array_keys($this->pageLabels);
+
         $pages = PageSection::select('page')
             ->selectRaw('COUNT(*) as sections_count')
             ->selectRaw('SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active_count')
             ->groupBy('page')
-            ->orderByRaw("FIELD(page, 'home','about','approach','training','testimonials','fees','faq','contact','booking')")
             ->get()
             ->map(fn($p) => (object) [
                 'key'            => $p->page,
@@ -48,7 +49,10 @@ class AdminPageSectionController extends Controller
                 'route'          => $this->pageRoutes[$p->page] ?? '/' . $p->page,
                 'sections_count' => $p->sections_count,
                 'active_count'   => $p->active_count,
-            ]);
+                'sort'           => array_search($p->page, $pageOrder),
+            ])
+            ->sortBy('sort')
+            ->values();
 
         return view('admin.pages.sections.pages', compact('pages'));
     }
@@ -79,28 +83,31 @@ class AdminPageSectionController extends Controller
             ->sortBy('filename')
             ->values();
 
-        return view('admin.pages.sections.edit', compact('section', 'mediaFiles'));
+        $locales = config('app.supported_locales', ['en', 'nl']);
+
+        // Get per-locale content for the form
+        $localeContent = [];
+        foreach ($locales as $locale) {
+            $localeContent[$locale] = $section->getTranslation('content', $locale) ?? [];
+        }
+
+        return view('admin.pages.sections.edit', compact('section', 'mediaFiles', 'locales', 'localeContent'));
     }
 
     public function update(Request $request, PageSection $section)
     {
         $request->validate([
-            'title'              => 'nullable|string|max:500',
-            'subtitle'           => 'nullable|string|max:500',
-            'body'               => 'nullable|string',
-            'cta_text'           => 'nullable|string|max:255',
-            'cta_url'            => 'nullable|string|max:500',
-            'cta_secondary_text' => 'nullable|string|max:255',
-            'cta_secondary_url'  => 'nullable|string|max:500',
-            'is_active'          => 'boolean',
-            'image'              => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,svg|max:5120',
-            'media_image_url'    => 'nullable|string|max:500',
-            'remove_image'       => 'nullable|boolean',
+            'is_active'       => 'boolean',
+            'translations'    => 'nullable|array',
+            'image'           => 'nullable|file|mimes:jpg,jpeg,png,webp,gif,svg|max:5120',
+            'media_image_url' => 'nullable|string|max:500',
+            'remove_image'    => 'nullable|boolean',
         ]);
 
-        $content = $section->content ?? [];
+        $locales = config('app.supported_locales', ['en', 'nl']);
+        $translations = $request->input('translations', []);
 
-        // ── Text fields ──
+        // Text field mapping: form input key => possible content keys
         $textFields = [
             'title'              => ['title', 'heading'],
             'subtitle'           => ['subtitle', 'subheading'],
@@ -111,111 +118,120 @@ class AdminPageSectionController extends Controller
             'cta_secondary_url'  => ['cta_secondary_url'],
         ];
 
-        foreach ($textFields as $input => $contentKeys) {
-            if ($request->has($input)) {
-                // Write to the first key that already exists in content, else the canonical name
-                $written = false;
-                foreach ($contentKeys as $key) {
-                    if (array_key_exists($key, $content)) {
-                        $content[$key] = $request->input($input) ?: null;
-                        $written = true;
-                        break;
-                    }
-                }
-                if (!$written) {
-                    $content[$contentKeys[0]] = $request->input($input) ?: null;
-                }
-            }
-        }
+        // Extra scalar fields
+        $extraFields = ['fee_amount', 'fee_duration', 'quote', 'attribution', 'whatsapp_number', 'whatsapp_text', 'email'];
 
-        // ── Image handling ──
-        if ($request->boolean('remove_image')) {
-            // Delete stored upload if it was one
-            $oldImg = $content['image'] ?? null;
-            if ($oldImg && Str::contains($oldImg, '/storage/media/')) {
-                $relativePath = 'media/' . basename($oldImg);
-                Storage::disk('public')->delete($relativePath);
-            }
-            $content['image'] = null;
-
-        } elseif ($request->hasFile('image')) {
-            // Upload new file
-            $file = $request->file('image');
-            $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
-                  . '-' . time()
-                  . '.' . $file->getClientOriginalExtension();
-
-            $file->storeAs('media', $name, 'public');
-            $content['image'] = '/storage/media/' . $name;
-
-        } elseif ($request->filled('media_image_url')) {
-            // Use URL picked from Media Library
-            $content['image'] = $request->input('media_image_url');
-        }
-
-        // ── Array/repeater fields ──
+        // Array/repeater schemas
         $arraySchemas = [
             'steps'  => ['title', 'description', 'duration', 'badge'],
             'items'  => ['title', 'description', 'key', 'label', 'value'],
             'cards'  => ['title', 'subtitle', 'description'],
             'stats'  => ['value', 'label'],
-            'groups' => ['title'], // groups also contain nested 'items'
+            'groups' => ['title'],
         ];
 
-        foreach ($arraySchemas as $field => $subFields) {
-            if ($request->has($field)) {
-                $raw = $request->input($field, []);
-                $cleaned = [];
+        foreach ($locales as $locale) {
+            $locData = $translations[$locale] ?? [];
+            // Start with existing content for this locale
+            $content = $section->getTranslation('content', $locale) ?? [];
 
-                foreach ($raw as $row) {
-                    if (!is_array($row)) continue;
-
-                    // For groups with nested items
-                    if ($field === 'groups') {
-                        $title = trim($row['title'] ?? '');
-                        if ($title === '') continue;
-
-                        $nestedItems = [];
-                        foreach (($row['items'] ?? []) as $item) {
-                            if (is_array($item) && trim($item['title'] ?? '') !== '') {
-                                $nestedItems[] = ['title' => trim($item['title'])];
-                            }
+            // ── Text fields ──
+            foreach ($textFields as $input => $contentKeys) {
+                if (isset($locData[$input])) {
+                    $written = false;
+                    foreach ($contentKeys as $key) {
+                        if (array_key_exists($key, $content)) {
+                            $content[$key] = $locData[$input] ?: null;
+                            $written = true;
+                            break;
                         }
-                        $cleaned[] = ['title' => $title, 'items' => $nestedItems];
-                        continue;
                     }
-
-                    // Filter out completely empty rows
-                    $hasContent = false;
-                    $cleanedRow = [];
-                    foreach ($subFields as $sf) {
-                        $val = trim($row[$sf] ?? '');
-                        if ($val !== '') $hasContent = true;
-                        $cleanedRow[$sf] = $val ?: null;
-                    }
-
-                    if ($hasContent) {
-                        // Remove null-only fields to keep JSON clean
-                        $cleaned[] = array_filter($cleanedRow, fn($v) => $v !== null);
+                    if (!$written) {
+                        $content[$contentKeys[0]] = $locData[$input] ?: null;
                     }
                 }
-
-                $content[$field] = $cleaned;
             }
+
+            // ── Array/repeater fields ──
+            foreach ($arraySchemas as $field => $subFields) {
+                if (isset($locData[$field])) {
+                    $raw = $locData[$field];
+                    $cleaned = [];
+
+                    foreach ($raw as $row) {
+                        if (!is_array($row)) continue;
+
+                        if ($field === 'groups') {
+                            $title = trim($row['title'] ?? '');
+                            if ($title === '') continue;
+                            $nestedItems = [];
+                            foreach (($row['items'] ?? []) as $item) {
+                                if (is_array($item) && trim($item['title'] ?? '') !== '') {
+                                    $nestedItems[] = ['title' => trim($item['title'])];
+                                }
+                            }
+                            $cleaned[] = ['title' => $title, 'items' => $nestedItems];
+                            continue;
+                        }
+
+                        $hasContent = false;
+                        $cleanedRow = [];
+                        foreach ($subFields as $sf) {
+                            $val = trim($row[$sf] ?? '');
+                            if ($val !== '') $hasContent = true;
+                            $cleanedRow[$sf] = $val ?: null;
+                        }
+                        if ($hasContent) {
+                            $cleaned[] = array_filter($cleanedRow, fn($v) => $v !== null);
+                        }
+                    }
+
+                    $content[$field] = $cleaned;
+                }
+            }
+
+            // ── Extra scalar fields ──
+            foreach ($extraFields as $ef) {
+                if (isset($locData[$ef])) {
+                    $content[$ef] = $locData[$ef] ?: null;
+                }
+            }
+
+            $section->setTranslation('content', $locale, $content);
         }
 
-        // ── Extra scalar fields (fee_amount, fee_duration, quote, etc.) ──
-        $extraFields = ['fee_amount', 'fee_duration', 'quote', 'attribution', 'whatsapp_number', 'whatsapp_text', 'email'];
-        foreach ($extraFields as $ef) {
-            if ($request->has($ef)) {
-                $content[$ef] = $request->input($ef) ?: null;
+        // ── Image handling (shared across locales — stored in English content) ──
+        $enContent = $section->getTranslation('content', 'en') ?? [];
+
+        if ($request->boolean('remove_image')) {
+            $oldImg = $enContent['image'] ?? null;
+            if ($oldImg && Str::contains($oldImg, '/storage/media/')) {
+                $relativePath = 'media/' . basename($oldImg);
+                Storage::disk('public')->delete($relativePath);
             }
+            $enContent['image'] = null;
+        } elseif ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                  . '-' . time()
+                  . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('media', $name, 'public');
+            $enContent['image'] = '/storage/media/' . $name;
+        } elseif ($request->filled('media_image_url')) {
+            $enContent['image'] = $request->input('media_image_url');
         }
 
-        $section->update([
-            'content'   => $content,
-            'is_active' => $request->boolean('is_active'),
-        ]);
+        $section->setTranslation('content', 'en', $enContent);
+
+        // Also update image in NL content if it exists
+        $nlContent = $section->getTranslation('content', 'nl') ?? [];
+        if (!empty($nlContent) && isset($enContent['image'])) {
+            $nlContent['image'] = $enContent['image'];
+            $section->setTranslation('content', 'nl', $nlContent);
+        }
+
+        $section->is_active = $request->boolean('is_active');
+        $section->save();
 
         return redirect()->route('admin.sections.edit', $section)
             ->with('success', 'Section "' . $section->label . '" saved successfully.');

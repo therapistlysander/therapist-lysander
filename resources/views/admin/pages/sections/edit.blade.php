@@ -33,209 +33,243 @@
     {{-- ── Left Column: Main content ── --}}
     <div style="display:flex;flex-direction:column;gap:20px;">
 
-      {{-- Text Content --}}
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Text Content</div>
-
-          <div class="admin-field">
-            <label class="admin-label">Heading / Title</label>
-            <input type="text" name="title" class="admin-input" value="{{ old('title', $section->content['title'] ?? $section->content['heading'] ?? '') }}" placeholder="Main heading text">
-          </div>
-
-          <div class="admin-field">
-            <label class="admin-label">Subheading / Eyebrow</label>
-            <input type="text" name="subtitle" class="admin-input" value="{{ old('subtitle', $section->content['subtitle'] ?? $section->content['subheading'] ?? '') }}" placeholder="Smaller text above or below the heading">
-          </div>
-
-          <div class="admin-field">
-            <label class="admin-label">Body</label>
-            <input type="hidden" id="body-input" name="body" value="{{ old('body', $section->content['body'] ?? '') }}">
-            <div class="admin-editor-wrap" data-editor="body-input" data-placeholder="Write the body text for this section...">
-              <div class="ql-editor-area"></div>
-            </div>
-          </div>
-        </div>
+      {{-- Locale Tabs --}}
+      <div class="locale-tabs" style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;">
+        @foreach($locales as $locale)
+        <button type="button" class="locale-tab {{ $loop->first ? 'locale-tab--active' : '' }}" data-locale="{{ $locale }}" onclick="switchLocale('{{ $locale }}')">
+          {{ strtoupper($locale) }}
+        </button>
+        @endforeach
       </div>
 
-      {{-- CTA Section --}}
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Call-to-Action</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-            <div class="admin-field">
-              <label class="admin-label">Primary button label</label>
-              <input type="text" name="cta_text" class="admin-input" value="{{ old('cta_text', $section->content['cta_text'] ?? $section->content['cta_label'] ?? $section->content['cta_primary_label'] ?? '') }}" placeholder="e.g. Book a Free Call">
-            </div>
-            <div class="admin-field">
-              <label class="admin-label">Primary button URL</label>
-              <input type="text" name="cta_url" class="admin-input" value="{{ old('cta_url', $section->content['cta_url'] ?? $section->content['cta_primary_url'] ?? '') }}" placeholder="/booking or https://...">
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
-            <div class="admin-field">
-              <label class="admin-label">Secondary label <span style="font-weight:400;color:#9ca3af;">(optional)</span></label>
-              <input type="text" name="cta_secondary_text" class="admin-input" value="{{ old('cta_secondary_text', $section->content['cta_secondary_text'] ?? $section->content['cta_secondary_label'] ?? '') }}" placeholder="e.g. Learn More">
-            </div>
-            <div class="admin-field">
-              <label class="admin-label">Secondary URL</label>
-              <input type="text" name="cta_secondary_url" class="admin-input" value="{{ old('cta_secondary_url', $section->content['cta_secondary_url'] ?? '') }}" placeholder="/about">
-            </div>
-          </div>
-        </div>
-      </div>
+      @foreach($locales as $li => $locale)
+      @php $lc = $localeContent[$locale] ?? []; @endphp
+      <div class="locale-panel" data-locale="{{ $locale }}" style="{{ $li !== 0 ? 'display:none;' : '' }}display:flex;flex-direction:column;gap:20px;">
 
-      {{-- Extra scalar fields --}}
-      @php
-        $extraFields = [
-          'quote' => 'Quote text',
-          'attribution' => 'Quote attribution',
-          'fee_amount' => 'Fee amount (e.g. €110)',
-          'fee_duration' => 'Fee duration label',
-          'whatsapp_number' => 'WhatsApp number',
-          'whatsapp_text' => 'WhatsApp CTA text',
-          'email' => 'Email address',
-        ];
-        $hasExtras = false;
-        foreach ($extraFields as $k => $v) { if (isset($section->content[$k])) { $hasExtras = true; break; } }
-      @endphp
-      @if($hasExtras)
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Additional Fields</div>
-          @foreach($extraFields as $fieldKey => $fieldLabel)
-            @if(isset($section->content[$fieldKey]))
+        {{-- Text Content --}}
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Text Content — {{ strtoupper($locale) }}</div>
+
             <div class="admin-field">
-              <label class="admin-label">{{ $fieldLabel }}</label>
-              <input type="text" name="{{ $fieldKey }}" class="admin-input" value="{{ old($fieldKey, $section->content[$fieldKey] ?? '') }}">
+              <label class="admin-label">Heading / Title</label>
+              <input type="text" name="translations[{{ $locale }}][title]" class="admin-input" value="{{ old("translations.$locale.title", $lc['title'] ?? $lc['heading'] ?? '') }}" placeholder="Main heading text">
             </div>
-            @endif
-          @endforeach
-        </div>
-      </div>
-      @endif
 
-      {{-- Repeater: Stats --}}
-      @if(isset($section->content['stats']))
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Stats</div>
-          <div class="repeater" data-field="stats">
-            @foreach($section->content['stats'] ?? [] as $i => $stat)
-            <div class="repeater-row" style="display:grid;grid-template-columns:100px 1fr 32px;gap:8px;align-items:center;margin-bottom:8px;">
-              <input type="text" name="stats[{{ $i }}][value]" class="admin-input" value="{{ $stat['value'] ?? '' }}" placeholder="Value">
-              <input type="text" name="stats[{{ $i }}][label]" class="admin-input" value="{{ $stat['label'] ?? '' }}" placeholder="Label">
-              <button type="button" class="repeater-remove" title="Remove">&times;</button>
+            <div class="admin-field">
+              <label class="admin-label">Subheading / Eyebrow</label>
+              <input type="text" name="translations[{{ $locale }}][subtitle]" class="admin-input" value="{{ old("translations.$locale.subtitle", $lc['subtitle'] ?? $lc['subheading'] ?? '') }}" placeholder="Smaller text above or below the heading">
             </div>
-            @endforeach
-            <button type="button" class="repeater-add btn-admin btn-admin--outline" data-field="stats" data-fields="value,label" data-cols="100px 1fr 32px" style="font-size:12px;margin-top:4px;">+ Add stat</button>
-          </div>
-        </div>
-      </div>
-      @endif
 
-      {{-- Repeater: Items --}}
-      @if(isset($section->content['items']))
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Items</div>
-          <div class="repeater" data-field="items">
-            @php $itemHasDesc = collect($section->content['items'] ?? [])->contains(fn($i) => !empty($i['description'] ?? '')); @endphp
-            @foreach($section->content['items'] ?? [] as $i => $item)
-            <div class="repeater-row" style="display:grid;grid-template-columns:1fr {{ $itemHasDesc ? '1fr' : '' }} 32px;gap:8px;align-items:center;margin-bottom:8px;">
-              <input type="text" name="items[{{ $i }}][title]" class="admin-input" value="{{ $item['title'] ?? '' }}" placeholder="Title">
-              @if($itemHasDesc)
-              <input type="text" name="items[{{ $i }}][description]" class="admin-input" value="{{ $item['description'] ?? '' }}" placeholder="Description">
-              @endif
-              @if(!empty($item['key'] ?? ''))
-              <input type="hidden" name="items[{{ $i }}][key]" value="{{ $item['key'] }}">
-              @endif
-              @if(!empty($item['label'] ?? ''))
-              <input type="hidden" name="items[{{ $i }}][label]" value="{{ $item['label'] }}">
-              @endif
-              @if(!empty($item['value'] ?? ''))
-              <input type="hidden" name="items[{{ $i }}][value]" value="{{ $item['value'] }}">
-              @endif
-              <button type="button" class="repeater-remove" title="Remove">&times;</button>
-            </div>
-            @endforeach
-            <button type="button" class="repeater-add btn-admin btn-admin--outline" data-field="items" data-fields="title{{ $itemHasDesc ? ',description' : '' }}" data-cols="1fr {{ $itemHasDesc ? '1fr' : '' }} 32px" style="font-size:12px;margin-top:4px;">+ Add item</button>
-          </div>
-        </div>
-      </div>
-      @endif
-
-      {{-- Repeater: Steps --}}
-      @if(isset($section->content['steps']))
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Steps</div>
-          <div class="repeater" data-field="steps">
-            @foreach($section->content['steps'] ?? [] as $i => $step)
-            <div class="repeater-row" style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;">
-              <div style="display:grid;grid-template-columns:1fr 1fr 120px;gap:8px;margin-bottom:8px;">
-                <input type="text" name="steps[{{ $i }}][title]" class="admin-input" value="{{ $step['title'] ?? '' }}" placeholder="Step title">
-                <input type="text" name="steps[{{ $i }}][duration]" class="admin-input" value="{{ $step['duration'] ?? '' }}" placeholder="Duration (optional)">
-                <input type="text" name="steps[{{ $i }}][badge]" class="admin-input" value="{{ $step['badge'] ?? '' }}" placeholder="Badge (optional)">
+            <div class="admin-field">
+              <label class="admin-label">Body</label>
+              <input type="hidden" id="body-{{ $locale }}-input" name="translations[{{ $locale }}][body]" value="{{ old("translations.$locale.body", $lc['body'] ?? '') }}">
+              <div class="admin-editor-wrap" data-editor="body-{{ $locale }}-input" data-placeholder="Write the body text for this section...">
+                <div class="ql-editor-area"></div>
               </div>
-              <textarea name="steps[{{ $i }}][description]" class="admin-input" rows="2" placeholder="Step description" style="resize:vertical;">{{ $step['description'] ?? '' }}</textarea>
-              <button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove">&times;</button>
             </div>
-            @endforeach
-            <button type="button" class="repeater-add-step btn-admin btn-admin--outline" data-field="steps" style="font-size:12px;margin-top:4px;">+ Add step</button>
           </div>
         </div>
-      </div>
-      @endif
 
-      {{-- Repeater: Cards --}}
-      @if(isset($section->content['cards']))
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Cards</div>
-          <div class="repeater" data-field="cards">
-            @foreach($section->content['cards'] ?? [] as $i => $card)
-            <div class="repeater-row" style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-                <input type="text" name="cards[{{ $i }}][title]" class="admin-input" value="{{ $card['title'] ?? '' }}" placeholder="Card title">
-                <input type="text" name="cards[{{ $i }}][subtitle]" class="admin-input" value="{{ $card['subtitle'] ?? '' }}" placeholder="Subtitle (optional)">
+        {{-- CTA Section --}}
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Call-to-Action — {{ strtoupper($locale) }}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <div class="admin-field">
+                <label class="admin-label">Primary button label</label>
+                <input type="text" name="translations[{{ $locale }}][cta_text]" class="admin-input" value="{{ old("translations.$locale.cta_text", $lc['cta_text'] ?? $lc['cta_label'] ?? $lc['cta_primary_label'] ?? '') }}" placeholder="e.g. Book a Free Call">
               </div>
-              <textarea name="cards[{{ $i }}][description]" class="admin-input" rows="2" placeholder="Card description" style="resize:vertical;">{{ $card['description'] ?? '' }}</textarea>
-              <button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove">&times;</button>
+              <div class="admin-field">
+                <label class="admin-label">Primary button URL</label>
+                <input type="text" name="translations[{{ $locale }}][cta_url]" class="admin-input" value="{{ old("translations.$locale.cta_url", $lc['cta_url'] ?? $lc['cta_primary_url'] ?? '') }}" placeholder="/booking or https://...">
+              </div>
             </div>
-            @endforeach
-            <button type="button" class="repeater-add-card btn-admin btn-admin--outline" data-field="cards" style="font-size:12px;margin-top:4px;">+ Add card</button>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+              <div class="admin-field">
+                <label class="admin-label">Secondary label <span style="font-weight:400;color:#9ca3af;">(optional)</span></label>
+                <input type="text" name="translations[{{ $locale }}][cta_secondary_text]" class="admin-input" value="{{ old("translations.$locale.cta_secondary_text", $lc['cta_secondary_text'] ?? $lc['cta_secondary_label'] ?? '') }}" placeholder="e.g. Learn More">
+              </div>
+              <div class="admin-field">
+                <label class="admin-label">Secondary URL</label>
+                <input type="text" name="translations[{{ $locale }}][cta_secondary_url]" class="admin-input" value="{{ old("translations.$locale.cta_secondary_url", $lc['cta_secondary_url'] ?? '') }}" placeholder="/about">
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      @endif
 
-      {{-- Repeater: Groups (nested) --}}
-      @if(isset($section->content['groups']))
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Groups</div>
-          <div class="repeater-groups" data-field="groups">
-            @foreach($section->content['groups'] ?? [] as $gi => $group)
-            <div class="repeater-group" style="border:1px solid #d1d5db;border-radius:8px;padding:14px;margin-bottom:12px;background:#fafafa;position:relative;">
-              <input type="text" name="groups[{{ $gi }}][title]" class="admin-input" value="{{ $group['title'] ?? '' }}" placeholder="Group title" style="font-weight:600;margin-bottom:8px;">
-              <div class="group-items">
-                @foreach($group['items'] ?? [] as $ii => $item)
-                <div class="repeater-row" style="display:grid;grid-template-columns:1fr 32px;gap:8px;align-items:center;margin-bottom:6px;">
-                  <input type="text" name="groups[{{ $gi }}][items][{{ $ii }}][title]" class="admin-input" value="{{ $item['title'] ?? '' }}" placeholder="Item title">
-                  <button type="button" class="repeater-remove" title="Remove">&times;</button>
+        {{-- Extra scalar fields --}}
+        @php
+          $extraFields = [
+            'quote' => 'Quote text',
+            'attribution' => 'Quote attribution',
+            'fee_amount' => 'Fee amount (e.g. €110)',
+            'fee_duration' => 'Fee duration label',
+            'whatsapp_number' => 'WhatsApp number',
+            'whatsapp_text' => 'WhatsApp CTA text',
+            'email' => 'Email address',
+          ];
+          $hasExtras = false;
+          foreach ($extraFields as $k => $v) { if (isset($lc[$k])) { $hasExtras = true; break; } }
+        @endphp
+        @if($hasExtras)
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Additional Fields — {{ strtoupper($locale) }}</div>
+            @foreach($extraFields as $fieldKey => $fieldLabel)
+              @if(isset($lc[$fieldKey]))
+              <div class="admin-field">
+                <label class="admin-label">{{ $fieldLabel }}</label>
+                <input type="text" name="translations[{{ $locale }}][{{ $fieldKey }}]" class="admin-input" value="{{ old("translations.$locale.$fieldKey", $lc[$fieldKey] ?? '') }}">
+              </div>
+              @endif
+            @endforeach
+          </div>
+        </div>
+        @endif
+
+        {{-- Repeater: Stats --}}
+        @if(isset($lc['stats']))
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Stats — {{ strtoupper($locale) }}</div>
+            <div class="repeater" data-field="stats" data-locale="{{ $locale }}">
+              @foreach($lc['stats'] ?? [] as $i => $stat)
+              <div class="repeater-row" style="display:grid;grid-template-columns:100px 1fr 32px;gap:8px;align-items:center;margin-bottom:8px;">
+                <input type="text" name="translations[{{ $locale }}][stats][{{ $i }}][value]" class="admin-input" value="{{ $stat['value'] ?? '' }}" placeholder="Value">
+                <input type="text" name="translations[{{ $locale }}][stats][{{ $i }}][label]" class="admin-input" value="{{ $stat['label'] ?? '' }}" placeholder="Label">
+                <button type="button" class="repeater-remove" title="Remove">&times;</button>
+              </div>
+              @endforeach
+              <button type="button" class="repeater-add btn-admin btn-admin--outline" data-field="stats" data-fields="value,label" data-cols="100px 1fr 32px" data-locale="{{ $locale }}" style="font-size:12px;margin-top:4px;">+ Add stat</button>
+            </div>
+          </div>
+        </div>
+        @endif
+
+        {{-- Repeater: Items --}}
+        @if(isset($lc['items']))
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Items — {{ strtoupper($locale) }}</div>
+            <div class="repeater" data-field="items" data-locale="{{ $locale }}">
+              @php $itemHasDesc = collect($lc['items'] ?? [])->contains(fn($i) => !empty($i['description'] ?? '')); @endphp
+              @foreach($lc['items'] ?? [] as $i => $item)
+              <div class="repeater-row" style="display:grid;grid-template-columns:1fr {{ $itemHasDesc ? '1fr' : '' }} 32px;gap:8px;align-items:center;margin-bottom:8px;">
+                <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][title]" class="admin-input" value="{{ $item['title'] ?? '' }}" placeholder="Title">
+                @if($itemHasDesc)
+                <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][description]" class="admin-input" value="{{ $item['description'] ?? '' }}" placeholder="Description">
+                @endif
+                @if(!empty($item['key'] ?? ''))
+                <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][key]" value="{{ $item['key'] }}">
+                @endif
+                @if(!empty($item['label'] ?? ''))
+                <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][label]" value="{{ $item['label'] }}">
+                @endif
+                @if(!empty($item['value'] ?? ''))
+                <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][value]" value="{{ $item['value'] }}">
+                @endif
+                <button type="button" class="repeater-remove" title="Remove">&times;</button>
+              </div>
+              @endforeach
+              <button type="button" class="repeater-add btn-admin btn-admin--outline" data-field="items" data-fields="title{{ $itemHasDesc ? ',description' : '' }}" data-cols="1fr {{ $itemHasDesc ? '1fr' : '' }} 32px" data-locale="{{ $locale }}" style="font-size:12px;margin-top:4px;">+ Add item</button>
+            </div>
+          </div>
+        </div>
+        @endif
+
+        {{-- Repeater: Steps --}}
+        @if(isset($lc['steps']))
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Steps — {{ strtoupper($locale) }}</div>
+            <div class="repeater" data-field="steps" data-locale="{{ $locale }}">
+              @foreach($lc['steps'] ?? [] as $i => $step)
+              <div class="repeater-row" style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;">
+                <div style="display:grid;grid-template-columns:1fr 1fr 120px;gap:8px;margin-bottom:8px;">
+                  <input type="text" name="translations[{{ $locale }}][steps][{{ $i }}][title]" class="admin-input" value="{{ $step['title'] ?? '' }}" placeholder="Step title">
+                  <input type="text" name="translations[{{ $locale }}][steps][{{ $i }}][duration]" class="admin-input" value="{{ $step['duration'] ?? '' }}" placeholder="Duration (optional)">
+                  <input type="text" name="translations[{{ $locale }}][steps][{{ $i }}][badge]" class="admin-input" value="{{ $step['badge'] ?? '' }}" placeholder="Badge (optional)">
                 </div>
-                @endforeach
+                <textarea name="translations[{{ $locale }}][steps][{{ $i }}][description]" class="admin-input" rows="2" placeholder="Step description" style="resize:vertical;">{{ $step['description'] ?? '' }}</textarea>
+                <button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove">&times;</button>
               </div>
-              <button type="button" class="repeater-add-group-item btn-admin btn-admin--outline" data-group="{{ $gi }}" style="font-size:11px;margin-top:4px;">+ Add item</button>
-              <button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove group">&times;</button>
+              @endforeach
+              <button type="button" class="repeater-add-step btn-admin btn-admin--outline" data-field="steps" data-locale="{{ $locale }}" style="font-size:12px;margin-top:4px;">+ Add step</button>
             </div>
-            @endforeach
-            <button type="button" class="repeater-add-group btn-admin btn-admin--outline" style="font-size:12px;margin-top:4px;">+ Add group</button>
           </div>
         </div>
-      </div>
-      @endif
+        @endif
+
+        {{-- Repeater: Cards --}}
+        @if(isset($lc['cards']))
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Cards — {{ strtoupper($locale) }}</div>
+            <div class="repeater" data-field="cards" data-locale="{{ $locale }}">
+              @foreach($lc['cards'] ?? [] as $i => $card)
+              <div class="repeater-row" style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                  <input type="text" name="translations[{{ $locale }}][cards][{{ $i }}][title]" class="admin-input" value="{{ $card['title'] ?? '' }}" placeholder="Card title">
+                  <input type="text" name="translations[{{ $locale }}][cards][{{ $i }}][subtitle]" class="admin-input" value="{{ $card['subtitle'] ?? '' }}" placeholder="Subtitle (optional)">
+                </div>
+                <textarea name="translations[{{ $locale }}][cards][{{ $i }}][description]" class="admin-input" rows="2" placeholder="Card description" style="resize:vertical;">{{ $card['description'] ?? '' }}</textarea>
+                <button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove">&times;</button>
+              </div>
+              @endforeach
+              <button type="button" class="repeater-add-card btn-admin btn-admin--outline" data-field="cards" data-locale="{{ $locale }}" style="font-size:12px;margin-top:4px;">+ Add card</button>
+            </div>
+          </div>
+        </div>
+        @endif
+
+        {{-- Repeater: Groups (nested) --}}
+        @if(isset($lc['groups']))
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Groups — {{ strtoupper($locale) }}</div>
+            <div class="repeater-groups" data-field="groups" data-locale="{{ $locale }}">
+              @foreach($lc['groups'] ?? [] as $gi => $group)
+              <div class="repeater-group" style="border:1px solid #d1d5db;border-radius:8px;padding:14px;margin-bottom:12px;background:#fafafa;position:relative;">
+                <input type="text" name="translations[{{ $locale }}][groups][{{ $gi }}][title]" class="admin-input" value="{{ $group['title'] ?? '' }}" placeholder="Group title" style="font-weight:600;margin-bottom:8px;">
+                <div class="group-items">
+                  @foreach($group['items'] ?? [] as $ii => $item)
+                  <div class="repeater-row" style="display:grid;grid-template-columns:1fr 32px;gap:8px;align-items:center;margin-bottom:6px;">
+                    <input type="text" name="translations[{{ $locale }}][groups][{{ $gi }}][items][{{ $ii }}][title]" class="admin-input" value="{{ $item['title'] ?? '' }}" placeholder="Item title">
+                    <button type="button" class="repeater-remove" title="Remove">&times;</button>
+                  </div>
+                  @endforeach
+                </div>
+                <button type="button" class="repeater-add-group-item btn-admin btn-admin--outline" data-group="{{ $gi }}" data-locale="{{ $locale }}" style="font-size:11px;margin-top:4px;">+ Add item</button>
+                <button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove group">&times;</button>
+              </div>
+              @endforeach
+              <button type="button" class="repeater-add-group btn-admin btn-admin--outline" data-locale="{{ $locale }}" style="font-size:12px;margin-top:4px;">+ Add group</button>
+            </div>
+          </div>
+        </div>
+        @endif
+
+        {{-- Categories (FAQ categories special field) --}}
+        @if(isset($lc['categories']))
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Categories — {{ strtoupper($locale) }}</div>
+            <div class="repeater" data-field="categories" data-locale="{{ $locale }}">
+              @foreach($lc['categories'] ?? [] as $i => $cat)
+              <div class="repeater-row" style="display:grid;grid-template-columns:120px 1fr 32px;gap:8px;align-items:center;margin-bottom:8px;">
+                <input type="text" name="translations[{{ $locale }}][categories][{{ $i }}][key]" class="admin-input" value="{{ $cat['key'] ?? '' }}" placeholder="Key">
+                <input type="text" name="translations[{{ $locale }}][categories][{{ $i }}][label]" class="admin-input" value="{{ $cat['label'] ?? '' }}" placeholder="Label">
+                <button type="button" class="repeater-remove" title="Remove">&times;</button>
+              </div>
+              @endforeach
+            </div>
+          </div>
+        </div>
+        @endif
+
+      </div>{{-- end locale-panel --}}
+      @endforeach
 
       {{-- Raw JSON (advanced) --}}
       <details>
@@ -255,7 +289,7 @@
           <div class="admin-form__section-title">Image</div>
 
           @php
-            $currentImg = $section->content['image'] ?? null;
+            $currentImg = $localeContent['en']['image'] ?? $section->content['image'] ?? null;
             // Normalize absolute URLs to relative paths
             if ($currentImg && preg_match('#https?://[^/]+(/storage/.+)#', $currentImg, $m)) {
                 $currentImg = $m[1];
@@ -330,6 +364,13 @@
 
 @section('page_styles')
 <style>
+  .locale-tab {
+    padding: 8px 20px; font-size: 13px; font-weight: 500; cursor: pointer;
+    border: none; background: none; color: #6b7280; border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.15s;
+  }
+  .locale-tab:hover { color: #374151; }
+  .locale-tab--active { color: #5a9e97; border-bottom-color: #5a9e97; }
   .media-thumb-btn {
     background: none; border: 2px solid #e5e7eb; border-radius: 6px;
     padding: 0; cursor: pointer; transition: border-color 0.15s; overflow: hidden;
@@ -347,6 +388,11 @@
 
 @section('page_scripts')
 <script>
+function switchLocale(locale) {
+  document.querySelectorAll('.locale-tab').forEach(t => t.classList.toggle('locale-tab--active', t.dataset.locale === locale));
+  document.querySelectorAll('.locale-panel').forEach(p => p.style.display = p.dataset.locale === locale ? 'flex' : 'none');
+}
+
 function previewNewImage(input) {
   const wrap = document.getElementById('new-image-preview');
   const thumb = document.getElementById('new-image-thumb');
@@ -379,19 +425,25 @@ document.addEventListener('click', function(e) {
   }
 });
 
+// Helper: build locale-prefixed name
+function locName(locale, field, idx, sub) {
+  return 'translations[' + locale + '][' + field + '][' + idx + '][' + sub + ']';
+}
+
 // Repeater: add simple row (items, stats)
 document.querySelectorAll('.repeater-add').forEach(btn => {
   btn.addEventListener('click', function() {
     const field = this.dataset.field;
     const fields = this.dataset.fields.split(',');
     const cols = this.dataset.cols;
+    const locale = this.dataset.locale;
     const container = this.closest('.repeater');
     const idx = container.querySelectorAll('.repeater-row').length;
     const row = document.createElement('div');
     row.className = 'repeater-row';
     row.style.cssText = 'display:grid;grid-template-columns:' + cols + ';gap:8px;align-items:center;margin-bottom:8px;';
     fields.forEach(f => {
-      row.innerHTML += '<input type="text" name="' + field + '[' + idx + '][' + f + ']" class="admin-input" placeholder="' + f.charAt(0).toUpperCase() + f.slice(1) + '">';
+      row.innerHTML += '<input type="text" name="' + locName(locale, field, idx, f) + '" class="admin-input" placeholder="' + f.charAt(0).toUpperCase() + f.slice(1) + '">';
     });
     row.innerHTML += '<button type="button" class="repeater-remove" title="Remove">&times;</button>';
     container.insertBefore(row, this);
@@ -402,16 +454,17 @@ document.querySelectorAll('.repeater-add').forEach(btn => {
 document.querySelectorAll('.repeater-add-step').forEach(btn => {
   btn.addEventListener('click', function() {
     const container = this.closest('.repeater');
+    const locale = this.dataset.locale;
     const idx = container.querySelectorAll('.repeater-row').length;
     const row = document.createElement('div');
     row.className = 'repeater-row';
     row.style.cssText = 'border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;';
     row.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr 120px;gap:8px;margin-bottom:8px;">' +
-      '<input type="text" name="steps[' + idx + '][title]" class="admin-input" placeholder="Step title">' +
-      '<input type="text" name="steps[' + idx + '][duration]" class="admin-input" placeholder="Duration (optional)">' +
-      '<input type="text" name="steps[' + idx + '][badge]" class="admin-input" placeholder="Badge (optional)">' +
+      '<input type="text" name="' + locName(locale, 'steps', idx, 'title') + '" class="admin-input" placeholder="Step title">' +
+      '<input type="text" name="' + locName(locale, 'steps', idx, 'duration') + '" class="admin-input" placeholder="Duration (optional)">' +
+      '<input type="text" name="' + locName(locale, 'steps', idx, 'badge') + '" class="admin-input" placeholder="Badge (optional)">' +
       '</div>' +
-      '<textarea name="steps[' + idx + '][description]" class="admin-input" rows="2" placeholder="Step description" style="resize:vertical;"></textarea>' +
+      '<textarea name="' + locName(locale, 'steps', idx, 'description') + '" class="admin-input" rows="2" placeholder="Step description" style="resize:vertical;"></textarea>' +
       '<button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove">&times;</button>';
     container.insertBefore(row, this);
   });
@@ -421,15 +474,16 @@ document.querySelectorAll('.repeater-add-step').forEach(btn => {
 document.querySelectorAll('.repeater-add-card').forEach(btn => {
   btn.addEventListener('click', function() {
     const container = this.closest('.repeater');
+    const locale = this.dataset.locale;
     const idx = container.querySelectorAll('.repeater-row').length;
     const row = document.createElement('div');
     row.className = 'repeater-row';
     row.style.cssText = 'border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;';
     row.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">' +
-      '<input type="text" name="cards[' + idx + '][title]" class="admin-input" placeholder="Card title">' +
-      '<input type="text" name="cards[' + idx + '][subtitle]" class="admin-input" placeholder="Subtitle (optional)">' +
+      '<input type="text" name="' + locName(locale, 'cards', idx, 'title') + '" class="admin-input" placeholder="Card title">' +
+      '<input type="text" name="' + locName(locale, 'cards', idx, 'subtitle') + '" class="admin-input" placeholder="Subtitle (optional)">' +
       '</div>' +
-      '<textarea name="cards[' + idx + '][description]" class="admin-input" rows="2" placeholder="Card description" style="resize:vertical;"></textarea>' +
+      '<textarea name="' + locName(locale, 'cards', idx, 'description') + '" class="admin-input" rows="2" placeholder="Card description" style="resize:vertical;"></textarea>' +
       '<button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove">&times;</button>';
     container.insertBefore(row, this);
   });
@@ -439,12 +493,13 @@ document.querySelectorAll('.repeater-add-card').forEach(btn => {
 document.querySelectorAll('.repeater-add-group-item').forEach(btn => {
   btn.addEventListener('click', function() {
     const gi = this.dataset.group;
+    const locale = this.dataset.locale;
     const container = this.previousElementSibling;
     const idx = container.querySelectorAll('.repeater-row').length;
     const row = document.createElement('div');
     row.className = 'repeater-row';
     row.style.cssText = 'display:grid;grid-template-columns:1fr 32px;gap:8px;align-items:center;margin-bottom:6px;';
-    row.innerHTML = '<input type="text" name="groups[' + gi + '][items][' + idx + '][title]" class="admin-input" placeholder="Item title">' +
+    row.innerHTML = '<input type="text" name="translations[' + locale + '][groups][' + gi + '][items][' + idx + '][title]" class="admin-input" placeholder="Item title">' +
       '<button type="button" class="repeater-remove" title="Remove">&times;</button>';
     container.appendChild(row);
   });
@@ -454,24 +509,26 @@ document.querySelectorAll('.repeater-add-group-item').forEach(btn => {
 document.querySelectorAll('.repeater-add-group').forEach(btn => {
   btn.addEventListener('click', function() {
     const container = this.closest('.repeater-groups');
+    const locale = this.dataset.locale;
     const gi = container.querySelectorAll('.repeater-group').length;
     const group = document.createElement('div');
     group.className = 'repeater-group';
     group.style.cssText = 'border:1px solid #d1d5db;border-radius:8px;padding:14px;margin-bottom:12px;background:#fafafa;position:relative;';
-    group.innerHTML = '<input type="text" name="groups[' + gi + '][title]" class="admin-input" value="" placeholder="Group title" style="font-weight:600;margin-bottom:8px;">' +
+    group.innerHTML = '<input type="text" name="translations[' + locale + '][groups][' + gi + '][title]" class="admin-input" value="" placeholder="Group title" style="font-weight:600;margin-bottom:8px;">' +
       '<div class="group-items"></div>' +
-      '<button type="button" class="repeater-add-group-item btn-admin btn-admin--outline" data-group="' + gi + '" style="font-size:11px;margin-top:4px;">+ Add item</button>' +
+      '<button type="button" class="repeater-add-group-item btn-admin btn-admin--outline" data-group="' + gi + '" data-locale="' + locale + '" style="font-size:11px;margin-top:4px;">+ Add item</button>' +
       '<button type="button" class="repeater-remove" style="position:absolute;top:8px;right:8px;" title="Remove group">&times;</button>';
     container.insertBefore(group, this);
     // Rebind the add-group-item button
     group.querySelector('.repeater-add-group-item').addEventListener('click', function() {
       const gIdx = this.dataset.group;
+      const loc = this.dataset.locale;
       const itemsDiv = this.previousElementSibling;
       const iIdx = itemsDiv.querySelectorAll('.repeater-row').length;
       const row = document.createElement('div');
       row.className = 'repeater-row';
       row.style.cssText = 'display:grid;grid-template-columns:1fr 32px;gap:8px;align-items:center;margin-bottom:6px;';
-      row.innerHTML = '<input type="text" name="groups[' + gIdx + '][items][' + iIdx + '][title]" class="admin-input" placeholder="Item title">' +
+      row.innerHTML = '<input type="text" name="translations[' + loc + '][groups][' + gIdx + '][items][' + iIdx + '][title]" class="admin-input" placeholder="Item title">' +
         '<button type="button" class="repeater-remove" title="Remove">&times;</button>';
       itemsDiv.appendChild(row);
     });

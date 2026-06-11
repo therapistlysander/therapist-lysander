@@ -26,22 +26,36 @@
 
     {{-- Left: Content --}}
     <div style="display:flex;flex-direction:column;gap:20px;">
-      <div class="admin-form">
-        <div class="admin-form__section">
-          <div class="admin-form__section-title">Question & Answer</div>
-          <div class="admin-field">
-            <label class="admin-label">Question <span style="color:#dc2626;">*</span></label>
-            <input type="text" name="question" class="admin-input" value="{{ old('question', $faq->question) }}" required placeholder="What question does this answer?">
-          </div>
-          <div class="admin-field">
-            <label class="admin-label">Answer <span style="color:#dc2626;">*</span></label>
-            <input type="hidden" id="answer-input" name="answer" value="{{ old('answer', $faq->answer) }}">
-            <div class="admin-editor-wrap" data-editor="answer-input" data-placeholder="Write the answer to this FAQ...">
-              <div class="ql-editor-area"></div>
+
+      {{-- Locale Tabs --}}
+      <div class="locale-tabs" style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;">
+        @foreach($locales as $locale)
+        <button type="button" class="locale-tab {{ $loop->first ? 'locale-tab--active' : '' }}" data-locale="{{ $locale }}" onclick="switchLocale('{{ $locale }}')">
+          {{ strtoupper($locale) }}
+        </button>
+        @endforeach
+      </div>
+
+      @foreach($locales as $locale)
+      <div class="locale-panel" data-locale="{{ $locale }}" style="{{ !$loop->first ? 'display:none;' : 'display:flex;' }}flex-direction:column;gap:20px;">
+        <div class="admin-form">
+          <div class="admin-form__section">
+            <div class="admin-form__section-title">Question & Answer — {{ strtoupper($locale) }}</div>
+            <div class="admin-field">
+              <label class="admin-label">Question <span style="color:#dc2626;">*</span></label>
+              <input type="text" name="translations[{{ $locale }}][question]" class="admin-input" value="{{ old("translations.$locale.question", $faq->exists ? ($faq->getTranslation('question', $locale) ?? '') : '') }}" required placeholder="What question does this answer?">
+            </div>
+            <div class="admin-field">
+              <label class="admin-label">Answer <span style="color:#dc2626;">*</span></label>
+              <input type="hidden" id="answer-{{ $locale }}-input" name="translations[{{ $locale }}][answer]" value="{{ old("translations.$locale.answer", $faq->exists ? ($faq->getTranslation('answer', $locale) ?? '') : '') }}">
+              <div class="admin-editor-wrap" data-editor="answer-{{ $locale }}-input" data-placeholder="Write the answer to this FAQ...">
+                <div class="ql-editor-area"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      @endforeach
     </div>
 
     {{-- Right: Settings --}}
@@ -71,4 +85,25 @@
     </div>
   </div>
 </form>
+@endsection
+
+@section('page_styles')
+<style>
+  .locale-tab {
+    padding: 8px 20px; font-size: 13px; font-weight: 500; cursor: pointer;
+    border: none; background: none; color: #6b7280; border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.15s;
+  }
+  .locale-tab:hover { color: #374151; }
+  .locale-tab--active { color: #5a9e97; border-bottom-color: #5a9e97; }
+</style>
+@endsection
+
+@section('page_scripts')
+<script>
+function switchLocale(locale) {
+  document.querySelectorAll('.locale-tab').forEach(t => t.classList.toggle('locale-tab--active', t.dataset.locale === locale));
+  document.querySelectorAll('.locale-panel').forEach(p => p.style.display = p.dataset.locale === locale ? '' : 'none');
+}
+</script>
 @endsection
