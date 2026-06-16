@@ -190,3 +190,29 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
     Route::get('/password', [AdminPasswordController::class, 'edit'])->name('password.edit');
     Route::patch('/password', [AdminPasswordController::class, 'update'])->name('password.update');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Catch-all fallback — redirect unprefixed URLs to /{locale}/...
+| e.g. /trauma-approach → /en/trauma-approach
+|--------------------------------------------------------------------------
+*/
+
+Route::fallback(function () {
+    $path = request()->path();
+
+    // Don't redirect API, admin, or asset paths
+    if (preg_match('#^(api|admin|lang|sitemap\.xml)#', $path)) {
+        abort(404);
+    }
+
+    // Detect locale from session or default
+    $locale = session('locale', config('app.locale', 'en'));
+    $supported = config('app.supported_locales', ['en', 'nl']);
+    if (!in_array($locale, $supported, true)) {
+        $locale = 'en';
+    }
+
+    // Redirect to locale-prefixed path
+    return redirect("/{$locale}/{$path}", 301);
+});
