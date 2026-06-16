@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Contact | Therapist Lysander')
+@section('title', __('ui.page_title.contact'))
 @section('meta_description', 'Get in touch with Lysander Verschuur, MSc. — psychologist and trauma therapist. Online sessions worldwide. Free and without commitment.')
 @section('canonical', 'https://www.therapistlysander.com/contact-me/')
 
@@ -126,10 +126,10 @@
 
           <!-- Prominent booking CTA -->
           <div class="booking-cta-card">
-            <h3>{{ $booking?->content['heading'] ?? 'Book a Free 30-Minute Intro Call' }}</h3>
+            <h3>{{ $booking?->content['heading'] ?? __('ui.contact.booking_card_heading') }}</h3>
             <p>{{ __('ui.contact.booking_desc') }}</p>
             <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($booking?->content['cta_url'] ?? null) }}" class="btn btn--primary btn--lg" style="width:100%;justify-content:center;">
-              {{ $booking?->content['cta_label'] ?? 'Start booking' }}
+              {{ $booking?->content['cta_label'] ?? __('ui.contact.start_booking') }}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
             </a>
           </div>

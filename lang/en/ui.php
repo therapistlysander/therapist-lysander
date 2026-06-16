@@ -50,6 +50,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Page Titles
+    |--------------------------------------------------------------------------
+    */
+    'page_title' => [
+        'home'         => 'Home | Therapist Lysander',
+        'approach'     => 'Trauma & My Approach | Therapist Lysander',
+        'training'     => 'Clinical Training | Therapist Lysander',
+        'testimonials' => 'Testimonials | Therapist Lysander',
+        'fees'         => 'Fees & Process | Therapist Lysander',
+        'faq'          => 'FAQ | Therapist Lysander',
+        'contact'      => 'Contact | Therapist Lysander',
+        'booking'      => 'Book a Free Intro Call | Lysander Verschuur, MSc.',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Common / Shared
     |--------------------------------------------------------------------------
     */
@@ -98,6 +114,16 @@ return [
         'tab_emdr'              => 'EMDR',
         'tab_schema'            => 'Schema Therapy',
         'tab_somatic'           => 'Somatic Approaches',
+        'process_heading'       => 'Starting therapy — what to expect',
+        'step_free_call_title'  => 'Free Introduction Call',
+        'step_free_call_desc'   => 'A free 30-minute online introduction call to briefly explore your current situation, your goals for therapy, and whether we feel like a good fit to work together.',
+        'step_intake_title'     => 'Intake Session',
+        'step_intake_desc'      => 'An in-depth 60-minute intake session exploring your background, current difficulties, relevant life experiences, and treatment goals in greater detail. A personalized treatment plan will be developed after the intake session.',
+        'step_ongoing_title'    => 'Ongoing Sessions',
+        'step_ongoing_desc'     => 'Sessions tailored to your individual needs, goals, and pace. Together we work toward meaningful and lasting psychological change.',
+        'free_intro_call_label' => 'Free introduction call',
+        'minutes_30'            => '30 minutes',
+        'minutes_60'            => '60 minutes',
     ],
 
     /*
@@ -153,6 +179,9 @@ return [
         'more_voices'           => 'More voices',
         'further_reflections'   => 'Further reflections',
         'additional_quotes'     => 'Additional client quotes',
+        'hero_subheading'       => 'Client experiences',
+        'hero_heading'          => 'What clients say',
+        'hero_body'             => 'These testimonials are shared with permission and reflect genuine experiences from therapy.',
     ],
 
     /*
@@ -170,6 +199,23 @@ return [
         'availability_text'     => 'I currently maintain a limited caseload to ensure therapy remains thoughtful, personal, and attentive. Availability varies over time, but new clients can usually be accommodated within',
         'availability_weeks'    => '2–6 weeks',
         'session_duration_note' => 'Individual therapy sessions last 60 minutes. The introductory call is free and without obligation.',
+        'hero_heading'          => 'Fees & Practical Information',
+        'hero_body'             => 'Information about fees, availability, and what to expect when starting therapy. The introductory call is free and without obligation.',
+        'process_free_title'    => 'Free Introductory Call',
+        'process_free_desc'     => 'We briefly discuss what brings you to therapy, your goals, and whether we feel like a good fit to work together.',
+        'process_free_duration' => '30 minutes · Free',
+        'process_intake_title'  => 'Intake Session',
+        'process_intake_desc'   => 'An in-depth session exploring your background, current difficulties, relevant life experiences, and treatment goals. Prior to the session, you\'ll complete a questionnaire that helps guide the assessment process. Following the intake, you\'ll receive a personalized treatment plan outlining the main difficulties, therapeutic goals, and proposed treatment approach.',
+        'process_intake_duration' => '60 minutes',
+        'process_ongoing_title' => 'Ongoing Sessions',
+        'process_ongoing_desc'  => 'Sessions tailored to your individual needs, goals, and pace. Together we work toward meaningful and lasting psychological change.',
+        'process_ongoing_duration' => '60 minutes',
+        'info_online_title'     => 'Online sessions',
+        'info_online_desc'      => 'Sessions take place in a secure, confidential online setting. Available to clients worldwide.',
+        'info_duration_title'   => 'Session duration',
+        'info_duration_desc'    => 'Sessions are typically 60 minutes in length. Shorter or longer sessions can occasionally be arranged when clinically appropriate. As a general principle, therapy is kept as short as possible and as long as necessary.',
+        'info_languages_title'  => 'Languages',
+        'info_languages_desc'   => 'Sessions are conducted in Dutch or English. Both languages are equally available for all therapy modalities.',
     ],
 
     /*
@@ -191,6 +237,8 @@ return [
         'more_questions'        => 'Have more questions before booking?',
         'view_faqs'             => 'View all FAQs',
         'booking_desc'          => 'A free online introductory call to discuss your situation, ask questions, and explore whether we are a good fit to work together. Online sessions available worldwide.',
+        'booking_card_heading'  => 'Book a Free 30-Minute Intro Call',
+        'start_booking'         => 'Start booking',
         'send_heading'          => 'Send a message',
         'send_desc'             => 'Have a question or prefer to reach out first? Fill in the form below.',
         'your_name'             => 'Your name',
@@ -211,6 +259,10 @@ return [
         'categories'            => 'Categories',
         'still_questions'       => 'Still have questions?',
         'still_questions_desc'  => "Feel free to reach out directly — I'm happy to answer any questions before you decide to book.",
+        'cat_therapy_emdr'      => 'Therapy & EMDR',
+        'cat_starting_therapy'  => 'Starting Therapy',
+        'cat_practical'         => 'Practical Information',
+        'cat_sessions_progress' => 'Sessions & Progress',
     ],
 
     /*
@@ -224,6 +276,9 @@ return [
         'youre_booking'         => "You're booking",
         'free_call_label'       => 'Free introduction call &middot; Online',
         'free_call_desc'        => '30-minute video call &mdash; no commitment required',
+        'hero_heading'          => "Let's get started",
+        'hero_subheading'       => 'Book a free 30-minute introduction call. No commitment required.',
+        'email_placeholder'     => 'your@email.com',
         'your_details'          => 'Your details',
         'full_name'             => 'Full name',
         'name_placeholder'      => 'Your name',

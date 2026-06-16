@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Fees & Process | Therapist Lysander')
+@section('title', __('ui.page_title.fees'))
 @section('meta_description', 'Session fees, therapy process, and practical information for therapy with Lysander Verschuur, MSc. — €110 per session, primarily online, free 30-minute introduction call.')
 @section('canonical', 'https://www.therapistlysander.com/fees-process/')
 
@@ -17,8 +17,8 @@
 <div class="page-hero">
   <div class="container--narrow">
     <span class="page-hero__eyebrow">{{ $hero?->content['subheading'] ?? 'Practical information' }}</span>
-    <h1 class="page-hero__title">{{ $hero?->content['heading'] ?? 'Fees & Practical Information' }}</h1>
-    <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>Information about fees, availability, and what to expect when starting therapy. The introductory call is free and without obligation.</p>' !!}</div>
+    <h1 class="page-hero__title">{{ $hero?->content['heading'] ?? __('ui.fees.hero_heading') }}</h1>
+    <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>' . __('ui.fees.hero_body') . '</p>' !!}</div>
   </div>
 </div>
 
@@ -58,9 +58,9 @@
       <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;margin:0 auto;">{{ $process?->content['subheading'] ?? 'Therapy begins with a free introductory call, followed by an intake session where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.' }}</p>
     </div>
     @php $processSteps = $process?->content['steps'] ?? [
-      ['title'=>'Free Introductory Call','description'=>'We briefly discuss what brings you to therapy, your goals, and whether we feel like a good fit to work together.','duration'=>'30 minutes · Free','badge'=>'Free'],
-      ['title'=>'Intake Session','description'=>"An in-depth session exploring your background, current difficulties, relevant life experiences, and treatment goals. Prior to the session, you'll complete a questionnaire that helps guide the assessment process. Following the intake, you'll receive a personalized treatment plan outlining the main difficulties, therapeutic goals, and proposed treatment approach.",'duration'=>'60 minutes','badge'=>null],
-      ['title'=>'Ongoing Sessions','description'=>'Sessions tailored to your individual needs, goals, and pace. Together we work toward meaningful and lasting psychological change.','duration'=>'60 minutes','badge'=>null],
+      ['title'=>__('ui.fees.process_free_title'),'description'=>__('ui.fees.process_free_desc'),'duration'=>__('ui.fees.process_free_duration'),'badge'=>__('ui.common.free')],
+      ['title'=>__('ui.fees.process_intake_title'),'description'=>__('ui.fees.process_intake_desc'),'duration'=>__('ui.fees.process_intake_duration'),'badge'=>null],
+      ['title'=>__('ui.fees.process_ongoing_title'),'description'=>__('ui.fees.process_ongoing_desc'),'duration'=>__('ui.fees.process_ongoing_duration'),'badge'=>null],
     ]; @endphp
     <div class="process-cards fade-in">
       @foreach($processSteps as $i => $step)
@@ -85,9 +85,9 @@
       <h2 id="practical-heading" style="color:var(--color-white);">{{ $info?->content['heading'] ?? 'Session information' }}</h2>
     </div>
     @php $infoCards = $info?->content['cards'] ?? [
-      ['title'=>'Online sessions','description'=>'Sessions take place in a secure, confidential online setting. Available to clients worldwide.'],
-      ['title'=>'Session duration','description'=>'Sessions are typically 60 minutes in length. Shorter or longer sessions can occasionally be arranged when clinically appropriate. As a general principle, therapy is kept as short as possible and as long as necessary.'],
-      ['title'=>'Languages','description'=>'Sessions are conducted in Dutch or English. Both languages are equally available for all therapy modalities.'],
+      ['title'=>__('ui.fees.info_online_title'),'description'=>__('ui.fees.info_online_desc')],
+      ['title'=>__('ui.fees.info_duration_title'),'description'=>__('ui.fees.info_duration_desc')],
+      ['title'=>__('ui.fees.info_languages_title'),'description'=>__('ui.fees.info_languages_desc')],
     ]; @endphp
     <div class="card-grid fade-in">
       @foreach($infoCards as $card)

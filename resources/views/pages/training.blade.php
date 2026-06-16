@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Clinical Training | Therapist Lysander')
+@section('title', __('ui.page_title.training'))
 @section('meta_description', 'Clinical training and professional background of Lysander Verschuur, MSc. — advanced training in EMDR, Schema Therapy, ACT, CBT, and trauma-focused psychotherapy.')
 @section('canonical', 'https://www.therapistlysander.com/clinical-training/')
 

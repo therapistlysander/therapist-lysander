@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Trauma & My Approach | Therapist Lysander')
+@section('title', __('ui.page_title.approach'))
 @section('meta_description', 'Trauma therapy and psychological treatment by Lysander Verschuur, MSc. — EMDR, Schema Therapy, Exposure Therapy, and integrative trauma-focused treatment for adults.')
 @section('canonical', 'https://www.therapistlysander.com/trauma-approach/')
 

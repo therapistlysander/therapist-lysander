@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Testimonials | Therapist Lysander')
+@section('title', __('ui.page_title.testimonials'))
 @section('meta_description', 'Read what clients say about therapy with Lysander Verschuur, MSc. — real testimonials about EMDR, trauma therapy, and psychological recovery.')
 @section('canonical', 'https://www.therapistlysander.com/clients/')
 
@@ -17,9 +17,9 @@
 
   <div class="page-hero">
     <div class="container--narrow">
-      <span class="page-hero__eyebrow">{{ $hero?->content['subheading'] ?? 'Client experiences' }}</span>
-      <h1 class="page-hero__title">{{ $hero?->content['heading'] ?? 'What clients say' }}</h1>
-      <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>These testimonials are shared with permission and reflect genuine experiences from therapy.</p>' !!}</div>
+      <span class="page-hero__eyebrow">{{ $hero?->content['subheading'] ?? __('ui.testimonials.hero_subheading') }}</span>
+      <h1 class="page-hero__title">{{ $hero?->content['heading'] ?? __('ui.testimonials.hero_heading') }}</h1>
+      <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>' . __('ui.testimonials.hero_body') . '</p>' !!}</div>
     </div>
   </div>
 

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'FAQ | Therapist Lysander')
+@section('title', __('ui.page_title.faq'))
 @section('meta_description', 'Frequently asked questions about therapy with Lysander Verschuur — fees, sessions, EMDR, online therapy, and how to get started.')
 @section('canonical', 'https://www.therapistlysander.com/faq/')
 
@@ -82,10 +82,10 @@
             }
             if (empty($categoryLabels)) {
               $categoryLabels = [
-                'therapy_emdr' => 'Therapy & EMDR',
-                'starting_therapy' => 'Starting Therapy',
-                'practical' => 'Practical Information',
-                'sessions_progress' => 'Sessions & Progress',
+                'therapy_emdr' => __('ui.faq.cat_therapy_emdr'),
+                'starting_therapy' => __('ui.faq.cat_starting_therapy'),
+                'practical' => __('ui.faq.cat_practical'),
+                'sessions_progress' => __('ui.faq.cat_sessions_progress'),
               ];
             }
           @endphp

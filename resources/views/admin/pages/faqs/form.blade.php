@@ -66,7 +66,7 @@
           <div class="admin-field">
             <label class="admin-label">Category <span style="color:#dc2626;">*</span></label>
             <select name="category" class="admin-select" required>
-              @foreach($categories ?? ['therapy_emdr'=>'Therapy & EMDR','starting_therapy'=>'Starting Therapy','practical'=>'Practical Information','sessions_progress'=>'Sessions & Progress'] as $cat => $label)
+              @foreach($categories ?? ['therapy_emdr'=>__('ui.faq.cat_therapy_emdr'),'starting_therapy'=>__('ui.faq.cat_starting_therapy'),'practical'=>__('ui.faq.cat_practical'),'sessions_progress'=>__('ui.faq.cat_sessions_progress')] as $cat => $label)
                 <option value="{{ $cat }}" {{ old('category', $faq->category) === $cat ? 'selected' : '' }}>{{ $label }}</option>
               @endforeach
             </select>

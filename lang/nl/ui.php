@@ -9,13 +9,13 @@ return [
     */
     'nav' => [
         'home'              => 'Home',
-        'approach'          => 'Trauma & Mijn Aanpak',
-        'training'          => 'Opleiding & Training',
-        'testimonials'      => 'Ervaringen',
-        'fees'              => 'Tarieven & Werkwijze',
+        'approach'          => 'Trauma & Aanpak',
+        'training'          => 'Opleiding & Specialisatie',
+        'testimonials'      => 'Cliëntervaringen',
+        'fees'              => 'Tarieven & Traject',
         'faq'               => 'Veelgestelde Vragen',
         'contact'           => 'Contact',
-        'booking_cta'       => 'Boek een Gratis 30-Min Kennismaking',
+        'booking_cta'       => 'Boek een Gratis Kennismakingsgesprek',
         'toggle_menu'       => 'Menu openen/sluiten',
         'identity_title'    => 'Psycholoog &amp; Traumatherapeut',
         'main_navigation'   => 'Hoofdnavigatie',
@@ -32,7 +32,7 @@ return [
         'contact'           => 'Contact',
         'tagline'           => 'Evidence-based therapie met een persoonlijke en cliëntgerichte aanpak',
         'credentials'       => 'MSc. Psychologie',
-        'book_intro_call'   => 'Boek een Gratis Kennismaking',
+        'book_intro_call'   => 'Gratis Kennismakingsgesprek',
         'online_worldwide'  => 'Online sessies wereldwijd',
         'all_rights'        => 'Alle rechten voorbehouden.',
         'psychotherapy'     => 'Psychotherapie &amp; Traumatherapie',
@@ -50,13 +50,29 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Paginatitels
+    |--------------------------------------------------------------------------
+    */
+    'page_title' => [
+        'home'         => 'Home | Therapeut Lysander',
+        'approach'     => 'Trauma & Aanpak | Therapeut Lysander',
+        'training'     => 'Opleiding & Specialisatie | Therapeut Lysander',
+        'testimonials' => 'Cliëntervaringen | Therapeut Lysander',
+        'fees'         => 'Tarieven & Traject | Therapeut Lysander',
+        'faq'          => 'Veelgestelde Vragen | Therapeut Lysander',
+        'contact'      => 'Contact | Therapeut Lysander',
+        'booking'      => 'Boek een Gratis Kennismakingsgesprek | Lysander Verschuur, MSc.',
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Algemeen / Gedeeld
     |--------------------------------------------------------------------------
     */
     'common' => [
         'book_session'           => 'Boek een sessie',
         'contact_me'             => 'Neem Contact Op',
-        'book_intro_call'        => 'Boek een Gratis 30-Minuten Kennismaking',
+        'book_intro_call'        => 'Boek een Gratis Kennismakingsgesprek',
         'ready_to_begin'         => 'Klaar om te beginnen?',
         'ready_first_step'       => 'Klaar om de eerste stap te zetten?',
         'ready_next_step'        => 'Klaar voor de volgende stap?',
@@ -65,7 +81,7 @@ return [
         'send_message'           => 'Bericht versturen',
         'learn_more'             => 'Meer informatie',
         'per_session'            => 'Per sessie',
-        'minutes'                => 'minuten',
+        'minutes'                => 'Minuten',
         'free'                   => 'Gratis',
     ],
 
@@ -89,15 +105,25 @@ return [
         'methods_label'         => 'Therapeutische methoden',
         'how_it_works'          => 'Hoe het werkt',
         'working_together'      => 'Samenwerken',
-        'what_clients_say'      => 'Wat Cliënten Zeggen',
-        'read_testimonials'     => 'Lees alle ervaringen',
-        'view_approach'         => 'Bekijk Trauma & Mijn Aanpak',
-        'view_fees'             => 'Bekijk Tarieven & Werkwijze',
+        'what_clients_say'      => 'Wat cliënten zeggen',
+        'read_testimonials'     => 'Bekijk Cliëntervaringen',
+        'view_approach'         => 'Bekijk Trauma & Aanpak',
+        'view_fees'             => 'Bekijk Tarieven & Traject',
         'tab_cbt'               => 'CGT',
         'tab_act'               => 'ACT',
         'tab_emdr'              => 'EMDR',
         'tab_schema'            => 'Schematherapie',
         'tab_somatic'           => 'Lichaamsgericht',
+        'process_heading'       => 'De opbouw van het traject',
+        'step_free_call_title'  => 'Gratis Kennismakingsgesprek',
+        'step_free_call_desc'   => 'Een gratis online kennismakingsgesprek van 30 minuten om kort je huidige situatie te bespreken, je doelen voor therapie en of we een goede match zijn.',
+        'step_intake_title'     => 'Intakegesprek',
+        'step_intake_desc'      => 'Een uitgebreid intakegesprek van 60 minuten waarin we je achtergrond, huidige uitdagingen, relevante levenservaringen en behandelingsdoelen verkennen. Na het intakegesprek ontvang je een persoonlijk behandelplan.',
+        'step_ongoing_title'    => 'Therapiesessies',
+        'step_ongoing_desc'     => 'Sessies afgestemd op je individuele behoeften, doelen en tempo. Samen werken we aan betekenisvolle en blijvende psychologische verandering.',
+        'free_intro_call_label' => 'Gratis kennismakingsgesprek',
+        'minutes_30'            => '30 Minuten',
+        'minutes_60'            => '60 Minuten',
     ],
 
     /*
@@ -153,6 +179,9 @@ return [
         'more_voices'           => 'Meer stemmen',
         'further_reflections'   => 'Verdere reflecties',
         'additional_quotes'     => 'Meer cliëntervaringen',
+        'hero_subheading'       => 'Cliëntervaringen',
+        'hero_heading'          => 'Wat cliënten zeggen',
+        'hero_body'             => 'Deze ervaringen worden met toestemming gedeeld en weerspiegelen oprechte ervaringen uit therapie.',
     ],
 
     /*
@@ -163,13 +192,30 @@ return [
     'fees' => [
         'session_fee'           => 'Sessietarief',
         'what_included'         => 'Wat is inbegrepen',
-        'per_session_duration'  => 'Per sessie · 60 minuten',
+        'per_session_duration'  => 'Per sessie · 60 Minuten',
         'what_to_expect'        => 'Wat te verwachten',
         'practical_details'     => 'Praktische details',
         'availability_heading'  => 'Beschikbaarheid &amp; Wachttijden',
         'availability_text'     => 'Ik houd momenteel een beperkt aantal cliënten aan om therapie doordacht, persoonlijk en aandachtig te houden. De beschikbaarheid varieert, maar nieuwe cliënten kunnen doorgaans binnen',
         'availability_weeks'    => '2–6 weken',
         'session_duration_note' => 'Individuele therapiesessies duren 60 minuten. Het kennismakingsgesprek is gratis en vrijblijvend.',
+        'hero_heading'          => 'Tarieven & Praktische Informatie',
+        'hero_body'             => 'Informatie over tarieven, beschikbaarheid en wat te verwachten bij het starten van therapie. Het kennismakingsgesprek is gratis en vrijblijvend.',
+        'process_free_title'    => 'Gratis Kennismakingsgesprek',
+        'process_free_desc'     => 'We bespreken kort wat je bij therapie brengt, je doelen en of we een goede match zijn.',
+        'process_free_duration' => '30 Minuten · Gratis',
+        'process_intake_title'  => 'Intakegesprek',
+        'process_intake_desc'   => 'Een uitgebreid gesprek waarin we je achtergrond, huidige uitdagingen, relevante levenservaringen en behandelingsdoelen verkennen. Voorafgaand aan de sessie vul je een vragenlijst in die het intakegesprek helpt sturen. Na de intake ontvang je een persoonlijk behandelplan met de belangrijkste uitdagingen, therapeutische doelen en voorgestelde aanpak.',
+        'process_intake_duration' => '60 Minuten',
+        'process_ongoing_title' => 'Therapiesessies',
+        'process_ongoing_desc'  => 'Sessies afgestemd op je individuele behoeften, doelen en tempo. Samen werken we aan betekenisvolle en blijvende psychologische verandering.',
+        'process_ongoing_duration' => '60 Minuten',
+        'info_online_title'     => 'Online sessies',
+        'info_online_desc'      => 'Sessies vinden plaats in een veilige, vertrouwelijke online omgeving. Beschikbaar voor cliënten wereldwijd.',
+        'info_duration_title'   => 'Sessieduur',
+        'info_duration_desc'    => 'Sessies duren doorgaans 60 minuten. Kortere of langere sessies zijn incidenteel mogelijk wanneer klinisch verantwoord. Als uitgangspunt geldt: therapie duurt zo kort als mogelijk en zo lang als nodig.',
+        'info_languages_title'  => 'Talen',
+        'info_languages_desc'   => 'Sessies worden gevoerd in het Nederlands of Engels. Beide talen zijn gelijkelijk beschikbaar voor alle therapievormen.',
     ],
 
     /*
@@ -191,6 +237,8 @@ return [
         'more_questions'        => 'Nog meer vragen voor het boeken?',
         'view_faqs'             => 'Bekijk alle veelgestelde vragen',
         'booking_desc'          => 'Een gratis online kennismakingsgesprek om jouw situatie te bespreken, vragen te stellen en te verkennen of we goed bij elkaar passen. Online sessies wereldwijd beschikbaar.',
+        'booking_card_heading'  => 'Boek een Gratis Kennismakingsgesprek',
+        'start_booking'         => 'Start met boeken',
         'send_heading'          => 'Stuur een bericht',
         'send_desc'             => 'Heb je een vraag of wil je eerst contact opnemen? Vul het onderstaande formulier in.',
         'your_name'             => 'Jouw naam',
@@ -211,6 +259,10 @@ return [
         'categories'            => "Categorieën",
         'still_questions'       => 'Nog vragen?',
         'still_questions_desc'  => 'Neem gerust direct contact op — ik beantwoord graag al je vragen voordat je besluit te boeken.',
+        'cat_therapy_emdr'      => 'Therapie & EMDR',
+        'cat_starting_therapy'  => 'Starten met therapie',
+        'cat_practical'         => 'Praktische informatie',
+        'cat_sessions_progress' => 'Sessies & Voortgang',
     ],
 
     /*
@@ -224,6 +276,9 @@ return [
         'youre_booking'         => 'Je boekt',
         'free_call_label'       => 'Gratis kennismakingsgesprek &middot; Online',
         'free_call_desc'        => '30 minuten videogesprek &mdash; vrijblijvend',
+        'hero_heading'          => 'Laten we beginnen',
+        'hero_subheading'       => 'Boek een gratis kennismakingsgesprek van 30 minuten. Geheel vrijblijvend.',
+        'email_placeholder'     => 'jouw@email.nl',
         'your_details'          => 'Jouw gegevens',
         'full_name'             => 'Volledige naam',
         'name_placeholder'      => 'Jouw naam',

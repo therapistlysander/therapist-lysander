@@ -47,7 +47,7 @@
     <div class="hero__text">{!! $hero?->content['body'] ?? '<p>Online therapy for adults struggling with the effects of trauma and PTSD, anxiety, self-worth difficulties, emotional overwhelm, and longstanding psychological patterns. Integrative, evidence-based, and tailored to the individual.</p>' !!}</div>
     <div class="hero__actions">
       @php
-        $heroPrimaryLabel = $hero?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call';
+        $heroPrimaryLabel = $hero?->content['cta_primary_label'] ?? __('ui.common.book_intro_call');
         $heroPrimaryUrl   = \App\Providers\AppServiceProvider::localizeUrl($hero?->content['cta_primary_url'] ?? null);
         $heroSecLabel     = $hero?->content['cta_secondary_label'] ?? null;
         $heroSecUrl       = \App\Providers\AppServiceProvider::localizeUrl($hero?->content['cta_secondary_url'] ?? null);
@@ -181,15 +181,19 @@
   <div class="container">
     <div class="section-header fade-in">
       <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.home.how_it_works') }}</span>
-      <h2 id="process-heading" style="color:var(--color-white);">{{ $process?->content['heading'] ?? 'Starting therapy — what to expect' }}</h2>
+      <h2 id="process-heading" style="color:var(--color-white);">{{ $process?->content['heading'] ?? __('ui.home.process_heading') }}</h2>
     </div>
     <div class="process-steps">
       @php
-        $defaultDurations = ['free introduction call' => '30 minutes', 'intake session' => '60 minutes', 'treatment plan' => null, 'ongoing sessions' => '60 minutes'];
+        $defaultDurations = [
+          __('ui.home.step_free_call_title') => __('ui.home.minutes_30'),
+          __('ui.home.step_intake_title') => __('ui.home.minutes_60'),
+          __('ui.home.step_ongoing_title') => __('ui.home.minutes_60'),
+        ];
         $steps = $process?->content['steps'] ?? [
-          ['title' => 'Free Introduction Call', 'description' => 'A free 30-minute online introduction call to briefly explore your current situation, your goals for therapy, and whether we feel like a good fit to work together.'],
-          ['title' => 'Intake Session', 'description' => 'An in-depth 60-minute intake session exploring your background, current difficulties, relevant life experiences, and treatment goals in greater detail. A personalized treatment plan will be developed after the intake session.'],
-          ['title' => 'Ongoing Sessions', 'description' => 'Sessions tailored to your individual needs, goals, and pace. Together we work toward meaningful and lasting psychological change.'],
+          ['title' => __('ui.home.step_free_call_title'), 'description' => __('ui.home.step_free_call_desc')],
+          ['title' => __('ui.home.step_intake_title'), 'description' => __('ui.home.step_intake_desc')],
+          ['title' => __('ui.home.step_ongoing_title'), 'description' => __('ui.home.step_ongoing_desc')],
         ];
       @endphp
       @foreach($steps as $step)
@@ -213,8 +217,8 @@
 <section class="section section--white" id="testimonials-preview" aria-labelledby="testimonials-heading">
   <div class="container">
     <div class="section-header fade-in" style="text-align:center;">
-      <span class="section-label">{{ $testimonialsHdr?->content['subheading'] ?? 'What Clients Say' }}</span>
-      <h2 id="testimonials-heading" class="section-title">{{ $testimonialsHdr?->content['heading'] ?? 'What clients say' }}</h2>
+      <span class="section-label">{{ $testimonialsHdr?->content['subheading'] ?? __('ui.home.what_clients_say') }}</span>
+      <h2 id="testimonials-heading" class="section-title">{{ $testimonialsHdr?->content['heading'] ?? __('ui.home.what_clients_say') }}</h2>
     </div>
     @php
       $validTestimonials = $testimonials->filter(fn($t) => !empty($t->body) || !empty($t->quote));
@@ -267,7 +271,7 @@
     <h2>{{ $ctaBottom?->content['heading'] ?? 'Take the first step toward change' }}</h2>
     <p>{!! $ctaBottom?->content['body'] ?? "Whether you're struggling with trauma, anxiety, depression, or simply feeling stuck — I'm here. The first conversation is free and without commitment." !!}</p>
     <div class="cta-section__actions">
-      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($ctaBottom?->content['cta_primary_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $ctaBottom?->content['cta_primary_label'] ?? 'Book a Free 30-Minute Intro Call' }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($ctaBottom?->content['cta_primary_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $ctaBottom?->content['cta_primary_label'] ?? __('ui.common.book_intro_call') }}</a>
     </div>
   </div>
 </div>

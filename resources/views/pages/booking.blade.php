@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Book a Free Intro Call | Lysander Verschuur, MSc.')
+@section('title', __('ui.page_title.booking'))
 @section('meta_description', 'Book a free 30-minute introductory call with Lysander Verschuur — psychologist and trauma specialist. No commitment required. Online sessions available worldwide.')
 @section('canonical', 'https://www.therapistlysander.com/booking/')
 
@@ -159,8 +159,8 @@
     @php $bookingHero = $sections['booking_hero'] ?? null; @endphp
     <!-- STEP 1: Details -->
     <div id="step-1" class="step-content">
-      <h1 class="step-heading">{{ $bookingHero?->content['heading'] ?? "Let's get started" }}</h1>
-      <p class="step-subheading">{{ $bookingHero?->content['subheading'] ?? 'Book a free 30-minute introduction call. No commitment required.' }}</p>
+      <h1 class="step-heading">{{ $bookingHero?->content['heading'] ?? __('ui.booking.hero_heading') }}</h1>
+      <p class="step-subheading">{{ $bookingHero?->content['subheading'] ?? __('ui.booking.hero_subheading') }}</p>
 
       <div class="step-section">
         <label class="step-section__label">{{ __('ui.booking.youre_booking') }}</label>
@@ -181,7 +181,7 @@
         </div>
         <div class="form-group" style="margin-top:var(--space-4);">
           <label class="form-label" for="b-email">{{ __('ui.contact.email_address') }}</label>
-          <input type="email" class="form-input" id="b-email" placeholder="your@email.com" autocomplete="email">
+          <input type="email" class="form-input" id="b-email" placeholder="{{ __('ui.booking.email_placeholder') }}" autocomplete="email">
         </div>
       </div>
 
