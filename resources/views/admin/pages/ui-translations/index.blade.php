@@ -5,7 +5,7 @@
 @section('content')
 <div class="admin-page-header">
   <h1>UI Translations</h1>
-  <p style="color:#6b7280;font-size:14px;margin-top:4px;">Manage all navigation labels, buttons, page titles, and static text across the site.</p>
+  <p style="color:#6b7280;font-size:14px;margin-top:4px;">Manage all navigation labels, buttons, page titles, and static text across the site. Edit both English and Dutch content directly.</p>
 </div>
 
 @if(session('success'))
@@ -22,9 +22,8 @@
       {{ $groupLabels[$item->group] ?? ucfirst(str_replace('_', ' ', $item->group)) }}
     </div>
     <div style="font-size:12px;color:#9ca3af;margin-top:4px;">
-      <code style="background:#f3f4f6;padding:2px 6px;border-radius:3px;font-size:11px;">{{ $item->group }}</code>
-      <span style="margin-left:8px;">{{ $item->key_count }} keys</span>
-      <span style="margin-left:4px;">· {{ $item->locale_count }} locales</span>
+      <span>{{ $item->key_count }} items</span>
+      <span style="margin-left:4px;">&middot; {{ $item->locale_count }} languages</span>
     </div>
   </a>
   @endforeach

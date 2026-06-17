@@ -4,9 +4,8 @@
 
 @section('content')
 <div class="admin-page-header" style="display:flex;align-items:center;gap:12px;">
-  <a href="{{ route('admin.ui-translations.index') }}" style="color:#6366f1;text-decoration:none;font-size:14px;">&larr; All Groups</a>
+  <a href="{{ route('admin.ui-translations.index') }}" style="color:#6366f1;text-decoration:none;font-size:14px;">&larr; All Sections</a>
   <h1 style="margin:0;">{{ $groupLabel }}</h1>
-  <code style="background:#f3f4f6;padding:4px 8px;border-radius:4px;font-size:12px;color:#6b7280;">{{ $group }}</code>
 </div>
 
 @if(session('success'))
@@ -24,32 +23,34 @@
       <table style="width:100%;border-collapse:collapse;">
         <thead>
           <tr style="border-bottom:2px solid #e5e7eb;">
-            <th style="text-align:left;padding:8px 12px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;width:20%;">Key</th>
-            <th style="text-align:left;padding:8px 12px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;width:38%;">English (EN)</th>
-            <th style="text-align:left;padding:8px 12px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;width:38%;">Dutch (NL)</th>
-            <th style="width:4%;"></th>
+            <th style="text-align:left;padding:8px 12px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;width:25%;">Content</th>
+            <th style="text-align:left;padding:8px 12px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;width:35%;">English</th>
+            <th style="text-align:left;padding:8px 12px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;width:35%;">Dutch</th>
+            <th style="width:5%;"></th>
           </tr>
         </thead>
         <tbody>
           @foreach($translations as $key => $localeRows)
           @php
-            $enValue = $localeRows->firstWhere('locale', 'en')?->value ?? '';
-            $nlValue = $localeRows->firstWhere('locale', 'nl')?->value ?? '';
-            $label = $localeRows->first()?->label;
+            $enRow = $localeRows->firstWhere('locale', 'en');
+            $nlRow = $localeRows->firstWhere('locale', 'nl');
+            $enValue = $enRow?->value ?? '';
+            $nlValue = $nlRow?->value ?? '';
+            $label = $localeRows->first()?->label ?? ucwords(str_replace('_', ' ', $key));
             $isLong = strlen($enValue) > 80 || strlen($nlValue) > 80 || str_contains($enValue, "\n");
+            $hasEn = $enRow !== null;
+            $hasNl = $nlRow !== null;
           @endphp
           <tr style="border-bottom:1px solid #f3f4f6;vertical-align:top;">
             <td style="padding:10px 12px;">
-              <code style="font-size:11px;color:#6366f1;background:#eef2ff;padding:2px 6px;border-radius:3px;word-break:break-all;">{{ $key }}</code>
-              @if($label)
-                <div style="font-size:11px;color:#9ca3af;margin-top:2px;">{{ $label }}</div>
-              @endif
+              <div style="font-weight:500;font-size:13px;color:#111827;">{{ $label }}</div>
+              <input type="hidden" name="labels[{{ $key }}]" value="{{ $label }}">
             </td>
             <td style="padding:10px 12px;">
               @if($isLong)
-                <textarea readonly rows="3" style="width:100%;padding:6px 8px;border:1px solid #e5e7eb;border-radius:4px;font-size:13px;color:#6b7280;background:#f9fafb;resize:vertical;font-family:inherit;">{{ $enValue }}</textarea>
+                <textarea name="translations[{{ $key }}][en]" rows="3" style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px;font-size:13px;color:#111827;resize:vertical;font-family:inherit;">{{ $enValue }}</textarea>
               @else
-                <input type="text" readonly value="{{ $enValue }}" style="width:100%;padding:6px 8px;border:1px solid #e5e7eb;border-radius:4px;font-size:13px;color:#6b7280;background:#f9fafb;">
+                <input type="text" name="translations[{{ $key }}][en]" value="{{ $enValue }}" style="width:100%;padding:6px 8px;border:1px solid #d1d5db;border-radius:4px;font-size:13px;color:#111827;">
               @endif
             </td>
             <td style="padding:10px 12px;">
@@ -60,10 +61,12 @@
               @endif
             </td>
             <td style="padding:10px 4px;text-align:center;">
-              @if($localeRows->count() >= 2)
-                <span style="color:#10b981;font-size:16px;" title="Both locales present">&#10003;</span>
+              @if($hasEn && $hasNl)
+                <span style="color:#10b981;font-size:16px;" title="Both languages filled">&#10003;</span>
+              @elseif($hasEn || $hasNl)
+                <span style="color:#f59e0b;font-size:14px;" title="Missing a language">&#9888;</span>
               @else
-                <span style="color:#f59e0b;font-size:14px;" title="Missing a locale">&#9888;</span>
+                <span style="color:#ef4444;font-size:14px;" title="No translations">&#10007;</span>
               @endif
             </td>
           </tr>

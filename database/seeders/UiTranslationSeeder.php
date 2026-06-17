@@ -46,6 +46,7 @@ class UiTranslationSeeder extends Seeder
                     ],
                     [
                         'value' => $value,
+                        'label' => ucwords(str_replace('_', ' ', $key)),
                     ]
                 );
                 $count++;

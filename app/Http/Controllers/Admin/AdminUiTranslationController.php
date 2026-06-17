@@ -49,6 +49,26 @@ class AdminUiTranslationController extends Controller
 
         $groupLabel = $this->groupLabels[$group] ?? ucfirst(str_replace('_', ' ', $group));
 
+        // Auto-generate labels for any keys that don't have one yet
+        foreach ($translations as $key => $localeRows) {
+            $hasLabel = $localeRows->firstWhere('label', '!=', null) !== null;
+            if (!$hasLabel) {
+                $generatedLabel = $this->generateLabel($key);
+                foreach ($localeRows as $row) {
+                    if (empty($row->label)) {
+                        $row->label = $generatedLabel;
+                        $row->save();
+                    }
+                }
+            }
+        }
+
+        // Re-fetch after label generation
+        $translations = UiTranslation::where('group', $group)
+            ->orderBy('key')
+            ->get()
+            ->groupBy('key');
+
         return view('admin.pages.ui-translations.edit', compact('translations', 'group', 'groupLabel'));
     }
 
@@ -71,10 +91,30 @@ class AdminUiTranslationController extends Controller
             }
         }
 
+        // Also update labels if provided
+        $labels = $request->input('labels', []);
+        foreach ($labels as $key => $label) {
+            if (!empty($label)) {
+                UiTranslation::where('group', $group)
+                    ->where('key', $key)
+                    ->update(['label' => $label]);
+            }
+        }
+
         UiTranslation::clearCache();
 
         return redirect()
             ->route('admin.ui-translations.edit', $group)
             ->with('success', 'Translations saved successfully.');
+    }
+
+    /**
+     * Generate a human-readable label from a translation key.
+     * e.g. "booking_cta" => "Booking Cta", "how_it_works" => "How It Works"
+     */
+    private function generateLabel(string $key): string
+    {
+        // Replace underscores with spaces and title-case each word
+        return ucwords(str_replace('_', ' ', $key));
     }
 }
