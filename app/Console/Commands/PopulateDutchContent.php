@@ -266,8 +266,9 @@ class PopulateDutchContent extends Command
                 'cta_url' => '/booking',
             ],
             'home_cta_bottom' => [
-                'heading' => 'Neem de eerste stap',
-                'body' => 'Of je nu worstelt met trauma, angst, somberheid of het gevoel hebt vast te zitten — ik ben er. Het eerste gesprek is gratis en vrijblijvend.',
+                'heading' => 'Vrijblijvend kennismaken',
+                'body' => 'Of je nu worstelt met trauma, angst, somberheid of het gevoel hebt vast te zitten, het kennismakingsgesprek biedt de gelegenheid om je hulpvraag te bespreken en te onderzoeken of mijn aanpak bij je past.',
+                'additional_text' => 'Het eerste gesprek is gratis en vrijblijvend.',
                 'cta_primary_label' => 'Plan een gratis kennismakingsgesprek',
                 'cta_primary_url' => '/booking',
                 'cta_secondary_label' => 'WhatsApp mij',
@@ -375,7 +376,7 @@ class PopulateDutchContent extends Command
                         ],
                     ],
                     [
-                        'title' => 'Schematherapie & Ervaringsgerichte Therapie',
+                        'title' => 'Schema- & Ervaringsgerichte Therapie',
                         'items' => [
                             ['title' => 'Schematherapie Basisopleiding'],
                             ['title' => 'ACT & Schematherapie Integratie'],
@@ -437,7 +438,7 @@ class PopulateDutchContent extends Command
 
             // ── FEES ──────────────────────────────────────────────────────
             'fees_hero' => [
-                'heading' => 'Tarieven & Werkwijze',
+                'heading' => 'Tarieven & Traject',
                 'subheading' => 'Praktische informatie',
                 'body' => 'Transparante informatie over sessietarieven, wat inbegrepen is en hoe therapie begint. Starten is altijd gratis en vrijblijvend.',
             ],
@@ -665,9 +666,9 @@ class PopulateDutchContent extends Command
                 'og_description' => 'Psycholoog en traumatherapeut, werkzaam met volwassenen in het Nederlands en Engels.',
             ],
             'fees-process' => [
-                'meta_title' => 'Tarieven & Werkwijze — Therapie met Lysander Verschuur',
+                'meta_title' => 'Tarieven & Traject — Therapie met Lysander Verschuur',
                 'meta_description' => 'Transparante informatie over sessietarieven, wat te verwachten van het therapieproces en hoe te beginnen.',
-                'og_title' => 'Tarieven & Werkwijze — Lysander Verschuur',
+                'og_title' => 'Tarieven & Traject — Lysander Verschuur',
                 'og_description' => 'Informatie over therapie tarieven, het intakeproces en hoe samenwerken eruitziet.',
             ],
             'booking' => [

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\UiTranslationSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
             // SiteSettingSeeder::class,
             // TestimonialSeeder::class,
             // FaqSeeder::class,
+            UiTranslationSeeder::class,
         ]);
     }
 }
