@@ -11,7 +11,7 @@ return [
         'home'              => 'Home',
         'approach'          => 'Trauma & Aanpak',
         'training'          => 'Opleiding & Specialisatie',
-        'testimonials'      => 'Cliëntervaringen',
+        'testimonials'      => 'Cliënt ervaringen',
         'fees'              => 'Tarieven & Traject',
         'faq'               => 'Veelgestelde Vragen',
         'contact'           => 'Contact',
@@ -44,7 +44,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'layout' => [
-        'default_title'       => 'Therapeut Lysander | Psycholoog &amp; Traumatherapeut',
+        'default_title'       => 'Therapist Lysander | Psycholoog &amp; Traumatherapeut',
         'default_description' => 'Online therapie voor volwassenen die worstelen met trauma, PTSS, angst, eigenwaarde-problemen en emotionele overweldiging.',
     ],
 
@@ -54,13 +54,13 @@ return [
     |--------------------------------------------------------------------------
     */
     'page_title' => [
-        'home'         => 'Home | Therapeut Lysander',
-        'approach'     => 'Trauma & Aanpak | Therapeut Lysander',
-        'training'     => 'Opleiding & Specialisatie | Therapeut Lysander',
-        'testimonials' => 'Cliëntervaringen | Therapeut Lysander',
-        'fees'         => 'Tarieven & Traject | Therapeut Lysander',
-        'faq'          => 'Veelgestelde Vragen | Therapeut Lysander',
-        'contact'      => 'Contact | Therapeut Lysander',
+        'home'         => 'Home | Therapist Lysander',
+        'approach'     => 'Trauma & Aanpak | Therapist Lysander',
+        'training'     => 'Opleiding & Specialisatie | Therapist Lysander',
+        'testimonials' => 'Cliënt ervaringen | Therapist Lysander',
+        'fees'         => 'Tarieven & Traject | Therapist Lysander',
+        'faq'          => 'Veelgestelde Vragen | Therapist Lysander',
+        'contact'      => 'Contact | Therapist Lysander',
         'booking'      => 'Boek een Gratis Kennismakingsgesprek | Lysander Verschuur, MSc.',
     ],
 
@@ -73,7 +73,9 @@ return [
         'book_session'           => 'Boek een sessie',
         'contact_me'             => 'Neem Contact Op',
         'book_intro_call'        => 'Boek een Gratis Kennismakingsgesprek',
-        'ready_to_begin'         => 'Klaar om te beginnen?',
+        'ready_to_begin'         => 'Vrijblijvend kennismaken',
+        'ready_to_begin_subtitle' => 'Een eerste gesprek',
+        'ready_to_begin_additional' => 'Het eerste gesprek is gratis en vrijblijvend.',
         'ready_first_step'       => 'Klaar om de eerste stap te zetten?',
         'ready_next_step'        => 'Klaar voor de volgende stap?',
         'continue'               => 'Doorgaan',
@@ -103,10 +105,10 @@ return [
         'lasting_title'         => 'Gericht op blijvende verandering',
         'lasting_desc'          => 'Niet alleen symptoombestrijding — werken aan betekenisvolle, duurzame psychologische verandering.',
         'methods_label'         => 'Therapeutische methoden',
-        'how_it_works'          => 'Hoe het werkt',
+        'how_it_works'          => 'Werkwijze',
         'working_together'      => 'Samenwerken',
         'what_clients_say'      => 'Wat cliënten zeggen',
-        'read_testimonials'     => 'Bekijk Cliëntervaringen',
+        'read_testimonials'     => 'Bekijk cliëntervaringen',
         'view_approach'         => 'Bekijk Trauma & Aanpak',
         'view_fees'             => 'Bekijk Tarieven & Traject',
         'tab_cbt'               => 'CGT',
@@ -153,8 +155,8 @@ return [
     'approach' => [
         'understanding_label'   => 'Trauma begrijpen',
         'types_label'           => 'Soorten trauma',
-        'treatment_label'       => 'Behandeling',
-        'about_emdr_label'      => 'Over EMDR',
+        'treatment_label'       => 'Traumabehandeling',
+        'about_emdr_label'      => 'Toekomstgerichte angst',
         'my_perspective'        => 'Mijn perspectief',
         'begin_recovery'        => 'Begin met herstel',
     ],

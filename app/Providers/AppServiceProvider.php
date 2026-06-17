@@ -13,7 +13,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Override translation loader to support database-driven UI translations
+        $this->app->singleton('translation.loader', function ($app) {
+            return new \App\Translation\DatabaseTranslationLoader(
+                $app['files'],
+                $app['path.lang']
+            );
+        });
     }
 
     /**

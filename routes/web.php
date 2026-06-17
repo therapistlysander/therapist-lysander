@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\AdminAvailabilityController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminPasswordController;
 use App\Http\Controllers\Admin\AdminForgotPasswordController;
+use App\Http\Controllers\Admin\AdminUiTranslationController;
 use App\Http\Controllers\BookingAvailabilityApiController;
 use App\Http\Controllers\SitemapController;
 
@@ -169,6 +170,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
     // Site Settings
     Route::get('/settings', [AdminSiteSettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [AdminSiteSettingController::class, 'update'])->name('settings.update');
+
+    // UI Translations
+    Route::get('/ui-translations', [AdminUiTranslationController::class, 'index'])->name('ui-translations.index');
+    Route::get('/ui-translations/{group}/edit', [AdminUiTranslationController::class, 'edit'])->name('ui-translations.edit');
+    Route::patch('/ui-translations/{group}', [AdminUiTranslationController::class, 'update'])->name('ui-translations.update');
 
     // Email & Notifications Settings
     Route::get('/email-settings', [AdminEmailSettingController::class, 'index'])->name('email-settings.index');
