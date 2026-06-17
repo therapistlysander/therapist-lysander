@@ -12,7 +12,7 @@
     </div>
     <div class="footer__grid">
       <div class="footer__col">
-        <h4>{{ __('ui.footer.navigation') }}</h4>
+        {{-- <h4>{{ __('ui.footer.navigation') }}</h4> --}}
         <a href="{{ route('home') }}">{{ __('ui.nav.home') }}</a>
         <a href="{{ route('approach') }}">{{ __('ui.nav.approach') }}</a>
         <a href="{{ route('training') }}">{{ __('ui.nav.training') }}</a>
@@ -22,7 +22,7 @@
         <a href="{{ route('contact') }}">{{ __('ui.nav.contact') }}</a>
       </div>
       <div class="footer__col">
-        <h4>{{ __('ui.footer.contact') }}</h4>
+        {{-- <h4>{{ __('ui.footer.contact') }}</h4> --}}
         <a href="mailto:therapistlysander@gmail.com">therapistlysander@gmail.com</a>
         <a href="https://wa.me/66935309052" target="_blank" rel="noopener noreferrer">WhatsApp: +66 93 530 9052</a>
         <a href="{{ route('booking') }}">{{ __('ui.footer.book_intro_call') }}</a>

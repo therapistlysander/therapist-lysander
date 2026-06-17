@@ -37,7 +37,6 @@
   <a href="{{ route('fees') }}" class="nav__link" role="menuitem">{{ __('ui.nav.fees') }}</a>
   <a href="{{ route('faq') }}" class="nav__link" role="menuitem">{{ __('ui.nav.faq') }}</a>
   <a href="{{ route('contact') }}" class="nav__link" role="menuitem">{{ __('ui.nav.contact') }}</a>
-  <a href="{{ route('booking') }}" class="nav__cta" role="menuitem">{{ __('ui.nav.booking_cta') }}</a>
   {{-- Mobile language switcher --}}
   @php
     $currentLocale = app()->getLocale();

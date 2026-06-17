@@ -29,7 +29,7 @@
         <span class="section-label">{{ __('ui.fees.session_fee') }}</span>
         <h2 id="fees-heading">{{ $pricing?->content['heading'] ?? 'Fees & Availability' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
+        <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
           <p>{{ __('ui.fees.session_duration_note') }}</p>
         </div>
       </div>
@@ -55,7 +55,7 @@
     <div class="section-header fade-in" style="text-align:center;">
       <span class="section-label">{{ __('ui.fees.what_to_expect') }}</span>
       <h2 id="process-heading" class="section-title">{{ $process?->content['heading'] ?? 'What to Expect' }}</h2>
-      <p style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;margin:0 auto;">{{ $process?->content['subheading'] ?? 'Therapy begins with a free introductory call, followed by an intake session where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.' }}</p>
+      <p style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;margin:0 auto;">{{ $process?->content['subheading'] ?? 'Therapy begins with a free introductory call, followed by an intake session where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.' }}</p>
     </div>
     @php $processSteps = $process?->content['steps'] ?? [
       ['title'=>__('ui.fees.process_free_title'),'description'=>__('ui.fees.process_free_desc'),'duration'=>__('ui.fees.process_free_duration'),'badge'=>__('ui.common.free')],

@@ -24,7 +24,7 @@
   .approach-panel { display:none; }
   .approach-panel.active { display:block; }
   .approach-panel h3 { font-size:var(--size-xl); margin-bottom:var(--space-4); }
-  .approach-panel p { font-size:var(--size-md); color:var(--color-text-muted); line-height:1.8; }
+  .approach-panel p { font-size:var(--size-base); color:var(--color-text-muted); line-height:1.8; }
   .process-steps { counter-reset:steps; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:var(--space-6); }
   .process-step { counter-increment:steps; position:relative; padding-top:3.5rem; }
   .process-step::before { content:counter(steps); position:absolute; top:0; left:0; width:40px; height:40px; background:var(--color-teal); color:var(--color-white); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-size:var(--size-base); }
@@ -53,8 +53,10 @@
         $heroSecUrl       = \App\Providers\AppServiceProvider::localizeUrl($hero?->content['cta_secondary_url'] ?? null);
       @endphp
       <a href="{{ $heroPrimaryUrl }}" class="btn btn--primary btn--lg">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        {{ $heroPrimaryLabel }}
+        <span style="display:inline-flex;align-items:center;gap:var(--space-2);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          {{ $heroPrimaryLabel }}
+        </span>
       </a>
     </div>
   </div>
@@ -74,7 +76,7 @@
         <span class="section-label">{{ __('ui.home.who_i_am_label') }}</span>
         <h2 id="intro-heading">{{ $intro?->content['heading'] ?? 'A psychologist who has walked the path himself' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
+        <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
           {!! $intro?->content['body'] ?? '<p>I am a psychologist working with adults who feel emotionally overwhelmed, stuck in longstanding patterns, or disconnected from themselves and their lives.</p><p>Many of the people I work with struggle with the effects of trauma, anxiety, chronic self-criticism, emotional dysregulation, or difficulties related to self-worth and relationships.</p><p>Alongside my clinical training, my work is informed by <strong>personal experience with trauma, anxiety, and struggles with self-worth</strong>. My approach is warm, direct, collaborative, and focused on meaningful psychological change.</p>' !!}
         </div>
         @php $introStats = $intro?->content['stats'] ?? [['value'=>'5','label'=>'Approaches — EMDR, CBT, ACT, Schema & Somatic']]; @endphp
@@ -96,7 +98,7 @@
         <span class="section-label">{{ __('ui.home.what_i_work_with') }}</span>
         <h2 id="areas-heading">{{ $areas?->content['heading'] ?? 'Individualized & Goal-Oriented Therapy' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-4);">
+        <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-4);">
           {!! $areas?->content['body'] ?? '<p>Therapy is most effective when it is adapted to the person rather than forcing the person to fit a particular method or protocol.</p><p>I take time to understand your story, your strengths, your struggles, and the patterns that may be contributing to your difficulties. From there, we work collaboratively toward the goals that matter most to you, combining practical strategies with deeper emotional work where needed.</p>' !!}
         </div>
         @php $areaItems = $areas?->content['items'] ?? [['title'=>'Trauma and PTSD'],['title'=>'Anxiety disorders and panic'],['title'=>'Depression and grief'],['title'=>'Self-esteem and self-worth difficulties'],['title'=>'Perfectionism and control-related patterns'],['title'=>'Emotional regulation and anger-related difficulties'],['title'=>'Burnout and chronic stress'],['title'=>'Compulsive or avoidance-based coping patterns']]; @endphp
@@ -120,7 +122,7 @@
       <span class="section-label">{{ __('ui.home.therapy_approach_label') }}</span>
       <h2>{{ __('ui.home.therapy_with_me') }}</h2>
       <div class="divider"></div>
-      <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
+      <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
         <p>{{ __('ui.home.therapy_desc') }}</p>
       </div>
     </div>
@@ -147,7 +149,7 @@
     <div class="section-header fade-in">
       <span class="section-label">{{ __('ui.home.methods_label') }}</span>
       <h2 id="approaches-heading" class="section-title">{{ $approaches?->content['heading'] ?? 'Evidence-Based Therapy, Tailored to the Individual' }}</h2>
-      <p class="text-muted" style="color:var(--color-text-muted);font-size:var(--size-md);max-width:600px;">{!! $approaches?->content['body'] ?? 'I draw from a range of proven therapeutic approaches to help clients address the underlying patterns that contribute to emotional suffering, develop greater psychological flexibility, and create meaningful, lasting change.' !!}</p>
+      <p class="text-muted" style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;">{!! $approaches?->content['body'] ?? 'I draw from a range of proven therapeutic approaches to help clients address the underlying patterns that contribute to emotional suffering, develop greater psychological flexibility, and create meaningful, lasting change.' !!}</p>
     </div>
     @php
       $approachItems = $approaches?->content['items'] ?? [
@@ -253,7 +255,7 @@
         <span class="section-label">{{ __('ui.home.working_together') }}</span>
         <h2 id="working-heading">{{ $workingTogether?->content['heading'] ?? 'A space that is safe, thoughtful, and collaborative' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
+        <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
           {!! $workingTogether?->content['body'] ?? '<p>Therapy is not about "fixing" who you are. Often, it involves understanding the patterns that developed in response to difficult life experiences — and gradually creating more freedom, flexibility, and self-trust in the present.</p><p>My role is to provide a space that is safe, thoughtful, collaborative, and focused on real psychological change.</p>' !!}
         </div>
       </div>

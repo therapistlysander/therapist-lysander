@@ -23,9 +23,9 @@
   .values-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:var(--space-4); margin-top:var(--space-6); }
   .value-item { padding:var(--space-4); background:var(--color-white); border:1px solid var(--color-border); border-radius:var(--radius-md); border-top:3px solid var(--color-accent); }
   .value-item h4 { font-size:var(--size-lg); margin-bottom:var(--space-3); }
-  .value-item p { font-size:var(--size-sm); color:var(--color-text-muted); line-height:1.7; }
+  .value-item p { font-size:var(--size-base); color:var(--color-text-muted); line-height:1.7; }
   .personal-section { padding:var(--space-8); border-left:3px solid var(--color-accent); background:var(--color-teal-light); border-radius:0 var(--radius-md) var(--radius-md) 0; margin:var(--space-8) 0; }
-  .personal-section p { font-size:var(--size-md); color:var(--color-text-muted); line-height:1.8; }
+  .personal-section p { font-size:var(--size-base); color:var(--color-text-muted); line-height:1.8; }
   .personal-section p + p { margin-top:var(--space-4); }
 </style>
 @endsection
@@ -47,7 +47,7 @@
         <span class="section-label">{{ __('ui.about.who_i_am') }}</span>
         <h2>{{ $who?->content['heading'] ?? 'Lysander Verschuur, MSc.' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.8;margin-bottom:var(--space-6);">
+        <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.8;margin-bottom:var(--space-6);">
           {!! $who?->content['body'] ?? '<p>I am a trained psychologist working with individuals experiencing <strong>psychological and emotional difficulties such as trauma, anxiety, depression, and self-esteem issues</strong>. I am here to support people through some of life\'s hardest chapters.</p><p>My work is focused on the <strong>treatment and reduction of mental health complaints of individual clients</strong>, using evidence-based therapeutic methods. I work with both Dutch-speaking and English-speaking clients.</p><p>I help clients move from states of <strong>overwhelm, constriction, and emotional distress</strong> toward <strong>greater stability, clarity, and psychological flexibility</strong>.</p>' !!}
         </div>
         <div style="display:flex;gap:var(--space-4);flex-wrap:wrap;">
@@ -81,7 +81,7 @@
         <span class="section-label">{{ __('ui.about.how_i_work') }}</span>
         <h2>{{ $howIWork?->content['heading'] ?? 'Integrative & evidence-based' }}</h2>
         <div class="divider"></div>
-        <div style="font-size:var(--size-md);color:var(--color-text-muted);line-height:1.75;margin-bottom:var(--space-6);">{!! $howIWork?->content['body'] ?? '<p>I work integratively, drawing from evidence-based approaches that each serve a distinct therapeutic purpose.</p>' !!}</div>
+        <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.75;margin-bottom:var(--space-6);">{!! $howIWork?->content['body'] ?? '<p>I work integratively, drawing from evidence-based approaches that each serve a distinct therapeutic purpose.</p>' !!}</div>
         @php $methods = [['title'=>__('ui.about.method_cbt')],['title'=>__('ui.about.method_act')],['title'=>__('ui.about.method_emdr')],['title'=>__('ui.about.method_schema')],['title'=>__('ui.about.method_somatic')]]; @endphp
         <div class="methods-list">
           @foreach($methods as $method)
@@ -98,7 +98,7 @@
     <div class="section-header fade-in"><span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.about.my_approach') }}</span><h2 style="color:white;">{{ $values?->content['heading'] ?? 'Tailored, collaborative, direct' }}</h2></div>
     <div class="grid-2 fade-in">
       <div>
-        <div style="color:rgba(255,255,255,0.75);font-size:var(--size-md);line-height:1.8;margin-bottom:var(--space-6);">
+        <div style="color:rgba(255,255,255,0.75);font-size:var(--size-base);line-height:1.8;margin-bottom:var(--space-6);">
           {!! $values?->content['body'] ?? '<p><strong style="color:white;">Every person carries a unique life story, emotional landscape, and psychological makeup.</strong> I tailor each therapy trajectory to fit the person in front of me.</p><p><strong style="color:white;">My approach is practical, goal-oriented, and collaborative</strong>: we work together to develop insight, emotional resilience, and concrete tools for change.</p>' !!}
         </div>
       </div>

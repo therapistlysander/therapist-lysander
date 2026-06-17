@@ -1401,7 +1401,7 @@ strong { font-weight: 600; }
   .footer__brand { text-align: center; }
   .time-slots { grid-template-columns: repeat(2, 1fr); }
   .hero__actions { flex-direction: column; }
-  .hero__actions .btn { justify-content: center; width: 100%; }
+  .hero__actions .btn { justify-content: center; width: 100%; white-space: normal; text-align: center; line-height: 1.4; }
   .cta-section__actions { flex-direction: column; align-items: center; }
   .cta-section__actions .btn { width: 100%; max-width: 320px; justify-content: center; }
   .wa-float { bottom: 20px; right: 16px; width: 48px; height: 48px; }
