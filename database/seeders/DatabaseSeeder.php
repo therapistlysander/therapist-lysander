@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
             // SiteSettingSeeder::class,
             // TestimonialSeeder::class,
             // FaqSeeder::class,
-            UiTranslationSeeder::class,
+            // UiTranslationSeeder::class,
         ]);
     }
 }

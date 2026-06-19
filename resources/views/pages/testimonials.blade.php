@@ -78,7 +78,7 @@
       </div>
       <div class="endorsement-card fade-in">
         <blockquote class="endorsement-card__quote">
-          {{ __('ui.home.endorsement_quote') }}
+          {!! __('ui.home.endorsement_body') !!}
         </blockquote>
         <p class="endorsement-card__attribution">
           &mdash; {{ __('ui.home.endorsement_attribution') }}

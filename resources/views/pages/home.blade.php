@@ -254,7 +254,7 @@
       <span class="endorsement-card__badge">{{ __('ui.testimonials.professional_recommendation') }}</span>
       <h2 id="endorsement-heading" class="endorsement-card__heading">{{ __('ui.home.endorsement_heading') }}</h2>
       <blockquote class="endorsement-card__quote">
-        {{ $endorsement?->body ?? __('ui.home.endorsement_quote') }}
+        {!! $endorsement?->body ?? __('ui.home.endorsement_body') !!}
       </blockquote>
       <p class="endorsement-card__attribution">
         &mdash; {{ $endorsement?->client_name ?? __('ui.home.endorsement_attribution') }}
