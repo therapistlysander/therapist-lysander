@@ -270,9 +270,9 @@ return [
         'still_questions'       => 'Nog vragen?',
         'still_questions_desc'  => 'Neem gerust direct contact op — ik beantwoord graag al je vragen voordat je besluit te boeken.',
         'cat_therapy_emdr'      => 'Therapie & EMDR',
-        'cat_starting_therapy'  => 'Starten met therapie',
+        'cat_starting_therapy'  => 'Introductie & Intake',
         'cat_practical'         => 'Praktische informatie',
-        'cat_sessions_progress' => 'Sessies & Voortgang',
+        'cat_sessions_progress' => 'Therapieproces',
     ],
 
     /*

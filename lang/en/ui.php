@@ -270,9 +270,9 @@ return [
         'still_questions'       => 'Still have questions?',
         'still_questions_desc'  => "Feel free to reach out directly — I'm happy to answer any questions before you decide to book.",
         'cat_therapy_emdr'      => 'Therapy & EMDR',
-        'cat_starting_therapy'  => 'Starting Therapy',
+        'cat_starting_therapy'  => 'Introduction & Intake',
         'cat_practical'         => 'Practical Information',
-        'cat_sessions_progress' => 'Sessions & Progress',
+        'cat_sessions_progress' => 'Therapy Process',
     ],
 
     /*
