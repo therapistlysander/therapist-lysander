@@ -110,7 +110,6 @@ return [
         'what_clients_say'      => 'What Clients Say',
         'read_testimonials'     => 'Read full testimonials',
         'read_more_experiences' => 'Read More Client Experiences',
-        'read_full_story'     => 'Read Full Story',
         'endorsement_heading'   => 'Recommended by a Fellow Psychotherapist',
         'endorsement_quote'     => '"Professionalism, dedication, extensive experience, empathy, and a warm presence."',
         'endorsement_body'      => '<p>Lysander comes highly recommended as a trauma therapist for those seeking depth, nuance, and genuine therapeutic expertise. He combines professionalism, dedication, and extensive experience with empathy and a warm, grounded presence.</p><p>He has an extensive therapeutic toolbox and continues to expand his knowledge and skills with great enthusiasm. This allows him to tailor his approach to each individual client and adapt creatively to their needs.</p><p>I have personally experienced sessions with Lysander and found them to be incredibly valuable and impactful.</p>',
