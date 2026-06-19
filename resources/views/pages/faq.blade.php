@@ -76,17 +76,29 @@
           <p class="faq-sidebar__title">{{ __('ui.faq.categories') }}</p>
           @php
             $cmsCategories = $sections['faq_categories']?->content['categories'] ?? [];
-            $categoryLabels = [];
-            foreach ($cmsCategories as $cat) {
-              $categoryLabels[$cat['key']] = $cat['label'];
-            }
-            if (empty($categoryLabels)) {
-              $categoryLabels = [
-                'therapy_emdr' => __('ui.faq.cat_therapy_emdr'),
-                'starting_therapy' => __('ui.faq.cat_starting_therapy'),
-                'practical' => __('ui.faq.cat_practical'),
-                'sessions_progress' => __('ui.faq.cat_sessions_progress'),
-              ];
+            // Use UI translations for category labels (source of truth for i18n)
+            $categoryLabels = [
+              'starting_therapy'  => __('ui.faq.cat_starting_therapy'),
+              'therapy_emdr'      => __('ui.faq.cat_therapy_emdr'),
+              'practical'         => __('ui.faq.cat_practical'),
+              'sessions_progress' => __('ui.faq.cat_sessions_progress'),
+            ];
+            // Preserve category order from CMS if available
+            if (!empty($cmsCategories)) {
+              $ordered = [];
+              foreach ($cmsCategories as $cat) {
+                $key = $cat['key'] ?? '';
+                if (isset($categoryLabels[$key])) {
+                  $ordered[$key] = $categoryLabels[$key];
+                }
+              }
+              // Add any remaining categories not in CMS order
+              foreach ($categoryLabels as $key => $label) {
+                if (!isset($ordered[$key])) {
+                  $ordered[$key] = $label;
+                }
+              }
+              $categoryLabels = $ordered;
             }
           @endphp
           @foreach($categoryLabels as $catKey => $catLabel)

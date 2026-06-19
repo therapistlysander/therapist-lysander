@@ -230,12 +230,8 @@ class AdminPageSectionController extends Controller
             $section->setTranslation('content', 'nl', $nlContent);
         }
 
-        // Sync categories from EN to NL (keys stay the same, labels follow EN)
-        if (isset($enContent['categories'])) {
-            $nlContent = $section->getTranslation('content', 'nl') ?? [];
-            $nlContent['categories'] = $enContent['categories'];
-            $section->setTranslation('content', 'nl', $nlContent);
-        }
+        // Note: categories are NOT synced EN→NL. Each locale manages its own labels
+        // via the admin form. The public FAQ page uses UI translations for display.
 
         $section->is_active = $request->boolean('is_active');
         $section->save();
