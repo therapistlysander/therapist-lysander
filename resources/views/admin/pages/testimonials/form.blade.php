@@ -46,6 +46,10 @@
               <input type="text" name="translations[{{ $locale }}][headline]" class="admin-input" value="{{ old("translations.$locale.headline", $testimonial->exists ? ($testimonial->getTranslation('headline', $locale) ?? '') : '') }}" placeholder="A short memorable line">
             </div>
             <div class="admin-field">
+              <label class="admin-label">Short Description / Featured Quote</label>
+              <textarea name="translations[{{ $locale }}][short_description]" class="admin-input" rows="3" placeholder="A short excerpt shown on the homepage (max 2-3 lines)">{{ old("translations.$locale.short_description", $testimonial->exists ? ($testimonial->getTranslation('short_description', $locale) ?? '') : '') }}</textarea>
+            </div>
+            <div class="admin-field">
               <label class="admin-label">Full testimonial body <span style="color:#dc2626;">*</span></label>
               <input type="hidden" id="body-{{ $locale }}-input" name="translations[{{ $locale }}][body]" value="{{ old("translations.$locale.body", $testimonial->exists ? ($testimonial->getTranslation('body', $locale) ?? '') : '') }}">
               <div class="admin-editor-wrap" data-editor="body-{{ $locale }}-input" data-placeholder="Write the full testimonial text...">

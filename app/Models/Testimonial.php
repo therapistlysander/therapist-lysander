@@ -9,12 +9,13 @@ class Testimonial extends Model
 {
     use HasTranslations;
 
-    public array $translatable = ['headline', 'body', 'quote'];
+    public array $translatable = ['headline', 'short_description', 'body', 'quote'];
 
     protected $fillable = [
         'client_name',
         'client_title',
         'headline',
+        'short_description',
         'body',
         'tag',
         'type',

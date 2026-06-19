@@ -223,7 +223,7 @@
       <h2 id="testimonials-heading" class="section-title">{{ $testimonialsHdr?->content['heading'] ?? __('ui.home.what_clients_say') }}</h2>
     </div>
     @php
-      $validTestimonials = $testimonials->filter(fn($t) => !empty($t->body) || !empty($t->quote) || !empty($t->headline));
+      $validTestimonials = $testimonials->filter(fn($t) => !empty($t->short_description) || !empty($t->body) || !empty($t->quote) || !empty($t->headline));
       $tCount = $validTestimonials->count();
       $gridCols = $tCount >= 3 ? 3 : ($tCount === 2 ? 2 : 1);
     @endphp
@@ -232,7 +232,7 @@
       @foreach($validTestimonials as $i => $t)
       <div class="testimonial testimonial--card {{ $t->is_featured ? 'testimonial--featured' : '' }} fade-in">
         <span class="testimonial__icon" aria-hidden="true">&ldquo;</span>
-        <div class="testimonial__quote">{!! $t->body ?: ($t->quote ?: $t->headline) !!}</div>
+        <div class="testimonial__quote">{!! $t->short_description ?: ($t->body ?: ($t->quote ?: $t->headline)) !!}</div>
         <div class="testimonial__footer">
           <p class="testimonial__name">{{ $t->client_name }}</p>
           @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif

@@ -45,6 +45,7 @@ class AdminTestimonialController extends Controller
         $translations = $request->input('translations', []);
         foreach ($translations as $locale => $data) {
             $t->setTranslation('headline', $locale, $data['headline'] ?? '');
+            $t->setTranslation('short_description', $locale, $data['short_description'] ?? '');
             $t->setTranslation('body', $locale, $data['body'] ?? '');
             $t->setTranslation('quote', $locale, $data['quote'] ?? '');
         }
@@ -84,6 +85,7 @@ class AdminTestimonialController extends Controller
         $translations = $request->input('translations', []);
         foreach ($translations as $locale => $data) {
             $testimonial->setTranslation('headline', $locale, $data['headline'] ?? '');
+            $testimonial->setTranslation('short_description', $locale, $data['short_description'] ?? '');
             $testimonial->setTranslation('body', $locale, $data['body'] ?? '');
             $testimonial->setTranslation('quote', $locale, $data['quote'] ?? '');
         }
