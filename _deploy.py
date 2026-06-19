@@ -39,9 +39,10 @@ steps = [
     ("[3/9] NPM install", f"cd {APP_DIR} && npm install --ignore-scripts"),
     ("[4/9] NPM build", f"cd {APP_DIR} && npm run build"),
     ("[5/9] Migrate", f"cd {APP_DIR} && php artisan migrate --force"),
-    ("[6/8] Fix alignment", f"cd {APP_DIR} && php artisan content:fix-alignment"),
-    ("[7/8] Cache rebuild", f"cd {APP_DIR} && php artisan view:clear && php artisan config:clear && php artisan cache:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan event:cache"),
-    ("[8/8] Queue restart", f"cd {APP_DIR} && php artisan queue:restart"),
+    ("[6/9] Seed UI translations", f"cd {APP_DIR} && php artisan db:seed --force"),
+    ("[7/9] Fix alignment", f"cd {APP_DIR} && php artisan content:fix-alignment"),
+    ("[8/9] Cache rebuild", f"cd {APP_DIR} && php artisan view:clear && php artisan config:clear && php artisan cache:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan event:cache"),
+    ("[9/9] Queue restart", f"cd {APP_DIR} && php artisan queue:restart"),
 ]
 
 for label, cmd in steps:

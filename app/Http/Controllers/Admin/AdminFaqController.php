@@ -27,7 +27,10 @@ class AdminFaqController extends Controller
             'category'   => 'required|string|max:100',
             'sort_order' => 'nullable|integer',
             'is_active'  => 'boolean',
-            'translations' => 'nullable|array',
+            'translations.en.question' => 'required|string',
+            'translations.en.answer'   => 'required|string',
+            'translations.nl.question' => 'nullable|string',
+            'translations.nl.answer'   => 'nullable|string',
         ]);
 
         $faq = new Faq();
@@ -36,13 +39,20 @@ class AdminFaqController extends Controller
         $faq->is_active  = $request->boolean('is_active');
 
         $translations = $request->input('translations', []);
-        foreach ($translations as $locale => $data) {
-            if (!empty($data['question'])) {
-                $faq->setTranslation('question', $locale, $data['question']);
-            }
-            if (!empty($data['answer'])) {
-                $faq->setTranslation('answer', $locale, $data['answer']);
-            }
+
+        // English is always required
+        $faq->setTranslation('question', 'en', $translations['en']['question'] ?? '');
+        $faq->setTranslation('answer', 'en', $translations['en']['answer'] ?? '');
+
+        // Dutch is optional — pre-fill with English if not provided
+        $nlQuestion = $translations['nl']['question'] ?? $translations['en']['question'];
+        $nlAnswer   = $translations['nl']['answer']   ?? $translations['en']['answer'];
+
+        if (!empty($nlQuestion)) {
+            $faq->setTranslation('question', 'nl', $nlQuestion);
+        }
+        if (!empty($nlAnswer)) {
+            $faq->setTranslation('answer', 'nl', $nlAnswer);
         }
 
         $faq->save();
@@ -63,7 +73,10 @@ class AdminFaqController extends Controller
             'category'   => 'required|string|max:100',
             'sort_order' => 'nullable|integer',
             'is_active'  => 'boolean',
-            'translations' => 'nullable|array',
+            'translations.en.question' => 'required|string',
+            'translations.en.answer'   => 'required|string',
+            'translations.nl.question' => 'nullable|string',
+            'translations.nl.answer'   => 'nullable|string',
         ]);
 
         $faq->category   = $request->input('category');
@@ -71,13 +84,17 @@ class AdminFaqController extends Controller
         $faq->is_active  = $request->boolean('is_active');
 
         $translations = $request->input('translations', []);
-        foreach ($translations as $locale => $data) {
-            if (!empty($data['question'])) {
-                $faq->setTranslation('question', $locale, $data['question']);
-            }
-            if (!empty($data['answer'])) {
-                $faq->setTranslation('answer', $locale, $data['answer']);
-            }
+
+        // English is always required
+        $faq->setTranslation('question', 'en', $translations['en']['question'] ?? '');
+        $faq->setTranslation('answer', 'en', $translations['en']['answer'] ?? '');
+
+        // Dutch is optional — only update if provided
+        if (!empty($translations['nl']['question'])) {
+            $faq->setTranslation('question', 'nl', $translations['nl']['question']);
+        }
+        if (!empty($translations['nl']['answer'])) {
+            $faq->setTranslation('answer', 'nl', $translations['nl']['answer']);
         }
 
         $faq->save();

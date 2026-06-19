@@ -386,6 +386,9 @@ document.querySelectorAll('[data-editor]').forEach(function(wrap) {
     }
   });
 
+  // Store instance on wrap for external access (e.g. translation pre-fill)
+  wrap.__quill = quill;
+
   // Set initial content
   if (hiddenEl.value) {
     quill.root.innerHTML = hiddenEl.value;

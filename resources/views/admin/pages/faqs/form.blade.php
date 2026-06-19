@@ -42,11 +42,11 @@
           <div class="admin-form__section">
             <div class="admin-form__section-title">Question & Answer — {{ strtoupper($locale) }}</div>
             <div class="admin-field">
-              <label class="admin-label">Question <span style="color:#dc2626;">*</span></label>
-              <input type="text" name="translations[{{ $locale }}][question]" class="admin-input" value="{{ old("translations.$locale.question", $faq->exists ? ($faq->getTranslation('question', $locale) ?? '') : '') }}" required placeholder="What question does this answer?">
+              <label class="admin-label">Question @if($locale === 'en')<span style="color:#dc2626;">*</span>@endif</label>
+              <input type="text" name="translations[{{ $locale }}][question]" class="admin-input" value="{{ old("translations.$locale.question", $faq->exists ? ($faq->getTranslation('question', $locale) ?? '') : '') }}" @if($locale === 'en') required @endif placeholder="What question does this answer?">
             </div>
             <div class="admin-field">
-              <label class="admin-label">Answer <span style="color:#dc2626;">*</span></label>
+              <label class="admin-label">Answer @if($locale === 'en')<span style="color:#dc2626;">*</span>@endif</label>
               <input type="hidden" id="answer-{{ $locale }}-input" name="translations[{{ $locale }}][answer]" value="{{ old("translations.$locale.answer", $faq->exists ? ($faq->getTranslation('answer', $locale) ?? '') : '') }}">
               <div class="admin-editor-wrap" data-editor="answer-{{ $locale }}-input" data-placeholder="Write the answer to this FAQ...">
                 <div class="ql-editor-area"></div>
@@ -105,5 +105,46 @@ function switchLocale(locale) {
   document.querySelectorAll('.locale-tab').forEach(t => t.classList.toggle('locale-tab--active', t.dataset.locale === locale));
   document.querySelectorAll('.locale-panel').forEach(p => p.style.display = p.dataset.locale === locale ? '' : 'none');
 }
+
+// Auto pre-fill Dutch fields with English content on create (only when Dutch is empty)
+@if(!$faq->exists)
+document.addEventListener('DOMContentLoaded', function() {
+  const enQuestion = document.querySelector('input[name="translations[en][question]"]');
+  const nlQuestion = document.querySelector('input[name="translations[nl][question]"]');
+  const enAnswerHidden = document.getElementById('answer-en-input');
+  const nlAnswerHidden = document.getElementById('answer-nl-input');
+
+  // Pre-fill Dutch question when English question changes
+  if (enQuestion && nlQuestion) {
+    enQuestion.addEventListener('input', function() {
+      if (!nlQuestion.value) {
+        nlQuestion.value = enQuestion.value;
+      }
+    });
+  }
+
+  // Pre-fill Dutch answer when English answer changes (via Quill)
+  // Quill instances are initialized after DOMContentLoaded, so we wait
+  setTimeout(function() {
+    const enEditorWrap = document.querySelector('[data-editor="answer-en-input"]');
+    if (enEditorWrap) {
+      const quillInstance = enEditorWrap.__quill;
+      if (quillInstance) {
+        quillInstance.on('text-change', function() {
+          const nlEditorWrap = document.querySelector('[data-editor="answer-nl-input"]');
+          if (nlEditorWrap && nlEditorWrap.__quill) {
+            // Only pre-fill if Dutch editor is empty
+            const nlText = nlEditorWrap.__quill.getText().trim();
+            if (!nlText) {
+              nlEditorWrap.__quill.root.innerHTML = quillInstance.root.innerHTML;
+              nlAnswerHidden.value = enAnswerHidden.value;
+            }
+          }
+        });
+      }
+    }
+  }, 500);
+});
+@endif
 </script>
 @endsection
