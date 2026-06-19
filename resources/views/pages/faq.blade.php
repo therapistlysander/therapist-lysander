@@ -37,9 +37,10 @@
   .faq-icon svg { width: 14px; height: 14px; transition: transform 0.25s ease; }
   .faq-item.open .faq-icon { color: var(--color-teal); }
   .faq-item.open .faq-icon svg { transform: rotate(45deg); }
-  .faq-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-  .faq-body.open { max-height: 600px; }
-  .faq-body__inner { padding: var(--space-2) 0 var(--space-5); }
+  .faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease; }
+  .faq-body.open { grid-template-rows: 1fr; }
+  .faq-body__inner { overflow: hidden; padding: 0 var(--space-0); transition: padding 0.3s ease; }
+  .faq-body.open .faq-body__inner { padding: var(--space-2) 0 var(--space-5); }
   .faq-body p { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.8; max-width: none; margin-bottom: var(--space-3); }
   .faq-body p:last-child { margin-bottom: 0; }
 
