@@ -216,7 +216,7 @@
 </section>
 
 <!-- Testimonials -->
-<section class="section section--white" id="testimonials-preview" aria-labelledby="testimonials-heading">
+<section class="section section--testimonials" id="testimonials-preview" aria-labelledby="testimonials-heading">
   <div class="container">
     <div class="section-header fade-in" style="text-align:center;">
       <span class="section-label">{{ $testimonialsHdr?->content['subheading'] ?? __('ui.home.what_clients_say') }}</span>
@@ -225,24 +225,39 @@
     @php
       $validTestimonials = $testimonials->filter(fn($t) => !empty($t->body) || !empty($t->quote) || !empty($t->headline));
       $tCount = $validTestimonials->count();
-      $gridCols = $tCount >= 3 ? 3 : ($tCount === 2 ? 2 : 1);
     @endphp
     @if($tCount > 0)
-    <div class="testimonial-grid {{ $gridCols === 2 ? 'testimonial-grid--2' : ($gridCols === 1 ? 'testimonial-grid--1' : '') }}">
+    <div class="testimonial-grid {{ $tCount >= 3 ? '' : ($tCount === 2 ? 'testimonial-grid--2' : 'testimonial-grid--1') }}">
       @foreach($validTestimonials as $i => $t)
-      <div class="testimonial testimonial--card {{ $t->is_featured ? 'testimonial--featured' : '' }} fade-in">
-        <span class="testimonial__icon" aria-hidden="true">&ldquo;</span>
-        <div class="testimonial__quote">{!! $t->body ?: ($t->quote ?: $t->headline) !!}</div>
-        <div class="testimonial__footer">
-          <p class="testimonial__name">{{ $t->client_name }}</p>
-          @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
+      @php
+        $excerpt = $t->quote ?: Str::limit(strip_tags($t->body ?: $t->headline), 160);
+      @endphp
+      <div class="testimonial-card fade-in" style="animation-delay: {{ $i * 0.1 }}s">
+        <div class="testimonial-card__icon" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 18C6 14 8 10 12 8L13 10C10 12 9 14 9 16H12V22H6V18ZM18 18C18 14 20 10 24 8L25 10C22 12 21 14 21 16H24V22H18V18Z" fill="currentColor" opacity="0.6"/>
+          </svg>
+        </div>
+        <p class="testimonial-card__excerpt">{{ $excerpt }}</p>
+        <div class="testimonial-card__footer">
+          <div class="testimonial-card__author">
+            <p class="testimonial-card__name">{{ $t->client_name }}</p>
+            @if($t->tag)<p class="testimonial-card__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial-card__tag">{{ $t->client_title }}</p>@endif
+          </div>
+          <a href="{{ \App\Providers\AppServiceProvider::localizeUrl('/testimonials') }}" class="testimonial-card__link" aria-label="{{ __('ui.home.read_full_story') }}">
+            {{ __('ui.home.read_full_story') }}
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3L9 7L5 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
       </div>
       @endforeach
     </div>
     @endif
-    <div style="text-align:center;margin-top:var(--space-8);">
-      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl('/testimonials') }}" class="btn btn--outline">{{ __('ui.home.read_more_experiences') }}</a>
+    <div class="testimonials-cta fade-in">
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl('/testimonials') }}" class="btn btn--outline">
+        {{ __('ui.home.read_more_experiences') }}
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3L10 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
   </div>
 </section>
