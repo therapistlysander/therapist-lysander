@@ -27,6 +27,11 @@ class AdminSiteSettingController extends Controller
                 $value = $value ? '1' : '0';
             }
 
+            // JSON type: encode array values
+            if ($setting->type === 'json' && is_array($value)) {
+                $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+            }
+
             $setting->update(['value' => $value]);
         }
 

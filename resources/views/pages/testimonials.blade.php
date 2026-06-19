@@ -48,18 +48,23 @@
   </section>
 
   <!-- Section 2: Professional Recommendation -->
+  @php
+    $settingsHeading = $endorsementSettings['endorsement_heading'][$locale] ?? '';
+    $settingsFullBody = $endorsementSettings['endorsement_full_body'][$locale] ?? '';
+    $settingsAttribution = $endorsementSettings['endorsement_attribution'][$locale] ?? '';
+  @endphp
   @if($endorsements->count() > 0)
   <section class="section section--endorsement" aria-labelledby="professional-recommendation-heading">
     <div class="container--narrow">
       <div class="section-header fade-in" style="text-align:center;">
         <span class="section-label">{{ __('ui.testimonials.professional_recommendation') }}</span>
-        <h2 id="professional-recommendation-heading">{{ __('ui.testimonials.professional_recommendation_heading') }}</h2>
+        <h2 id="professional-recommendation-heading">{{ $settingsHeading ?: __('ui.testimonials.professional_recommendation_heading') }}</h2>
       </div>
 
       @foreach($endorsements as $endorsement)
       <div class="endorsement-card fade-in">
         <blockquote class="endorsement-card__quote">
-          {!! $endorsement->body !!}
+          {!! nl2br(e($endorsement->body)) ?: ($settingsFullBody ? nl2br(e($settingsFullBody)) : '') !!}
         </blockquote>
         <p class="endorsement-card__attribution">
           &mdash; {{ $endorsement->client_name }}
@@ -69,13 +74,23 @@
     </div>
   </section>
   @else
-  {{-- Fallback: show Stacey's endorsement from translations if no DB entry --}}
+  {{-- Fallback: show endorsement from settings or translations --}}
   <section class="section section--endorsement" aria-labelledby="professional-recommendation-heading">
     <div class="container--narrow">
       <div class="section-header fade-in" style="text-align:center;">
         <span class="section-label">{{ __('ui.testimonials.professional_recommendation') }}</span>
-        <h2 id="professional-recommendation-heading">{{ __('ui.testimonials.professional_recommendation_heading') }}</h2>
+        <h2 id="professional-recommendation-heading">{{ $settingsHeading ?: __('ui.testimonials.professional_recommendation_heading') }}</h2>
       </div>
+      @if($settingsFullBody)
+      <div class="endorsement-card fade-in">
+        <blockquote class="endorsement-card__quote">
+          {!! nl2br(e($settingsFullBody)) !!}
+        </blockquote>
+        <p class="endorsement-card__attribution">
+          &mdash; {{ $settingsAttribution ?: __('ui.home.endorsement_attribution') }}
+        </p>
+      </div>
+      @else
       <div class="endorsement-card fade-in">
         <blockquote class="endorsement-card__quote">
           {!! __('ui.home.endorsement_body') !!}
@@ -84,6 +99,7 @@
           &mdash; {{ __('ui.home.endorsement_attribution') }}
         </p>
       </div>
+      @endif
     </div>
   </section>
   @endif

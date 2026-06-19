@@ -110,7 +110,7 @@ return [
         'what_clients_say'      => 'Wat cliënten zeggen',
         'read_testimonials'     => 'Bekijk cliëntervaringen',
         'read_more_experiences' => 'Lees Meer Cliëntervaringen',
-        'endorsement_heading'   => 'Aanbevolen door een collega psychotherapeut',
+        'endorsement_heading'   => 'Aanbevolen door een collega-psychotherapeut',
         'endorsement_quote'     => '"Professionaliteit, bezieling, ruime ervaring, empathie en een warme aanwezigheid."',
         'endorsement_body'      => '<p>Lysander is echt een aanrader als trauma therapeut als je voor diepgang en finesse gaat. Professionaliteit, bezieling, veel ervaring, in combinatie met empathie en warme aanwezigheid.</p><p>Hij heeft een flinke therapeutische toolbox die hij enthousiast verder blijft uitbreiden. Hierdoor weet hij mooi te improviseren en dingen op maat te maken voor zijn cliënten.</p><p>Ik heb zelf ook sessies van hem mogen ontvangen en heb die als enorm waardevol ervaren!</p>',
         'endorsement_attribution' => 'Stacey, BIG-geregistreerd psychotherapeut',

@@ -252,12 +252,12 @@
   <div class="container--narrow">
     <div class="endorsement-card fade-in">
       <span class="endorsement-card__badge">{{ __('ui.testimonials.professional_recommendation') }}</span>
-      <h2 id="endorsement-heading" class="endorsement-card__heading">{{ __('ui.home.endorsement_heading') }}</h2>
+      <h2 id="endorsement-heading" class="endorsement-card__heading">{{ $endorsementSettings['endorsement_heading'][$locale] ?? __('ui.home.endorsement_heading') }}</h2>
       <blockquote class="endorsement-card__quote">
-        {!! $endorsement?->body ?? __('ui.home.endorsement_body') !!}
+        {{ $endorsementSettings['endorsement_short_quote'][$locale] ?? __('ui.home.endorsement_quote') }}
       </blockquote>
       <p class="endorsement-card__attribution">
-        &mdash; {{ $endorsement?->client_name ?? __('ui.home.endorsement_attribution') }}
+        &mdash; {{ $endorsementSettings['endorsement_attribution'][$locale] ?? __('ui.home.endorsement_attribution') }}
       </p>
     </div>
   </div>

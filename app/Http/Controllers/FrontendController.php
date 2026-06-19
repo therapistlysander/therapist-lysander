@@ -6,6 +6,7 @@ use App\Models\Testimonial;
 use App\Models\Faq;
 use App\Models\PageSection;
 use App\Models\SeoSetting;
+use App\Models\SiteSetting;
 
 class FrontendController extends Controller
 {
@@ -29,6 +30,17 @@ class FrontendController extends Controller
         return SeoSetting::where('page_key', $pageKey)->first();
     }
 
+    /**
+     * Load endorsement settings as [key => [en => ..., nl => ...]].
+     */
+    private function endorsementSettings(): array
+    {
+        return SiteSetting::where('group', 'endorsement')
+            ->pluck('value', 'key')
+            ->map(fn($v) => json_decode($v, true) ?: [])
+            ->toArray();
+    }
+
     public function home(string $locale)
     {
         $testimonials = Testimonial::client()
@@ -45,8 +57,9 @@ class FrontendController extends Controller
 
         $sections = $this->sections('home');
         $seo      = $this->seo('home');
+        $endorsementSettings = $this->endorsementSettings();
 
-        return view('pages.home', compact('testimonials', 'endorsement', 'sections', 'seo'));
+        return view('pages.home', compact('testimonials', 'endorsement', 'sections', 'seo', 'endorsementSettings'));
     }
 
     public function about(string $locale)
@@ -85,8 +98,9 @@ class FrontendController extends Controller
 
         $sections = $this->sections('testimonials');
         $seo      = $this->seo('testimonials');
+        $endorsementSettings = $this->endorsementSettings();
 
-        return view('pages.testimonials', compact('testimonials', 'endorsements', 'sections', 'seo'));
+        return view('pages.testimonials', compact('testimonials', 'endorsements', 'sections', 'seo', 'endorsementSettings'));
     }
 
     public function fees(string $locale)

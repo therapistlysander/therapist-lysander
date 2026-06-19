@@ -19,12 +19,13 @@
 
   @php
     $groupLabels = [
-      'general'   => 'General',
-      'contact'   => 'Contact & Location',
-      'social'    => 'Social Media & Profiles',
-      'analytics' => 'Analytics & Tracking',
+      'general'    => 'General',
+      'contact'    => 'Contact & Location',
+      'social'     => 'Social Media & Profiles',
+      'analytics'  => 'Analytics & Tracking',
+      'endorsement' => 'Professional Endorsement',
     ];
-    $groupOrder = ['general', 'contact', 'social', 'analytics'];
+    $groupOrder = ['general', 'contact', 'social', 'analytics', 'endorsement'];
   @endphp
 
   @foreach($groupOrder as $group)
@@ -72,6 +73,25 @@
             id="setting-{{ $setting->key }}"
             class="admin-input"
             rows="4">{{ old('settings.' . $setting->key, $setting->getRawOriginal('value')) }}</textarea>
+
+        @elseif($setting->type === 'json')
+          @php $jsonVal = json_decode($setting->getRawOriginal('value'), true) ?: []; @endphp
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div>
+              <label style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">EN</label>
+              <input type="text"
+                name="settings[{{ $setting->key }}][en]"
+                class="admin-input"
+                value="{{ old("settings.{$setting->key}.en", $jsonVal['en'] ?? '') }}">
+            </div>
+            <div>
+              <label style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">NL</label>
+              <input type="text"
+                name="settings[{{ $setting->key }}][nl]"
+                class="admin-input"
+                value="{{ old("settings.{$setting->key}.nl", $jsonVal['nl'] ?? '') }}">
+            </div>
+          </div>
 
         @else
           <input type="text"

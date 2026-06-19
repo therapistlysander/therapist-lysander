@@ -113,7 +113,7 @@ return [
         'endorsement_heading'   => 'Recommended by a Fellow Psychotherapist',
         'endorsement_quote'     => '"Professionalism, dedication, extensive experience, empathy, and a warm presence."',
         'endorsement_body'      => '<p>Lysander comes highly recommended as a trauma therapist for those seeking depth, nuance, and genuine therapeutic expertise. He combines professionalism, dedication, and extensive experience with empathy and a warm, grounded presence.</p><p>He has an extensive therapeutic toolbox and continues to expand his knowledge and skills with great enthusiasm. This allows him to tailor his approach to each individual client and adapt creatively to their needs.</p><p>I have personally experienced sessions with Lysander and found them to be incredibly valuable and impactful.</p>',
-        'endorsement_attribution' => 'Stacey, licensed psychotherapist (BIG-registered)',
+        'endorsement_attribution' => 'Stacey, BIG-registered Psychotherapist',
         'view_approach'         => 'View Trauma & My Approach',
         'view_fees'             => 'View Fees & Process',
         'tab_cbt'               => 'CBT',
