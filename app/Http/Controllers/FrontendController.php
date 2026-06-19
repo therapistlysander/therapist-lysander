@@ -59,7 +59,7 @@ class FrontendController extends Controller
         $seo      = $this->seo('home');
         $endorsementSettings = $this->endorsementSettings();
 
-        return view('pages.home', compact('testimonials', 'endorsement', 'sections', 'seo', 'endorsementSettings'));
+        return view('pages.home', compact('testimonials', 'endorsement', 'sections', 'seo', 'endorsementSettings', 'locale'));
     }
 
     public function about(string $locale)
@@ -100,7 +100,7 @@ class FrontendController extends Controller
         $seo      = $this->seo('testimonials');
         $endorsementSettings = $this->endorsementSettings();
 
-        return view('pages.testimonials', compact('testimonials', 'endorsements', 'sections', 'seo', 'endorsementSettings'));
+        return view('pages.testimonials', compact('testimonials', 'endorsements', 'sections', 'seo', 'endorsementSettings', 'locale'));
     }
 
     public function fees(string $locale)
