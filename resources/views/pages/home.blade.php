@@ -242,7 +242,23 @@
     </div>
     @endif
     <div style="text-align:center;margin-top:var(--space-8);">
-      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($testimonialsHdr?->content['cta_url'] ?? null) }}" class="btn btn--outline">{{ $testimonialsHdr?->content['cta_label'] ?? __('ui.home.read_testimonials') }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl('/testimonials') }}" class="btn btn--outline">{{ __('ui.home.read_more_experiences') }}</a>
+    </div>
+  </div>
+</section>
+
+<!-- Professional Endorsement -->
+<section class="section section--endorsement" id="endorsement" aria-labelledby="endorsement-heading">
+  <div class="container--narrow">
+    <div class="endorsement-card fade-in">
+      <span class="endorsement-card__badge">{{ __('ui.testimonials.professional_recommendation') }}</span>
+      <h2 id="endorsement-heading" class="endorsement-card__heading">{{ __('ui.home.endorsement_heading') }}</h2>
+      <blockquote class="endorsement-card__quote">
+        {{ $endorsement?->body ?? __('ui.home.endorsement_quote') }}
+      </blockquote>
+      <p class="endorsement-card__attribution">
+        &mdash; {{ $endorsement?->client_name ?? __('ui.home.endorsement_attribution') }}
+      </p>
     </div>
   </div>
 </section>

@@ -109,6 +109,10 @@ return [
         'working_together'      => 'Samenwerken',
         'what_clients_say'      => 'Wat cliënten zeggen',
         'read_testimonials'     => 'Bekijk cliëntervaringen',
+        'read_more_experiences' => 'Lees Meer Cliëntervaringen',
+        'endorsement_heading'   => 'Aanbevolen door een collega psychotherapeut',
+        'endorsement_quote'     => '"Professionalisme, toewijding, uitgebreide ervaring, empathie en een warme aanwezigheid."',
+        'endorsement_attribution' => 'Stacey, BIG-geregistreerd Psychotherapeut',
         'view_approach'         => 'Bekijk Trauma & Aanpak',
         'view_fees'             => 'Bekijk Tarieven & Traject',
         'tab_cbt'               => 'CGT',
@@ -184,6 +188,10 @@ return [
         'hero_subheading'       => 'Cliëntervaringen',
         'hero_heading'          => 'Wat cliënten zeggen',
         'hero_body'             => 'Deze ervaringen worden met toestemming gedeeld en weerspiegelen oprechte ervaringen uit therapie.',
+        'client_experiences'    => 'Cliëntervaringen',
+        'client_experiences_heading' => 'Cliëntervaringen',
+        'professional_recommendation' => 'Professionele Aanbeveling',
+        'professional_recommendation_heading' => 'Professionele Aanbeveling',
     ],
 
     /*

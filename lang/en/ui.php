@@ -109,6 +109,10 @@ return [
         'working_together'      => 'Working together',
         'what_clients_say'      => 'What Clients Say',
         'read_testimonials'     => 'Read full testimonials',
+        'read_more_experiences' => 'Read More Client Experiences',
+        'endorsement_heading'   => 'Recommended by a Fellow Psychotherapist',
+        'endorsement_quote'     => '"Professionalism, dedication, extensive experience, empathy, and a warm presence."',
+        'endorsement_attribution' => 'Stacey, BIG-registered Psychotherapist',
         'view_approach'         => 'View Trauma & My Approach',
         'view_fees'             => 'View Fees & Process',
         'tab_cbt'               => 'CBT',
@@ -184,6 +188,10 @@ return [
         'hero_subheading'       => 'Client experiences',
         'hero_heading'          => 'What clients say',
         'hero_body'             => 'These testimonials are shared with permission and reflect genuine experiences from therapy.',
+        'client_experiences'    => 'Client experiences',
+        'client_experiences_heading' => 'Client Experiences',
+        'professional_recommendation' => 'Professional Recommendation',
+        'professional_recommendation_heading' => 'Professional Recommendation',
     ],
 
     /*

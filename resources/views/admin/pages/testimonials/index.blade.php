@@ -19,11 +19,12 @@
     </div>
   @else
     <table>
-      <thead><tr><th>Client</th><th>Headline</th><th>Featured</th><th>Active</th><th>Order</th><th></th></tr></thead>
+      <thead><tr><th>Client</th><th>Type</th><th>Headline</th><th>Featured</th><th>Active</th><th>Order</th><th></th></tr></thead>
       <tbody>
         @foreach($testimonials as $t)
         <tr>
           <td><strong>{{ $t->client_name }}</strong>@if($t->tag)<br><span style="font-size:11px;color:#9ca3af;">{{ $t->tag }}</span>@endif</td>
+          <td><span class="badge" style="background:{{ $t->type === 'endorsement' ? '#8b5cf6' : '#6b7280' }};color:#fff;font-size:11px;padding:2px 8px;border-radius:4px;">{{ ucfirst($t->type ?? 'client') }}</span></td>
           <td style="color:#6b7280;font-size:13px;">{{ Str::limit($t->headline ?? $t->body, 60) }}</td>
           <td>@if($t->is_featured)<span class="badge badge--featured">Featured</span>@else<span style="color:#d1d5db;font-size:13px;">—</span>@endif</td>
           <td>@if($t->is_active)<span class="badge badge--confirmed">Active</span>@else<span class="badge badge--cancelled">Hidden</span>@endif</td>

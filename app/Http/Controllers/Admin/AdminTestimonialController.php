@@ -24,6 +24,7 @@ class AdminTestimonialController extends Controller
     {
         $request->validate([
             'client_name'  => 'required|string|max:255',
+            'type'         => 'nullable|string|in:client,endorsement',
             'tag'          => 'nullable|string|max:100',
             'rating'       => 'nullable|integer|min:1|max:5',
             'sort_order'   => 'nullable|integer',
@@ -34,6 +35,7 @@ class AdminTestimonialController extends Controller
 
         $t = new Testimonial();
         $t->client_name = $request->input('client_name');
+        $t->type        = $request->input('type', 'client');
         $t->tag         = $request->input('tag');
         $t->rating      = $request->input('rating', 5);
         $t->sort_order  = $request->input('sort_order', 0);
@@ -62,6 +64,7 @@ class AdminTestimonialController extends Controller
     {
         $request->validate([
             'client_name'  => 'required|string|max:255',
+            'type'         => 'nullable|string|in:client,endorsement',
             'tag'          => 'nullable|string|max:100',
             'rating'       => 'nullable|integer|min:1|max:5',
             'sort_order'   => 'nullable|integer',
@@ -71,6 +74,7 @@ class AdminTestimonialController extends Controller
         ]);
 
         $testimonial->client_name = $request->input('client_name');
+        $testimonial->type        = $request->input('type', 'client');
         $testimonial->tag         = $request->input('tag');
         $testimonial->rating      = $request->input('rating', 5);
         $testimonial->sort_order  = $request->input('sort_order', 0);

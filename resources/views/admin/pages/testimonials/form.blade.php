@@ -81,6 +81,13 @@
         <div class="admin-form__section">
           <div class="admin-form__section-title">Settings</div>
           <div class="admin-field">
+            <label class="admin-label">Type</label>
+            <select name="type" class="admin-input">
+              <option value="client" {{ old('type', $testimonial->type ?? 'client') === 'client' ? 'selected' : '' }}>Client Testimonial</option>
+              <option value="endorsement" {{ old('type', $testimonial->type ?? 'client') === 'endorsement' ? 'selected' : '' }}>Professional Endorsement</option>
+            </select>
+          </div>
+          <div class="admin-field">
             <label class="admin-label">Rating (1-5)</label>
             <input type="number" name="rating" class="admin-input" min="1" max="5" value="{{ old('rating', $testimonial->rating ?? 5) }}">
           </div>

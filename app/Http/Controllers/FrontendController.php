@@ -31,16 +31,22 @@ class FrontendController extends Controller
 
     public function home(string $locale)
     {
-        $testimonials = Testimonial::where('is_active', true)
-            ->where('is_featured', true)
+        $testimonials = Testimonial::client()
+            ->featured()
+            ->active()
             ->orderBy('sort_order')
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $endorsement = Testimonial::endorsement()
+            ->active()
+            ->orderBy('sort_order')
+            ->first();
+
         $sections = $this->sections('home');
         $seo      = $this->seo('home');
 
-        return view('pages.home', compact('testimonials', 'sections', 'seo'));
+        return view('pages.home', compact('testimonials', 'endorsement', 'sections', 'seo'));
     }
 
     public function about(string $locale)
@@ -66,16 +72,21 @@ class FrontendController extends Controller
 
     public function testimonials(string $locale)
     {
-        $testimonials = Testimonial::where('is_active', true)
+        $testimonials = Testimonial::client()
+            ->active()
             ->orderBy('sort_order')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $featuredTestimonials = $testimonials->where('is_featured', true)->take(3);
+        $endorsements = Testimonial::endorsement()
+            ->active()
+            ->orderBy('sort_order')
+            ->get();
+
         $sections = $this->sections('testimonials');
         $seo      = $this->seo('testimonials');
 
-        return view('pages.testimonials', compact('testimonials', 'featuredTestimonials', 'sections', 'seo'));
+        return view('pages.testimonials', compact('testimonials', 'endorsements', 'sections', 'seo'));
     }
 
     public function fees(string $locale)
