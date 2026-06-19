@@ -230,6 +230,13 @@ class AdminPageSectionController extends Controller
             $section->setTranslation('content', 'nl', $nlContent);
         }
 
+        // Sync categories from EN to NL (keys stay the same, labels follow EN)
+        if (isset($enContent['categories'])) {
+            $nlContent = $section->getTranslation('content', 'nl') ?? [];
+            $nlContent['categories'] = $enContent['categories'];
+            $section->setTranslation('content', 'nl', $nlContent);
+        }
+
         $section->is_active = $request->boolean('is_active');
         $section->save();
 
