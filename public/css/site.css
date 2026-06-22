@@ -1690,3 +1690,126 @@ strong { font-weight: 600; }
 
 /* Force left-align on all Quill rich-text content (overrides saved alignment classes) */
 .ql-align-center, .ql-align-right, .ql-align-justify { text-align: left !important; }
+
+/* --- Testimonial Slider (Homepage) --- */
+.ts-slider {
+  max-width: 640px;
+  margin: 0 auto;
+  position: relative;
+}
+.ts-slider__track {
+  position: relative;
+  min-height: 180px;
+}
+.ts-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+}
+.ts-slide--active {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+}
+.ts-slide__icon {
+  font-family: Georgia, serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  color: var(--color-teal-light);
+  margin-bottom: var(--space-2);
+  user-select: none;
+}
+.ts-slide__quote {
+  font-size: var(--size-lg);
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  font-style: italic;
+  max-width: 520px;
+  margin-bottom: var(--space-4);
+  border: none;
+  padding: 0;
+}
+.ts-slide__quote strong {
+  color: var(--color-text);
+  font-weight: 500;
+  font-style: normal;
+}
+.ts-slide__name {
+  font-family: var(--font-heading);
+  font-size: var(--size-base);
+  color: var(--color-accent);
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+/* Slider controls */
+.ts-slider__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+.ts-slider__dots {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.ts-slider__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-accent-light);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+.ts-slider__dot:hover {
+  border-color: var(--color-teal);
+  transform: scale(1.2);
+}
+.ts-slider__dot--active,
+.ts-slider__dot[aria-selected="true"] {
+  background: var(--color-teal);
+  border-color: var(--color-teal);
+}
+.ts-slider__arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition), box-shadow var(--transition);
+}
+.ts-slider__arrow:hover {
+  border-color: var(--color-teal);
+  color: var(--color-teal);
+  box-shadow: var(--shadow-sm);
+}
+.ts-slider__arrow:focus-visible,
+.ts-slider__dot:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 2px;
+}
+
+/* Slider responsive */
+@media (max-width: 600px) {
+  .ts-slider__track { min-height: 200px; }
+  .ts-slide { padding: var(--space-4) var(--space-2); }
+  .ts-slide__icon { font-size: 2.5rem; }
+  .ts-slide__quote { font-size: var(--size-md); }
+  .ts-slider__arrow { width: 40px; height: 40px; }
+}

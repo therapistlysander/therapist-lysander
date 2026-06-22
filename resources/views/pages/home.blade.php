@@ -215,7 +215,7 @@
   </div>
 </section>
 
-<!-- Testimonials -->
+<!-- Testimonials Slider -->
 <section class="section section--white" id="testimonials-preview" aria-labelledby="testimonials-heading">
   <div class="container">
     <div class="section-header fade-in" style="text-align:center;">
@@ -223,22 +223,35 @@
       <h2 id="testimonials-heading" class="section-title">{{ $testimonialsHdr?->content['heading'] ?? __('ui.home.what_clients_say') }}</h2>
     </div>
     @php
-      $validTestimonials = $testimonials->filter(fn($t) => !empty($t->short_description) || !empty($t->body) || !empty($t->quote) || !empty($t->headline));
-      $tCount = $validTestimonials->count();
-      $gridCols = $tCount >= 3 ? 3 : ($tCount === 2 ? 2 : 1);
+      $sliderTestimonials = $testimonials->filter(fn($t) => !empty($t->short_description) || !empty($t->body) || !empty($t->quote) || !empty($t->headline));
+      $sliderCount = $sliderTestimonials->count();
     @endphp
-    @if($tCount > 0)
-    <div class="testimonial-grid {{ $gridCols === 2 ? 'testimonial-grid--2' : ($gridCols === 1 ? 'testimonial-grid--1' : '') }}">
-      @foreach($validTestimonials as $i => $t)
-      <div class="testimonial testimonial--card {{ $t->is_featured ? 'testimonial--featured' : '' }} fade-in">
-        <span class="testimonial__icon" aria-hidden="true">&ldquo;</span>
-        <div class="testimonial__quote">{!! $t->short_description ?: ($t->body ?: ($t->quote ?: $t->headline)) !!}</div>
-        <div class="testimonial__footer">
-          <p class="testimonial__name">{{ $t->client_name }}</p>
-          @if($t->tag)<p class="testimonial__tag">{{ $t->tag }}</p>@elseif($t->client_title)<p class="testimonial__tag">{{ $t->client_title }}</p>@endif
+    @if($sliderCount > 0)
+    <div class="ts-slider" data-autoplay="6000" role="region" aria-label="{{ __('ui.home.what_clients_say') }}" aria-roledescription="carousel">
+      <div class="ts-slider__track">
+        @foreach($sliderTestimonials as $i => $t)
+        <div class="ts-slide {{ $i === 0 ? 'ts-slide--active' : '' }}" role="group" aria-roledescription="slide" aria-label="{{ $i + 1 }} of {{ $sliderCount }}">
+          <span class="ts-slide__icon" aria-hidden="true">&ldquo;</span>
+          <blockquote class="ts-slide__quote">{!! $t->short_description ?: ($t->body ?: ($t->quote ?: $t->headline)) !!}</blockquote>
+          <p class="ts-slide__name">&mdash; {{ $t->client_name }}</p>
         </div>
+        @endforeach
       </div>
-      @endforeach
+      @if($sliderCount > 1)
+      <div class="ts-slider__controls">
+        <button class="ts-slider__arrow ts-slider__arrow--prev" aria-label="Previous testimonial">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="ts-slider__dots" role="tablist" aria-label="Testimonial slides">
+          @foreach($sliderTestimonials as $i => $t)
+          <button class="ts-slider__dot {{ $i === 0 ? 'ts-slider__dot--active' : '' }}" role="tab" aria-selected="{{ $i === 0 ? 'true' : 'false' }}" aria-label="Testimonial {{ $i + 1 }}" data-index="{{ $i }}"></button>
+          @endforeach
+        </div>
+        <button class="ts-slider__arrow ts-slider__arrow--next" aria-label="Next testimonial">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      @endif
     </div>
     @endif
     <div style="text-align:center;margin-top:var(--space-8);">
@@ -315,5 +328,69 @@ document.querySelectorAll('.approach-tab').forEach(tab => {
     if (panel) panel.classList.add('active');
   });
 });
+
+// Testimonial Slider
+(function() {
+  const slider = document.querySelector('.ts-slider');
+  if (!slider) return;
+
+  const slides = slider.querySelectorAll('.ts-slide');
+  const dots   = slider.querySelectorAll('.ts-slider__dot');
+  const prev   = slider.querySelector('.ts-slider__arrow--prev');
+  const next   = slider.querySelector('.ts-slider__arrow--next');
+  const total  = slides.length;
+  if (total <= 1) return;
+
+  let current    = 0;
+  let autoTimer  = null;
+  const delay    = parseInt(slider.dataset.autoplay, 10) || 6000;
+  let isPaused   = false;
+
+  function goTo(index) {
+    slides[current].classList.remove('ts-slide--active');
+    if (dots[current]) {
+      dots[current].classList.remove('ts-slider__dot--active');
+      dots[current].setAttribute('aria-selected', 'false');
+    }
+    current = (index + total) % total;
+    slides[current].classList.add('ts-slide--active');
+    if (dots[current]) {
+      dots[current].classList.add('ts-slider__dot--active');
+      dots[current].setAttribute('aria-selected', 'true');
+    }
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    autoTimer = setInterval(() => { if (!isPaused) goTo(current + 1); }, delay);
+  }
+  function stopAutoplay() { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } }
+
+  if (prev) prev.addEventListener('click', () => { goTo(current - 1); startAutoplay(); });
+  if (next) next.addEventListener('click', () => { goTo(current + 1); startAutoplay(); });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      goTo(parseInt(dot.dataset.index, 10));
+      startAutoplay();
+    });
+  });
+
+  // Pause on hover / focus
+  slider.addEventListener('mouseenter', () => { isPaused = true; });
+  slider.addEventListener('mouseleave', () => { isPaused = false; });
+  slider.addEventListener('focusin',    () => { isPaused = true; });
+  slider.addEventListener('focusout',   () => { isPaused = false; });
+
+  // Keyboard navigation
+  slider.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft')  { goTo(current - 1); startAutoplay(); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { goTo(current + 1); startAutoplay(); e.preventDefault(); }
+  });
+
+  // Respect prefers-reduced-motion
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reducedMotion) startAutoplay();
+})();
 </script>
 @endsection

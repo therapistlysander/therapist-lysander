@@ -286,7 +286,7 @@ return [
         'complete'              => 'Complete',
         'youre_booking'         => "You're booking",
         'free_call_label'       => 'Free introduction call &middot; Online',
-        'free_call_desc'        => '30-minute video call &mdash; no commitment required',
+        'free_call_desc'        => 'A chance to discuss your situation, ask questions, and see whether we\'re a good fit.',
         'hero_heading'          => "Let's get started",
         'hero_subheading'       => 'Book a free 30-minute introduction call. No commitment required.',
         'email_placeholder'     => 'your@email.com',

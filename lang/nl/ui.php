@@ -286,7 +286,7 @@ return [
         'complete'              => 'Voltooid',
         'youre_booking'         => 'Je boekt',
         'free_call_label'       => 'Gratis kennismakingsgesprek &middot; Online',
-        'free_call_desc'        => '30 minuten videogesprek &mdash; vrijblijvend',
+        'free_call_desc'        => 'Een moment om jouw situatie te bespreken, vragen te stellen en te zien of we een goede match zijn.',
         'hero_heading'          => 'Laten we beginnen',
         'hero_subheading'       => 'Boek een gratis kennismakingsgesprek van 30 minuten. Geheel vrijblijvend.',
         'email_placeholder'     => 'jouw@email.nl',

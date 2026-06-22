@@ -242,12 +242,6 @@
           </div>
         </div>
 
-        <div class="step-section" style="margin-top:var(--space-6);">
-          <label class="step-section__label">{{ __('ui.booking.additional_notes') }} <span>{{ __('ui.booking.optional') }}</span></label>
-          <div class="form-group">
-            <textarea class="form-textarea" id="b-notes" placeholder="{{ __('ui.booking.notes_placeholder') }}"></textarea>
-          </div>
-        </div>
       </div>
 
       <div class="step-nav">
@@ -452,7 +446,6 @@ function showSummary() {
 
 function submitBooking() {
   if (!state.date || !state.time) { showToast(__t.toastSelectTime,'info'); return; }
-  const notes = document.getElementById('b-notes').value.trim();
   const btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = __t.sending;
 
@@ -463,7 +456,7 @@ function submitBooking() {
     type: state.type,
     date: state.date,
     time: state.time,
-    notes: notes,
+    notes: '',
     pi_brings: state.piGoals || null,
   };
 
@@ -487,7 +480,7 @@ function submitBooking() {
       'Type: ' + (state.type === 'online' ? __t.waTypeOnline : __t.waTypeInperson) + '\n' +
       'Format: ' + state.format + '\n' +
       'Date: ' + state.date + ' at ' + state.time + '\n' +
-      (notes ? '\nNotes: ' + notes : '') +
+      (state.piGoals ? '\nReason: ' + state.piGoals : '') +
       '\n\nThank you!'
     );
 
