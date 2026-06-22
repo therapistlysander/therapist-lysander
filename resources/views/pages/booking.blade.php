@@ -315,6 +315,10 @@ fetch('/api/availability/schedule')
   .then(data => { scheduleData = data; })
   .catch(() => {});
 
+// Get current locale from URL path (e.g. /en/booking → 'en')
+const currentLocale = window.location.pathname.split('/')[1] || 'en';
+const bookingSubmitUrl = '/' + currentLocale + '/booking';
+
 // Format is always 'intake' (free intro call only)
 
 // Session type is always 'online' — no selection needed
@@ -460,7 +464,7 @@ function submitBooking() {
     pi_brings: state.piGoals || null,
   };
 
-  fetch('/booking', {
+  fetch(bookingSubmitUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -470,6 +474,9 @@ function submitBooking() {
     body: JSON.stringify(payload),
   })
   .then(r => {
+    if (r.status === 409) {
+      return r.json().then(data => { throw new Error(data.message || 'Slot taken'); });
+    }
     if (!r.ok) throw new Error('Server error');
     return r.json();
   })
@@ -507,7 +514,7 @@ function submitBooking() {
   })
   .catch(err => {
     btn.disabled = false; btn.textContent = __t.sendRequest;
-    showToast(__t.toastError, 'error');
+    showToast(err.message || __t.toastError, 'error');
   });
 }
 </script>

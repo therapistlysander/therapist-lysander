@@ -34,6 +34,18 @@ class BookingSubmitController extends Controller
         // Build preferred_date from date + time
         $preferredDate = $request->input('date') . ' ' . $request->input('time') . ':00';
 
+        // Double-booking prevention: check if slot is already taken
+        $existingBooking = Booking::where('preferred_date', $preferredDate)
+            ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
+            ->first();
+
+        if ($existingBooking) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This time slot is no longer available. Please choose another time.',
+            ], 409);
+        }
+
         // Create the booking
         $booking = Booking::create([
             'first_name'     => $firstName,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use App\Models\BookingAvailability;
 use App\Models\BookingBlockedDate;
 use App\Models\BookingConfig;
@@ -71,6 +72,15 @@ class BookingAvailabilityApiController extends Controller
             // Remove specific blocked slots
             $slots = array_values(array_diff($slots, $blocked->blocked_slots));
         }
+
+        // Subtract slots that already have pending/confirmed bookings (double-booking prevention)
+        $bookedSlots = Booking::whereDate('preferred_date', $date->toDateString())
+            ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
+            ->pluck('preferred_date')
+            ->map(fn($dt) => $dt->format('H:i'))
+            ->toArray();
+
+        $slots = array_values(array_diff($slots, $bookedSlots));
 
         return response()->json([
             'date'      => $dateStr,
