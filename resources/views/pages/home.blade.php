@@ -9,6 +9,7 @@
   $intro           = $sections['home_intro'] ?? null;
   $areas           = $sections['home_areas'] ?? null;
   $onlineStrip     = $sections['home_online_strip'] ?? null;
+  $therapyApproach = $sections['home_therapy_approach'] ?? null;
   $approaches      = $sections['home_approaches'] ?? null;
   $process         = $sections['home_process'] ?? null;
   $testimonialsHdr = $sections['home_testimonials'] ?? null;
@@ -119,26 +120,27 @@
 <section class="section section--alt" aria-label="What therapy with me is like">
   <div class="container">
     <div class="fade-in" style="max-width:var(--max-w-text);">
-      <span class="section-label">{{ __('ui.home.therapy_approach_label') }}</span>
-      <h2>{{ __('ui.home.therapy_with_me') }}</h2>
+      <span class="section-label">{{ $therapyApproach?->content['subheading'] ?? __('ui.home.therapy_approach_label') }}</span>
+      <h2>{{ $therapyApproach?->content['heading'] ?? __('ui.home.therapy_with_me') }}</h2>
       <div class="divider"></div>
       <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
-        <p>{{ __('ui.home.therapy_desc') }}</p>
+        <p>{{ $therapyApproach?->content['body'] ?? __('ui.home.therapy_desc') }}</p>
       </div>
     </div>
+    @php
+      $therapyCards = $therapyApproach?->content['cards'] ?? [
+        ['title' => __('ui.home.safe_title'), 'description' => __('ui.home.safe_desc')],
+        ['title' => __('ui.home.evidence_title'), 'description' => __('ui.home.evidence_desc')],
+        ['title' => __('ui.home.lasting_title'), 'description' => __('ui.home.lasting_desc')],
+      ];
+    @endphp
     <div class="card-grid fade-in" style="grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));">
+      @foreach($therapyCards as $card)
       <div class="card">
-        <h3 class="card__title">{{ __('ui.home.safe_title') }}</h3>
-        <p class="card__text">{{ __('ui.home.safe_desc') }}</p>
+        <h3 class="card__title">{{ $card['title'] ?? '' }}</h3>
+        <p class="card__text">{{ $card['description'] ?? '' }}</p>
       </div>
-      <div class="card">
-        <h3 class="card__title">{{ __('ui.home.evidence_title') }}</h3>
-        <p class="card__text">{{ __('ui.home.evidence_desc') }}</p>
-      </div>
-      <div class="card">
-        <h3 class="card__title">{{ __('ui.home.lasting_title') }}</h3>
-        <p class="card__text">{{ __('ui.home.lasting_desc') }}</p>
-      </div>
+      @endforeach
     </div>
   </div>
 </section>
