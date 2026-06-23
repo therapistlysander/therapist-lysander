@@ -32,8 +32,8 @@ class AdminSiteSettingController extends Controller
                 $value = json_encode($value, JSON_UNESCAPED_UNICODE);
             }
 
-            // endorsement_full_text: bilingual textarea submits as array, store as JSON
-            if ($key === 'endorsement_full_text' && is_array($value)) {
+            // endorsement_full_body: bilingual textarea submits as array, store as JSON
+            if ($key === 'endorsement_full_body' && is_array($value)) {
                 $value = json_encode(array_filter($value, fn($v) => $v !== null && $v !== ''), JSON_UNESCAPED_UNICODE);
             }
 

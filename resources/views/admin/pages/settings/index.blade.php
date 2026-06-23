@@ -70,7 +70,7 @@
           </div>
           <input type="hidden" name="settings[language]" id="language-hidden" value="{{ old('settings.language', $setting->getRawOriginal('value')) }}">
 
-        @elseif($setting->key === 'endorsement_full_text')
+        @elseif($setting->key === 'endorsement_full_body')
           {{-- Bilingual textarea for endorsement full text --}}
           @php $ftVal = json_decode($setting->getRawOriginal('value'), true) ?: []; @endphp
           <div style="display:flex;flex-direction:column;gap:8px;">
