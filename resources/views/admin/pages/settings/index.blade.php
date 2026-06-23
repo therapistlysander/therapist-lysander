@@ -71,16 +71,18 @@
           <input type="hidden" name="settings[language]" id="language-hidden" value="{{ old('settings.language', $setting->getRawOriginal('value')) }}">
 
         @elseif($setting->key === 'endorsement_full_body')
-          {{-- Bilingual textarea for endorsement full text --}}
+          {{-- Bilingual textarea with EN/NL tabs for endorsement full text --}}
           @php $ftVal = json_decode($setting->getRawOriginal('value'), true) ?: []; @endphp
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div>
-              <label style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">EN</label>
+          <div>
+            <div class="settings-locale-tabs" style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;margin-bottom:8px;">
+              <button type="button" class="settings-locale-tab settings-locale-tab--active" data-target="{{ $setting->key }}" data-locale="en" onclick="switchSettingsLocale(this)">EN</button>
+              <button type="button" class="settings-locale-tab" data-target="{{ $setting->key }}" data-locale="nl" onclick="switchSettingsLocale(this)">NL</button>
+            </div>
+            <div class="settings-locale-panel" data-target="{{ $setting->key }}" data-locale="en" style="display:flex;flex-direction:column;">
               <textarea name="settings[{{ $setting->key }}][en]"
                 class="admin-input" rows="6">{{ old("settings.{$setting->key}.en", $ftVal['en'] ?? '') }}</textarea>
             </div>
-            <div>
-              <label style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">NL</label>
+            <div class="settings-locale-panel" data-target="{{ $setting->key }}" data-locale="nl" style="display:none;flex-direction:column;">
               <textarea name="settings[{{ $setting->key }}][nl]"
                 class="admin-input" rows="6">{{ old("settings.{$setting->key}.nl", $ftVal['nl'] ?? '') }}</textarea>
             </div>
@@ -94,16 +96,18 @@
 
         @elseif($setting->type === 'json')
           @php $jsonVal = json_decode($setting->getRawOriginal('value'), true) ?: []; @endphp
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <div>
-              <label style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">EN</label>
+          <div>
+            <div class="settings-locale-tabs" style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;margin-bottom:8px;">
+              <button type="button" class="settings-locale-tab settings-locale-tab--active" data-target="{{ $setting->key }}" data-locale="en" onclick="switchSettingsLocale(this)">EN</button>
+              <button type="button" class="settings-locale-tab" data-target="{{ $setting->key }}" data-locale="nl" onclick="switchSettingsLocale(this)">NL</button>
+            </div>
+            <div class="settings-locale-panel" data-target="{{ $setting->key }}" data-locale="en" style="display:flex;flex-direction:column;">
               <input type="text"
                 name="settings[{{ $setting->key }}][en]"
                 class="admin-input"
                 value="{{ old("settings.{$setting->key}.en", $jsonVal['en'] ?? '') }}">
             </div>
-            <div>
-              <label style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">NL</label>
+            <div class="settings-locale-panel" data-target="{{ $setting->key }}" data-locale="nl" style="display:none;flex-direction:column;">
               <input type="text"
                 name="settings[{{ $setting->key }}][nl]"
                 class="admin-input"
@@ -164,7 +168,30 @@
   </div>
 </form>
 
+<style>
+.settings-locale-tab {
+  padding: 8px 20px; font-size: 13px; font-weight: 500; cursor: pointer;
+  border: none; background: none; color: #6b7280; border-bottom: 2px solid transparent;
+  margin-bottom: -2px; transition: all 0.15s;
+}
+.settings-locale-tab:hover { color: #374151; }
+.settings-locale-tab--active { color: #5a9e97; border-bottom-color: #5a9e97; }
+</style>
+
 <script>
+function switchSettingsLocale(btn) {
+  var target = btn.dataset.target;
+  var locale = btn.dataset.locale;
+  // Update tabs within the same group
+  btn.closest('.settings-locale-tabs').querySelectorAll('.settings-locale-tab').forEach(function(t) {
+    t.classList.toggle('settings-locale-tab--active', t.dataset.locale === locale);
+  });
+  // Show/hide panels
+  document.querySelectorAll('.settings-locale-panel[data-target="' + target + '"]').forEach(function(p) {
+    p.style.display = p.dataset.locale === locale ? 'flex' : 'none';
+  });
+}
+
 function toggleLanguageSection(enabled) {
   document.getElementById('language-section').style.display = enabled ? '' : 'none';
 }
