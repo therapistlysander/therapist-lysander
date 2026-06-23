@@ -124,7 +124,7 @@
       <h2>{{ $therapyApproach?->content['heading'] ?? __('ui.home.therapy_with_me') }}</h2>
       <div class="divider"></div>
       <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
-        <p>{{ $therapyApproach?->content['body'] ?? __('ui.home.therapy_desc') }}</p>
+        {!! $therapyApproach?->content['body'] ?? '<p>' . e(__('ui.home.therapy_desc')) . '</p>' !!}
       </div>
     </div>
     @php

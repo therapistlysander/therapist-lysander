@@ -44,7 +44,7 @@
 
       @foreach($locales as $li => $locale)
       @php $lc = $localeContent[$locale] ?? []; @endphp
-      <div class="locale-panel" data-locale="{{ $locale }}" style="{{ $li !== 0 ? 'display:none;' : '' }}display:flex;flex-direction:column;gap:20px;">
+      <div class="locale-panel" data-locale="{{ $locale }}" style="display:{{ $li === 0 ? 'flex' : 'none' }};flex-direction:column;gap:20px;">
 
         {{-- Text Content --}}
         <div class="admin-form">
