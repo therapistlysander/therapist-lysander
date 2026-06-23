@@ -97,10 +97,10 @@
       </div>
       @endforeach
     </div>
-    <div class="card fade-in" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:var(--space-6);">
+    {{-- <div class="card fade-in" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:var(--space-6);">
       <h3 class="card__title" style="color:var(--color-white);">{{ __('ui.fees.availability_heading') }}</h3>
       <p class="card__text" style="color:rgba(255,255,255,0.65);">{{ __('ui.fees.availability_text') }} <strong style="color:rgba(255,255,255,0.85);">{{ __('ui.fees.availability_weeks') }}</strong>.</p>
-    </div>
+    </div> --}}
   </div>
 </section>
 
