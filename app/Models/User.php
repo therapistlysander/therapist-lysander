@@ -16,6 +16,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'role',
     ];
 
     protected $hidden = [
@@ -30,5 +31,10 @@ class User extends Authenticatable
             'password'          => 'hashed',
             'is_admin'          => 'boolean',
         ];
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'superadmin';
     }
 }

@@ -11,7 +11,7 @@ class AdminAuthController extends Controller
     public function showLogin()
     {
         if (Auth::check() && Auth::user()->is_admin) {
-            return redirect()->route('admin.dashboard');
+            return redirect($this->homeRoute());
         }
 
         return view('admin.auth.login');
@@ -31,7 +31,7 @@ class AdminAuthController extends Controller
             }
 
             $request->session()->regenerate();
-            return redirect()->intended(route('admin.dashboard'));
+            return redirect()->intended($this->homeRoute());
         }
 
         return back()->withErrors([
@@ -46,5 +46,12 @@ class AdminAuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
+    }
+
+    private function homeRoute(): string
+    {
+        return Auth::user()?->isSuperAdmin()
+            ? route('admin.dashboard')
+            : route('admin.bookings.index');
     }
 }

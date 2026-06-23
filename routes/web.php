@@ -123,10 +123,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group(function () {
 
-    // Dashboard
-    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-
-    // Bookings
+    // Bookings (all admin roles)
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('bookings.show');
     Route::patch('/bookings/{booking}/status', [AdminBookingController::class, 'updateStatus'])->name('bookings.status');
@@ -137,64 +134,71 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
     Route::delete('/bookings/{booking}', [AdminBookingController::class, 'destroy'])->name('bookings.destroy');
     Route::post('/bookings/bulk-delete', [AdminBookingController::class, 'bulkDelete'])->name('bookings.bulkDelete');
 
-    // Contacts
-    Route::get('/contacts', [AdminContactController::class, 'index'])->name('contacts.index');
-    Route::get('/contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
-    Route::patch('/contacts/{contact}/status', [AdminContactController::class, 'updateStatus'])->name('contacts.status');
-    Route::post('/contacts/{contact}/notes', [AdminContactController::class, 'addNote'])->name('contacts.notes.store');
-
-    // Testimonials
-    Route::resource('testimonials', AdminTestimonialController::class);
-
-    // FAQs
-    Route::resource('faqs', AdminFaqController::class);
-
-    // Page sections
-    Route::get('/pages', [AdminPageSectionController::class, 'pages'])->name('pages.index');
-    Route::get('/pages/{page}/sections', [AdminPageSectionController::class, 'index'])->name('sections.index');
-    Route::get('/sections/{section}/edit', [AdminPageSectionController::class, 'edit'])->name('sections.edit');
-    Route::patch('/sections/{section}', [AdminPageSectionController::class, 'update'])->name('sections.update');
-
-    // SEO settings
-    Route::get('/seo', [AdminSeoController::class, 'index'])->name('seo.index');
-    Route::get('/seo/{pageKey}/edit', [AdminSeoController::class, 'edit'])->name('seo.edit');
-    Route::patch('/seo/{pageKey}', [AdminSeoController::class, 'update'])->name('seo.update');
-
-    // Media
-    Route::get('/media', [AdminMediaController::class, 'index'])->name('media.index');
-    Route::post('/media/upload', [AdminMediaController::class, 'upload'])->name('media.upload');
-    Route::post('/media/bulk-delete', [AdminMediaController::class, 'bulkDestroy'])->name('media.bulkDelete');
-    Route::get('/media/{filename}/details', [AdminMediaController::class, 'details'])->name('media.details');
-    Route::delete('/media/{filename}', [AdminMediaController::class, 'destroy'])->name('media.destroy');
-
-    // Site Settings
+    // Site Settings (all admin roles)
     Route::get('/settings', [AdminSiteSettingController::class, 'index'])->name('settings.index');
     Route::patch('/settings', [AdminSiteSettingController::class, 'update'])->name('settings.update');
 
-    // UI Translations
-    Route::get('/ui-translations', [AdminUiTranslationController::class, 'index'])->name('ui-translations.index');
-    Route::get('/ui-translations/{group}/edit', [AdminUiTranslationController::class, 'edit'])->name('ui-translations.edit');
-    Route::patch('/ui-translations/{group}', [AdminUiTranslationController::class, 'update'])->name('ui-translations.update');
-
-    // Email & Notifications Settings
+    // Email & Notifications Settings (all admin roles)
     Route::get('/email-settings', [AdminEmailSettingController::class, 'index'])->name('email-settings.index');
     Route::patch('/email-settings', [AdminEmailSettingController::class, 'update'])->name('email-settings.update');
     Route::post('/email-settings/test', [AdminEmailSettingController::class, 'sendTest'])->name('email-settings.test');
 
-    // Availability
+    // Availability (all admin roles)
     Route::get('/availability', [AdminAvailabilityController::class, 'index'])->name('availability.index');
     Route::patch('/availability/config', [AdminAvailabilityController::class, 'updateConfig'])->name('availability.config');
     Route::patch('/availability/schedule', [AdminAvailabilityController::class, 'updateSchedule'])->name('availability.schedule');
     Route::post('/availability/blocked', [AdminAvailabilityController::class, 'storeBlockedDate'])->name('availability.blocked.store');
     Route::delete('/availability/blocked/{blockedDate}', [AdminAvailabilityController::class, 'destroyBlockedDate'])->name('availability.blocked.destroy');
 
-    // Notifications (AJAX)
+    // Notifications AJAX (all admin roles)
     Route::get('/notifications/recent', [AdminNotificationController::class, 'recent'])->name('notifications.recent');
     Route::post('/notifications/mark-read', [AdminNotificationController::class, 'markRead'])->name('notifications.markRead');
 
-    // Change Password (authenticated)
+    // Change Password (all admin roles)
     Route::get('/password', [AdminPasswordController::class, 'edit'])->name('password.edit');
     Route::patch('/password', [AdminPasswordController::class, 'update'])->name('password.update');
+
+    // ── Super admin only routes ──
+    Route::middleware('superadmin')->group(function () {
+
+        // Dashboard
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        // Contacts
+        Route::get('/contacts', [AdminContactController::class, 'index'])->name('contacts.index');
+        Route::get('/contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
+        Route::patch('/contacts/{contact}/status', [AdminContactController::class, 'updateStatus'])->name('contacts.status');
+        Route::post('/contacts/{contact}/notes', [AdminContactController::class, 'addNote'])->name('contacts.notes.store');
+
+        // Testimonials
+        Route::resource('testimonials', AdminTestimonialController::class);
+
+        // FAQs
+        Route::resource('faqs', AdminFaqController::class);
+
+        // Page sections
+        Route::get('/pages', [AdminPageSectionController::class, 'pages'])->name('pages.index');
+        Route::get('/pages/{page}/sections', [AdminPageSectionController::class, 'index'])->name('sections.index');
+        Route::get('/sections/{section}/edit', [AdminPageSectionController::class, 'edit'])->name('sections.edit');
+        Route::patch('/sections/{section}', [AdminPageSectionController::class, 'update'])->name('sections.update');
+
+        // SEO settings
+        Route::get('/seo', [AdminSeoController::class, 'index'])->name('seo.index');
+        Route::get('/seo/{pageKey}/edit', [AdminSeoController::class, 'edit'])->name('seo.edit');
+        Route::patch('/seo/{pageKey}', [AdminSeoController::class, 'update'])->name('seo.update');
+
+        // Media
+        Route::get('/media', [AdminMediaController::class, 'index'])->name('media.index');
+        Route::post('/media/upload', [AdminMediaController::class, 'upload'])->name('media.upload');
+        Route::post('/media/bulk-delete', [AdminMediaController::class, 'bulkDestroy'])->name('media.bulkDelete');
+        Route::get('/media/{filename}/details', [AdminMediaController::class, 'details'])->name('media.details');
+        Route::delete('/media/{filename}', [AdminMediaController::class, 'destroy'])->name('media.destroy');
+
+        // UI Translations
+        Route::get('/ui-translations', [AdminUiTranslationController::class, 'index'])->name('ui-translations.index');
+        Route::get('/ui-translations/{group}/edit', [AdminUiTranslationController::class, 'edit'])->name('ui-translations.edit');
+        Route::patch('/ui-translations/{group}', [AdminUiTranslationController::class, 'update'])->name('ui-translations.update');
+    });
 });
 
 /*
