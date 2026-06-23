@@ -26,6 +26,8 @@
       'endorsement' => 'Professional Endorsement',
     ];
     $groupOrder = ['general', 'contact', 'social', 'analytics', 'endorsement'];
+    // Groups managed on other pages (e.g. /email-settings)
+    $skipGroups = ['email', 'notifications'];
   @endphp
 
   @foreach($groupOrder as $group)
@@ -67,6 +69,22 @@
             <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Select one or more languages for the site.</p>
           </div>
           <input type="hidden" name="settings[language]" id="language-hidden" value="{{ old('settings.language', $setting->getRawOriginal('value')) }}">
+
+        @elseif($setting->key === 'endorsement_full_text')
+          {{-- Bilingual textarea for endorsement full text --}}
+          @php $ftVal = json_decode($setting->getRawOriginal('value'), true) ?: []; @endphp
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div>
+              <label style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">EN</label>
+              <textarea name="settings[{{ $setting->key }}][en]"
+                class="admin-input" rows="6">{{ old("settings.{$setting->key}.en", $ftVal['en'] ?? '') }}</textarea>
+            </div>
+            <div>
+              <label style="font-size:11px;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">NL</label>
+              <textarea name="settings[{{ $setting->key }}][nl]"
+                class="admin-input" rows="6">{{ old("settings.{$setting->key}.nl", $ftVal['nl'] ?? '') }}</textarea>
+            </div>
+          </div>
 
         @elseif($setting->type === 'text')
           <textarea name="settings[{{ $setting->key }}]"
@@ -122,7 +140,7 @@
 
   {{-- Any groups not in the ordered list --}}
   @foreach($settings as $group => $groupSettings)
-  @if(!in_array($group, $groupOrder))
+  @if(!in_array($group, $groupOrder) && !in_array($group, $skipGroups))
   <div class="admin-form" style="margin-bottom:24px;">
     <div class="admin-form__section">
       <div class="admin-form__section-title">{{ ucfirst($group) }}</div>
