@@ -34,7 +34,15 @@
   @if(isset($settings[$group]))
   <div class="admin-form" style="margin-bottom:24px;">
     <div class="admin-form__section">
-      <div class="admin-form__section-title">{{ $groupLabels[$group] ?? ucfirst($group) }}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="admin-form__section-title" style="margin:0;">{{ $groupLabels[$group] ?? ucfirst($group) }}</div>
+        @if($group === 'endorsement')
+        <div class="settings-locale-tabs" style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;">
+          <button type="button" class="settings-locale-tab settings-locale-tab--active" data-target="endorsement" data-locale="en" onclick="switchSettingsLocale(this)">EN</button>
+          <button type="button" class="settings-locale-tab" data-target="endorsement" data-locale="nl" onclick="switchSettingsLocale(this)">NL</button>
+        </div>
+        @endif
+      </div>
 
       @foreach($settings[$group] as $setting)
       <div class="admin-field">
@@ -71,21 +79,13 @@
           <input type="hidden" name="settings[language]" id="language-hidden" value="{{ old('settings.language', $setting->getRawOriginal('value')) }}">
 
         @elseif($setting->key === 'endorsement_full_body')
-          {{-- Bilingual textarea with EN/NL tabs for endorsement full text --}}
+          {{-- Bilingual textarea for endorsement full text (controlled by section-level tab) --}}
           @php $ftVal = json_decode($setting->getRawOriginal('value'), true) ?: []; @endphp
-          <div>
-            <div class="settings-locale-tabs" style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;margin-bottom:8px;">
-              <button type="button" class="settings-locale-tab settings-locale-tab--active" data-target="{{ $setting->key }}" data-locale="en" onclick="switchSettingsLocale(this)">EN</button>
-              <button type="button" class="settings-locale-tab" data-target="{{ $setting->key }}" data-locale="nl" onclick="switchSettingsLocale(this)">NL</button>
-            </div>
-            <div class="settings-locale-panel" data-target="{{ $setting->key }}" data-locale="en" style="display:flex;flex-direction:column;">
-              <textarea name="settings[{{ $setting->key }}][en]"
-                class="admin-input" rows="6">{{ old("settings.{$setting->key}.en", $ftVal['en'] ?? '') }}</textarea>
-            </div>
-            <div class="settings-locale-panel" data-target="{{ $setting->key }}" data-locale="nl" style="display:none;flex-direction:column;">
-              <textarea name="settings[{{ $setting->key }}][nl]"
-                class="admin-input" rows="6">{{ old("settings.{$setting->key}.nl", $ftVal['nl'] ?? '') }}</textarea>
-            </div>
+          <div class="settings-locale-panel" data-target="endorsement" data-locale="en" style="display:flex;flex-direction:column;">
+            <textarea name="settings[{{ $setting->key }}][en]" class="admin-input" rows="6">{{ old("settings.{$setting->key}.en", $ftVal['en'] ?? '') }}</textarea>
+          </div>
+          <div class="settings-locale-panel" data-target="endorsement" data-locale="nl" style="display:none;flex-direction:column;">
+            <textarea name="settings[{{ $setting->key }}][nl]" class="admin-input" rows="6">{{ old("settings.{$setting->key}.nl", $ftVal['nl'] ?? '') }}</textarea>
           </div>
 
         @elseif($setting->type === 'text')
@@ -96,23 +96,11 @@
 
         @elseif($setting->type === 'json')
           @php $jsonVal = json_decode($setting->getRawOriginal('value'), true) ?: []; @endphp
-          <div>
-            <div class="settings-locale-tabs" style="display:flex;gap:0;border-bottom:2px solid #e5e7eb;margin-bottom:8px;">
-              <button type="button" class="settings-locale-tab settings-locale-tab--active" data-target="{{ $setting->key }}" data-locale="en" onclick="switchSettingsLocale(this)">EN</button>
-              <button type="button" class="settings-locale-tab" data-target="{{ $setting->key }}" data-locale="nl" onclick="switchSettingsLocale(this)">NL</button>
-            </div>
-            <div class="settings-locale-panel" data-target="{{ $setting->key }}" data-locale="en" style="display:flex;flex-direction:column;">
-              <input type="text"
-                name="settings[{{ $setting->key }}][en]"
-                class="admin-input"
-                value="{{ old("settings.{$setting->key}.en", $jsonVal['en'] ?? '') }}">
-            </div>
-            <div class="settings-locale-panel" data-target="{{ $setting->key }}" data-locale="nl" style="display:none;flex-direction:column;">
-              <input type="text"
-                name="settings[{{ $setting->key }}][nl]"
-                class="admin-input"
-                value="{{ old("settings.{$setting->key}.nl", $jsonVal['nl'] ?? '') }}">
-            </div>
+          <div class="settings-locale-panel" data-target="endorsement" data-locale="en" style="display:flex;flex-direction:column;">
+            <input type="text" name="settings[{{ $setting->key }}][en]" class="admin-input" value="{{ old("settings.{$setting->key}.en", $jsonVal['en'] ?? '') }}">
+          </div>
+          <div class="settings-locale-panel" data-target="endorsement" data-locale="nl" style="display:none;flex-direction:column;">
+            <input type="text" name="settings[{{ $setting->key }}][nl]" class="admin-input" value="{{ old("settings.{$setting->key}.nl", $jsonVal['nl'] ?? '') }}">
           </div>
 
         @else
