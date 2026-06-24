@@ -31,6 +31,7 @@
     // Hide Professional Endorsement from non-superadmin users
     if (! auth()->user()?->isSuperAdmin()) {
       $skipGroups[] = 'endorsement';
+      $groupOrder = array_values(array_diff($groupOrder, ['endorsement']));
     }
   @endphp
 
