@@ -17,8 +17,17 @@ class AdminSiteSettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->input('settings', []);
+        $isSuperAdmin = $request->user()?->isSuperAdmin();
+
+        // Endorsement keys that only superadmin can modify
+        $endorsementKeys = ['endorsement_heading', 'endorsement_short_quote', 'endorsement_full_body', 'endorsement_attribution'];
 
         foreach ($data as $key => $value) {
+            // Block endorsement changes for non-superadmin users
+            if (in_array($key, $endorsementKeys) && !$isSuperAdmin) {
+                continue;
+            }
+
             $setting = SiteSetting::where('key', $key)->first();
             if (!$setting) continue;
 
