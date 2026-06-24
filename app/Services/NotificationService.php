@@ -7,6 +7,7 @@ use App\Mail\Admin\NewContactAlertMail;
 use App\Mail\Client\BookingApprovedMail;
 use App\Mail\Client\BookingConfirmationMail;
 use App\Mail\Client\BookingRejectedMail;
+use App\Mail\Client\BookingStatusChangedMail;
 use App\Mail\Client\ContactConfirmationMail;
 use App\Models\Booking;
 use App\Models\ContactSubmission;
@@ -50,6 +51,29 @@ class NotificationService
         }
 
         Mail::to($booking->email)->queue(new BookingRejectedMail($booking));
+    }
+
+    /**
+     * Send status change notification when admin updates booking status via dropdown.
+     */
+    public function sendBookingStatusChanged(Booking $booking, string $newStatus): void
+    {
+        // For confirmed/cancelled, reuse existing dedicated emails
+        if ($newStatus === 'confirmed') {
+            $this->sendBookingApproved($booking);
+            return;
+        }
+        if ($newStatus === 'cancelled') {
+            $this->sendBookingRejected($booking);
+            return;
+        }
+
+        // For completed, no_show, etc.
+        if (!$this->shouldSend('notify_booking_approved')) {
+            return;
+        }
+
+        Mail::to($booking->email)->queue(new BookingStatusChangedMail($booking, $newStatus));
     }
 
     public function alertAdminNewContact(ContactSubmission $contact): void

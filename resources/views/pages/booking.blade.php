@@ -310,7 +310,7 @@ let inlinePicker;
 let scheduleData = { inactive_days: [5, 6], fully_blocked_dates: [] };
 
 // Load schedule data on page load (working days + blocked dates)
-fetch('/api/availability/schedule')
+const schedulePromise = fetch('/api/availability/schedule')
   .then(r => r.json())
   .then(data => { scheduleData = data; })
   .catch(() => {});
@@ -381,31 +381,34 @@ function goStep(step) {
 function initInlinePicker() {
   if (inlinePicker) { inlinePicker.destroy(); }
 
-  // Convert inactive_days (0=Mon..6=Sun) to JS day-of-week (0=Sun..6=Sat)
-  const disabledJsDays = scheduleData.inactive_days.map(d => (d + 1) % 7);
-  const blockedDates = scheduleData.fully_blocked_dates || [];
+  // Wait for schedule data before initializing calendar
+  schedulePromise.then(() => {
+    // Convert inactive_days (0=Mon..6=Sun) to JS day-of-week (0=Sun..6=Sat)
+    const disabledJsDays = scheduleData.inactive_days.map(d => (d + 1) % 7);
+    const blockedDates = scheduleData.fully_blocked_dates || [];
 
-  inlinePicker = flatpickr('#inline-calendar', {
-    inline: true, minDate: 'today', maxDate: new Date().fp_incr(60),
-    disable: [
-      function(date) {
-        if (disabledJsDays.includes(date.getDay())) return true;
-        const y = date.getFullYear();
-        const m = String(date.getMonth()+1).padStart(2,'0');
-        const dd = String(date.getDate()).padStart(2,'0');
-        if (blockedDates.includes(y+'-'+m+'-'+dd)) return true;
-        return false;
+    inlinePicker = flatpickr('#inline-calendar', {
+      inline: true, minDate: 'today', maxDate: new Date().fp_incr(60),
+      disable: [
+        function(date) {
+          if (disabledJsDays.includes(date.getDay())) return true;
+          const y = date.getFullYear();
+          const m = String(date.getMonth()+1).padStart(2,'0');
+          const dd = String(date.getDate()).padStart(2,'0');
+          if (blockedDates.includes(y+'-'+m+'-'+dd)) return true;
+          return false;
+        }
+      ],
+      locale: { firstDayOfWeek: 1 },
+      onChange(selectedDates, dateStr) {
+        state.date = dateStr; state.time = '';
+        fetchAndRenderSlots(dateStr);
+        document.getElementById('slots-wrap').style.display = 'block';
+        document.getElementById('summary-section').style.display = 'none';
+        const btn = document.getElementById('btn-submit');
+        btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
       }
-    ],
-    locale: { firstDayOfWeek: 1 },
-    onChange(selectedDates, dateStr) {
-      state.date = dateStr; state.time = '';
-      fetchAndRenderSlots(dateStr);
-      document.getElementById('slots-wrap').style.display = 'block';
-      document.getElementById('summary-section').style.display = 'none';
-      const btn = document.getElementById('btn-submit');
-      btn.style.opacity = '0.5'; btn.style.pointerEvents = 'none';
-    }
+    });
   });
 }
 

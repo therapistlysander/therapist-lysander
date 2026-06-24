@@ -52,7 +52,15 @@ class AdminBookingController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled,completed,no_show',
         ]);
 
-        $booking->update(['status' => $request->status]);
+        $oldStatus = $booking->status;
+        $newStatus = $request->status;
+
+        $booking->update(['status' => $newStatus]);
+
+        // Send notification if status actually changed
+        if ($oldStatus !== $newStatus && $newStatus !== 'pending') {
+            app(NotificationService::class)->sendBookingStatusChanged($booking, $newStatus);
+        }
 
         return back()->with('success', 'Booking status updated.');
     }

@@ -28,6 +28,10 @@ class BookingAvailabilityApiController extends Controller
         $date = \Carbon\Carbon::parse($dateStr);
         $dayOfWeek = $date->dayOfWeekIso - 1; // 0=Monday..6=Sunday
 
+        // Get configured timezone (fallback to app timezone)
+        $tzSetting = \App\Models\SiteSetting::where('key', 'timezone')->first();
+        $timezone = $tzSetting?->value ?: config('app.timezone', 'UTC');
+
         // Get the schedule for this day
         $schedule = BookingAvailability::where('day_of_week', $dayOfWeek)->first();
 
@@ -81,6 +85,15 @@ class BookingAvailabilityApiController extends Controller
             ->toArray();
 
         $slots = array_values(array_diff($slots, $bookedSlots));
+
+        // Filter out past time slots if the requested date is today
+        $now = \Carbon\Carbon::now($timezone);
+        if ($date->toDateString() === $now->toDateString()) {
+            $currentTime = $now->format('H:i');
+            $slots = array_values(array_filter($slots, function ($slot) use ($currentTime) {
+                return $slot > $currentTime;
+            }));
+        }
 
         return response()->json([
             'date'      => $dateStr,

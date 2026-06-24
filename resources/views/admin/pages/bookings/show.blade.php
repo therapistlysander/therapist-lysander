@@ -184,7 +184,7 @@
           <div style="font-size:11px;color:#9ca3af;margin-top:3px;">This link will be shared with the client.</div>
         </div>
         <button type="submit" class="btn-admin btn-admin--primary" style="width:100%;">
-          {{ $booking->scheduled_at ? 'Update Schedule' : 'Confirm &amp; Schedule' }}
+          {{ $booking->scheduled_at ? 'Update Schedule' : 'Confirm & Schedule' }}
         </button>
       </form>
     </div>
