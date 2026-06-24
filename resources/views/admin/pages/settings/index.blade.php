@@ -25,13 +25,13 @@
       'analytics'  => 'Analytics & Tracking',
       'endorsement' => 'Professional Endorsement',
     ];
-    $groupOrder = ['general', 'contact', 'social', 'analytics'];
-    // Endorsement section is only visible to superadmin
-    if (auth()->user()?->isSuperAdmin()) {
-        $groupOrder[] = 'endorsement';
-    }
+    $groupOrder = ['general', 'contact', 'social', 'analytics', 'endorsement'];
     // Groups managed on other pages (e.g. /email-settings)
     $skipGroups = ['email', 'notifications'];
+    // Hide Professional Endorsement from non-superadmin users
+    if (!auth()->user()?->isSuperAdmin()) {
+        $skipGroups[] = 'endorsement';
+    }
   @endphp
 
   @foreach($groupOrder as $group)
