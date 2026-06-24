@@ -29,8 +29,8 @@
     // Groups managed on other pages (e.g. /email-settings)
     $skipGroups = ['email', 'notifications'];
     // Hide Professional Endorsement from non-superadmin users
-    if (!auth()->user()?->isSuperAdmin()) {
-        $skipGroups[] = 'endorsement';
+    if (! auth()->user()?->isSuperAdmin()) {
+      $skipGroups[] = 'endorsement';
     }
   @endphp
 
