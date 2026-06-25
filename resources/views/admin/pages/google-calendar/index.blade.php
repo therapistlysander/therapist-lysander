@@ -5,7 +5,7 @@
 
 @section('page_styles')
 <style>
-  .gcal-layout { display: flex; flex-direction: column; gap: 24px; max-width: 720px; }
+  .gcal-layout { display: flex; flex-direction: column; gap: 24px; }
 
   .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; }
   .card__header { padding: 20px 24px; border-bottom: 1px solid #f3f4f6; }
