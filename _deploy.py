@@ -38,7 +38,7 @@ steps = [
     ("[2/7] Composer install", f"cd {APP_DIR} && COMPOSER_ALLOW_SUPERUSER=1 composer install --optimize-autoloader --no-dev --no-interaction"),
     ("[3/7] NPM install", f"cd {APP_DIR} && npm install --ignore-scripts"),
     ("[4/7] NPM build", f"cd {APP_DIR} && npm run build"),
-    ("[5/7] Migrate", f"cd {APP_DIR} && php artisan migrate --force"),
+    ("[5/7] Migrate", f"cd {APP_DIR} && php artisan migrate"),
     ("[6/7] Cache rebuild", f"cd {APP_DIR} && php artisan view:clear && php artisan config:clear && php artisan cache:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan event:cache"),
     ("[7/7] Queue restart", f"cd {APP_DIR} && php artisan queue:restart"),
 ]
