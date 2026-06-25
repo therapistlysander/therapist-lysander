@@ -74,7 +74,7 @@
       </div>
       <div class="admin-detail__row">
         <span class="admin-detail__label">Format</span>
-        <span class="admin-detail__value">{{ $booking->session_format ? ucfirst(str_replace('_',' ',$booking->session_format)) : '—' }}</span>
+        <span class="admin-detail__value">{{ match($booking->session_format) { 'intake' => 'Introduction Call', 'standard' => 'Standard Session', 'emdr' => 'EMDR Session', 'initial' => 'Initial Session', default => $booking->session_format ? ucfirst(str_replace('_',' ',$booking->session_format)) : '—' } }}</span>
       </div>
       <div class="admin-detail__row">
         <span class="admin-detail__label">Language</span>
@@ -219,11 +219,11 @@
     </div>
     @endif
 
-    {{-- Pre-Intake Responses --}}
+    {{-- Pre-Call Questionnaire Responses --}}
     @if($booking->preIntakeResponse)
     @php $pi = $booking->preIntakeResponse; @endphp
     <div class="admin-detail">
-      <h3 style="font-size:13px;font-weight:700;color:#1a2332;margin:0 0 16px;text-transform:uppercase;letter-spacing:.08em;">Pre-Intake Questionnaire</h3>
+      <h3 style="font-size:13px;font-weight:700;color:#1a2332;margin:0 0 16px;text-transform:uppercase;letter-spacing:.08em;">Pre-Call Questionnaire</h3>
 
       @if($pi->brings_to_therapy)
       <div class="admin-detail__row" style="align-items:flex-start;">
@@ -284,9 +284,9 @@
     </div>
     @else
     <div class="admin-detail">
-      <h3 style="font-size:13px;font-weight:700;color:#1a2332;margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em;">Pre-Intake Questionnaire</h3>
+      <h3 style="font-size:13px;font-weight:700;color:#1a2332;margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em;">Pre-Call Questionnaire</h3>
       <div class="admin-empty" style="padding:24px 0;">
-        <p style="margin:0;font-size:13px;">No pre-intake responses submitted yet.</p>
+        <p style="margin:0;font-size:13px;">No pre-call questionnaire responses submitted yet.</p>
       </div>
     </div>
     @endif

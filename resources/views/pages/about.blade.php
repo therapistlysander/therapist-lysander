@@ -117,7 +117,7 @@
 <div class="cta-section">
   <div class="container--narrow">
     <h2>{{ $cta?->content['heading'] ?? 'Ready to take the first step?' }}</h2>
-    <p>{!! $cta?->content['body'] ?? 'A short message is all it takes to start. The first intake conversation is free and without obligation.' !!}</p>
+    <p>{!! $cta?->content['body'] ?? 'A short message is all it takes to start. The first introduction call is free and without obligation.' !!}</p>
     <div class="cta-section__actions">
       <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($cta?->content['cta_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $cta?->content['cta_label'] ?? __('ui.common.book_session') }}</a>
     </div>

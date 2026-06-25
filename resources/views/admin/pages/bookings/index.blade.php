@@ -99,7 +99,7 @@
             <div style="font-size:11px;color:#9ca3af;">{{ $booking->email }}</div>
           </td>
           <td style="font-size:12px;">{{ $booking->session_type ? ucfirst($booking->session_type) : '—' }}</td>
-          <td style="font-size:12px;">{{ $booking->session_format ? ucfirst(str_replace('_',' ',$booking->session_format)) : '—' }}</td>
+          <td style="font-size:12px;">{{ match($booking->session_format) { 'intake' => 'Introduction Call', 'standard' => 'Standard Session', 'emdr' => 'EMDR Session', 'initial' => 'Initial Session', default => $booking->session_format ? ucfirst(str_replace('_',' ',$booking->session_format)) : '—' } }}</td>
           <td style="font-size:12px;">
             @if($booking->preferred_date)
               <span style="color:#1a2332;font-weight:500;">{{ $booking->preferred_date->format('d M Y') }}</span><br>

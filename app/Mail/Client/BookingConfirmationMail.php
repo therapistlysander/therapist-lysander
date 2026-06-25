@@ -27,12 +27,19 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
+        $formatLabels = [
+            'intake'    => 'Introduction Call',
+            'standard'  => 'Standard Session',
+            'emdr'      => 'EMDR Session',
+            'initial'   => 'Initial Session',
+        ];
+
         return new Content(
             view: 'emails.client.booking-confirmation',
             with: [
                 'firstName' => $this->booking->first_name,
                 'sessionType' => $this->booking->session_type,
-                'sessionFormat' => $this->booking->session_format,
+                'sessionFormat' => $formatLabels[$this->booking->session_format] ?? ucfirst($this->booking->session_format),
                 'preferredDate' => $this->booking->preferred_date,
             ],
         );
