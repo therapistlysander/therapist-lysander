@@ -156,8 +156,7 @@ class GoogleCalendarService
         $service = new Calendar($client);
         $timezone = $this->getAppTimezone();
 
-        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date)
-            ->setTimezone($timezone);
+        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date, $timezone);
         $slotDuration = BookingConfig::settings()->slot_duration;
         $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
 
@@ -186,12 +185,12 @@ class GoogleCalendarService
         }
 
         $start = new EventDateTime();
-        $start->setDateTime($scheduledAt->toIso8601String());
+        $start->setDateTime($scheduledAt->format('Y-m-d\TH:i:s'));
         $start->setTimeZone($timezone);
         $event->setStart($start);
 
         $end = new EventDateTime();
-        $end->setDateTime($endTime->toIso8601String());
+        $end->setDateTime($endTime->format('Y-m-d\TH:i:s'));
         $end->setTimeZone($timezone);
         $event->setEnd($end);
 
@@ -244,8 +243,7 @@ class GoogleCalendarService
 
         $existingEvent = $service->events->get($calendarId, $eventId);
 
-        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date)
-            ->setTimezone($timezone);
+        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date, $timezone);
         $slotDuration = BookingConfig::settings()->slot_duration;
         $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
 
@@ -273,12 +271,12 @@ class GoogleCalendarService
         }
 
         $start = new EventDateTime();
-        $start->setDateTime($scheduledAt->toIso8601String());
+        $start->setDateTime($scheduledAt->format('Y-m-d\TH:i:s'));
         $start->setTimeZone($timezone);
         $existingEvent->setStart($start);
 
         $end = new EventDateTime();
-        $end->setDateTime($endTime->toIso8601String());
+        $end->setDateTime($endTime->format('Y-m-d\TH:i:s'));
         $end->setTimeZone($timezone);
         $existingEvent->setEnd($end);
 
