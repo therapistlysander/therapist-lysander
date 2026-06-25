@@ -34,7 +34,7 @@ client.connect(HOST, username=USER, password=PASS, timeout=30)
 print("Connected!\n")
 
 steps = [
-    ("[1/7] Git stash + pull", f"cd {APP_DIR} && git stash && git remote set-url origin https://{GITHUB_TOKEN}@github.com/rakeshmaity271/therapistlysander.git && git pull origin main && git stash drop"),
+    ("[1/7] Git stash + pull", f"cd {APP_DIR} && git stash && git remote set-url origin https://{GITHUB_TOKEN}@github.com/rakeshmaity271/therapistlysander.git && git pull origin dev && git stash drop"),
     ("[2/7] Composer install", f"cd {APP_DIR} && COMPOSER_ALLOW_SUPERUSER=1 composer install --optimize-autoloader --no-dev --no-interaction"),
     ("[3/7] NPM install", f"cd {APP_DIR} && npm install --ignore-scripts"),
     ("[4/7] NPM build", f"cd {APP_DIR} && npm run build"),

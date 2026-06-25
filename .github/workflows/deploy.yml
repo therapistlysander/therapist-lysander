@@ -2,13 +2,13 @@ name: Deploy to Production
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
 
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/dev'
 
     steps:
       - name: Checkout code
@@ -26,7 +26,7 @@ jobs:
             echo "=== Pulling latest code ==="
             git stash
             git remote set-url origin https://${{ secrets.GH_PAT }}@github.com/rakeshmaity271/therapistlysander.git
-            git pull origin main
+            git pull origin dev
             git stash drop || true
 
             echo "=== Composer install ==="
