@@ -43,7 +43,7 @@ jobs:
         run: php artisan key:generate
 
       - name: Run PHPUnit tests
-        run: php artisan test --parallel
+        run: php artisan test
 
   php-lint:
     name: PHP Syntax Check
@@ -59,7 +59,13 @@ jobs:
           php-version: '8.3'
 
       - name: Check PHP syntax
-        run: find app config routes database -name "*.php" -exec php -l {} \; | grep -v "No syntax errors"
+        run: |
+          ERRORS=$(find app config routes database -name "*.php" -exec php -l {} \; 2>&1 | grep -v "No syntax errors" || true)
+          if [ -n "$ERRORS" ]; then
+            echo "$ERRORS"
+            exit 1
+          fi
+          echo "All PHP files pass syntax check"
 
   frontend-build:
     name: Frontend Build
