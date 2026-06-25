@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\AdminMediaController;
 use App\Http\Controllers\Admin\AdminSiteSettingController;
 use App\Http\Controllers\Admin\AdminEmailSettingController;
 use App\Http\Controllers\Admin\AdminAvailabilityController;
+use App\Http\Controllers\Admin\AdminGoogleCalendarController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminPasswordController;
 use App\Http\Controllers\Admin\AdminForgotPasswordController;
@@ -160,6 +161,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
     // Notifications AJAX (all admin roles)
     Route::get('/notifications/recent', [AdminNotificationController::class, 'recent'])->name('notifications.recent');
     Route::post('/notifications/mark-read', [AdminNotificationController::class, 'markRead'])->name('notifications.markRead');
+
+    // Google Calendar (all admin roles)
+    Route::get('/google-calendar', [AdminGoogleCalendarController::class, 'index'])->name('google-calendar.index');
+    Route::get('/google-calendar/connect', [AdminGoogleCalendarController::class, 'connect'])->name('google-calendar.connect');
+    Route::get('/google-calendar/callback', [AdminGoogleCalendarController::class, 'callback'])->name('google-calendar.callback');
+    Route::post('/google-calendar/disconnect', [AdminGoogleCalendarController::class, 'disconnect'])->name('google-calendar.disconnect');
+    Route::patch('/google-calendar/settings', [AdminGoogleCalendarController::class, 'updateSettings'])->name('google-calendar.settings');
+    Route::post('/google-calendar/test-sync', [AdminGoogleCalendarController::class, 'testSync'])->name('google-calendar.test-sync');
 
     // Change Password (all admin roles)
     Route::get('/password', [AdminPasswordController::class, 'edit'])->name('password.edit');

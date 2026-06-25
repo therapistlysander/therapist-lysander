@@ -24,7 +24,16 @@
         @if($preferredDate)
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;">Preferred date:</td>
-            <td style="padding:4px 0;color:#1a2332;">{{ \Carbon\Carbon::parse($preferredDate)->format('l, j F Y \a\t H:i') }}</td>
+            <td style="padding:4px 0;color:#1a2332;">
+                {{ \Carbon\Carbon::parse($preferredDate)->format('l, j F Y \a\t H:i') }}
+                <span style="font-size:11px;color:#9ca3af;">
+                    ({{ $timezone }}
+                    @if(!empty($clientTimezone))
+                        / {{ $clientTimezone }}
+                    @endif
+                    )
+                </span>
+            </td>
         </tr>
         @endif
     </table>

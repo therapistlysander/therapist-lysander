@@ -1,0 +1,387 @@
+<?php
+
+namespace App\Services;
+
+use App\Exceptions\GoogleCalendarException;
+use App\Models\Booking;
+use App\Models\BookingConfig;
+use App\Models\GoogleCalendarToken;
+use App\Models\SiteSetting;
+use Carbon\Carbon;
+use Google\Client;
+use Google\Service\Calendar;
+use Google\Service\Calendar\Event;
+use Google\Service\Calendar\EventDateTime;
+use Google\Service\Calendar\FreeBusyRequest;
+use Google\Service\Calendar\FreeBusyRequestItem;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
+class GoogleCalendarService
+{
+    private Client $client;
+
+    public function __construct()
+    {
+        $this->client = $this->buildClient();
+    }
+
+    // ─── OAuth ───────────────────────────────────────────────────────────────
+
+    /**
+     * Generate the Google OAuth consent URL.
+     */
+    public function createAuthUrl(): string
+    {
+        $this->client->setState('admin:' . Auth::id());
+
+        return $this->client->createAuthUrl();
+    }
+
+    /**
+     * Handle the OAuth callback: exchange code for tokens and persist them.
+     */
+    public function handleCallback(string $code): GoogleCalendarToken
+    {
+        $tokenData = $this->client->fetchAccessTokenWithAuthCode($code);
+
+        if (isset($tokenData['error'])) {
+            throw GoogleCalendarException::apiError($tokenData['error']);
+        }
+
+        // Get the user's Google email via the OAuth2 userinfo endpoint
+        $this->client->setAccessToken($tokenData['access_token']);
+        $oauth2 = new \Google\Service\Oauth2($this->client);
+        $userInfo = $oauth2->userinfo->get();
+
+        $userId = Auth::id();
+
+        // Upsert: replace any existing token for this user
+        $token = GoogleCalendarToken::updateOrCreate(
+            ['user_id' => $userId],
+            [
+                'access_token'     => $tokenData['access_token'],
+                'refresh_token'    => $tokenData['refresh_token'] ?? null,
+                'token_expires_at' => time() + ($tokenData['expires_in'] ?? 3600),
+                'calendar_id'      => config('google-calendar.default_calendar_id', 'primary'),
+                'google_email'     => $userInfo->email ?? null,
+                'is_active'        => true,
+                'connected_at'     => now(),
+                'last_error'       => null,
+            ]
+        );
+
+        return $token;
+    }
+
+    /**
+     * Revoke the token and delete the record.
+     */
+    public function disconnect(GoogleCalendarToken $token): void
+    {
+        try {
+            $this->client->setAccessToken([
+                'access_token'  => $token->access_token,
+                'refresh_token' => $token->refresh_token,
+            ]);
+            $this->client->revokeToken();
+        } catch (\Throwable $e) {
+            Log::warning("GoogleCalendar: Failed to revoke token during disconnect: {$e->getMessage()}");
+        }
+    }
+
+    /**
+     * Get an authenticated Google\Client, auto-refreshing the token if needed.
+     */
+    public function getAuthenticatedClient(?GoogleCalendarToken $token = null): Client
+    {
+        $token = $token ?? GoogleCalendarToken::where('is_active', true)->first();
+
+        if (!$token) {
+            throw GoogleCalendarException::notConnected();
+        }
+
+        if ($token->needsRefresh()) {
+            $this->refreshToken($token);
+        }
+
+        $this->client->setAccessToken([
+            'access_token'  => $token->access_token,
+            'refresh_token' => $token->refresh_token,
+            'expires_in'    => $token->token_expires_at - time(),
+            'created'       => time() - 3000, // simulate created 50 min ago
+        ]);
+
+        return $this->client;
+    }
+
+    /**
+     * Refresh the access token using the refresh token.
+     */
+    public function refreshToken(GoogleCalendarToken $token): void
+    {
+        try {
+            $this->client->fetchAccessTokenWithRefreshToken($token->refresh_token);
+            $newToken = $this->client->getAccessToken();
+
+            $token->update([
+                'access_token'     => $newToken['access_token'],
+                'token_expires_at' => time() + ($newToken['expires_in'] ?? 3600),
+                'last_error'       => null,
+            ]);
+        } catch (\Throwable $e) {
+            $token->update([
+                'is_active'  => false,
+                'last_error' => 'Token refresh failed: ' . $e->getMessage(),
+            ]);
+
+            throw GoogleCalendarException::tokenExpired(
+                'Google Calendar token refresh failed. Please reconnect your Google account.'
+            );
+        }
+    }
+
+    // ─── Calendar Operations ─────────────────────────────────────────────────
+
+    /**
+     * Create a Google Calendar event for a confirmed booking.
+     *
+     * @return string The Google event ID.
+     */
+    public function createEvent(Booking $booking, string $calendarId): string
+    {
+        $client = $this->getAuthenticatedClient();
+        $service = new Calendar($client);
+        $timezone = $this->getAppTimezone();
+
+        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date);
+        $slotDuration = BookingConfig::settings()->slot_duration;
+        $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
+
+        $formatLabels = [
+            'intake'   => 'Introduction Call',
+            'standard' => 'Standard Session',
+            'emdr'     => 'EMDR Session',
+            'initial'  => 'Initial Session',
+        ];
+
+        $event = new Event($service);
+        $event->setSummary('Session: ' . $booking->full_name);
+        $event->setDescription(implode("\n", array_filter([
+            'Client: ' . $booking->full_name,
+            'Email: ' . $booking->email,
+            'Phone: ' . ($booking->phone ?? 'Not provided'),
+            'Format: ' . ($formatLabels[$booking->session_format] ?? ucfirst($booking->session_format ?? '')),
+            'Type: ' . ucfirst($booking->session_type ?? 'N/A'),
+            'Language: ' . ($booking->preferred_language ?? 'N/A'),
+            $booking->reason ? 'Reason: ' . $booking->reason : null,
+            $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
+        ])));
+
+        if ($booking->meeting_link) {
+            $event->setLocation($booking->meeting_link);
+        }
+
+        $start = new EventDateTime();
+        $start->setDateTime($scheduledAt->toIso8601String());
+        $start->setTimeZone($timezone);
+        $event->setStart($start);
+
+        $end = new EventDateTime();
+        $end->setDateTime($endTime->toIso8601String());
+        $end->setTimeZone($timezone);
+        $event->setEnd($end);
+
+        // Set reminders
+        $reminder = new Calendar\EventReminder();
+        $reminder->setMethod('popup');
+        $reminder->setMinutes(30);
+        $reminders = new Calendar\EventReminders();
+        $reminders->setUseDefault(false);
+        $reminders->setOverrides([$reminder]);
+        $event->setReminders($reminders);
+
+        $createdEvent = $service->events->insert($calendarId, $event);
+
+        return $createdEvent->getId();
+    }
+
+    /**
+     * Update an existing Google Calendar event.
+     */
+    public function updateEvent(string $eventId, Booking $booking, string $calendarId): void
+    {
+        $client = $this->getAuthenticatedClient();
+        $service = new Calendar($client);
+        $timezone = $this->getAppTimezone();
+
+        $existingEvent = $service->events->get($calendarId, $eventId);
+
+        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date);
+        $slotDuration = BookingConfig::settings()->slot_duration;
+        $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
+
+        $formatLabels = [
+            'intake'   => 'Introduction Call',
+            'standard' => 'Standard Session',
+            'emdr'     => 'EMDR Session',
+            'initial'  => 'Initial Session',
+        ];
+
+        $existingEvent->setSummary('Session: ' . $booking->full_name);
+        $existingEvent->setDescription(implode("\n", array_filter([
+            'Client: ' . $booking->full_name,
+            'Email: ' . $booking->email,
+            'Phone: ' . ($booking->phone ?? 'Not provided'),
+            'Format: ' . ($formatLabels[$booking->session_format] ?? ucfirst($booking->session_format ?? '')),
+            'Type: ' . ucfirst($booking->session_type ?? 'N/A'),
+            'Language: ' . ($booking->preferred_language ?? 'N/A'),
+            $booking->reason ? 'Reason: ' . $booking->reason : null,
+            $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
+        ])));
+
+        if ($booking->meeting_link) {
+            $existingEvent->setLocation($booking->meeting_link);
+        }
+
+        $start = new EventDateTime();
+        $start->setDateTime($scheduledAt->toIso8601String());
+        $start->setTimeZone($timezone);
+        $existingEvent->setStart($start);
+
+        $end = new EventDateTime();
+        $end->setDateTime($endTime->toIso8601String());
+        $end->setTimeZone($timezone);
+        $existingEvent->setEnd($end);
+
+        $service->events->update($calendarId, $eventId, $existingEvent);
+    }
+
+    /**
+     * Delete a Google Calendar event.
+     */
+    public function deleteEvent(string $eventId, string $calendarId): void
+    {
+        $client = $this->getAuthenticatedClient();
+        $service = new Calendar($client);
+
+        $service->events->delete($calendarId, $eventId);
+    }
+
+    // ─── Availability ────────────────────────────────────────────────────────
+
+    /**
+     * Get busy time slots from Google Calendar for a date range.
+     *
+     * @return array Array of ['start' => 'H:i', 'end' => 'H:i'] entries.
+     */
+    public function getBusySlots(Carbon $start, Carbon $end, string $calendarId): array
+    {
+        $client = $this->getAuthenticatedClient();
+        $service = new Calendar($client);
+
+        $calendarItem = new FreeBusyRequestItem();
+        $calendarItem->setId($calendarId);
+
+        $request = new FreeBusyRequest();
+        $request->setTimeMin($start->toIso8601String());
+        $request->setTimeMax($end->toIso8601String());
+        $request->setTimeZone($this->getAppTimezone());
+        $request->setItems([$calendarItem]);
+
+        $response = $service->freebusy->query($request);
+        $busySlots = [];
+
+        $calendars = $response->getCalendars();
+        if (isset($calendars[$calendarId])) {
+            foreach ($calendars[$calendarId]->getBusy() as $busy) {
+                $busyStart = Carbon::parse($busy->getStart());
+                $busyEnd = Carbon::parse($busy->getEnd());
+                $busySlots[] = [
+                    'start' => $busyStart->format('H:i'),
+                    'end'   => $busyEnd->format('H:i'),
+                    'start_dt' => $busyStart,
+                    'end_dt'   => $busyEnd,
+                ];
+            }
+        }
+
+        return $busySlots;
+    }
+
+    /**
+     * Check if a specific time slot is busy on Google Calendar.
+     */
+    public function isSlotBusy(Carbon $slotStart, Carbon $slotEnd, string $calendarId): bool
+    {
+        $busySlots = $this->getBusySlots($slotStart->copy()->startOfDay(), $slotEnd->copy()->endOfDay(), $calendarId);
+
+        foreach ($busySlots as $busy) {
+            $busyStart = $busy['start_dt'];
+            $busyEnd = $busy['end_dt'];
+
+            // Overlap check: slot overlaps with busy period
+            if ($slotStart < $busyEnd && $slotEnd > $busyStart) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * List available calendars for the authenticated user.
+     *
+     * @return array Array of ['id' => string, 'summary' => string].
+     */
+    public function listCalendars(): array
+    {
+        $client = $this->getAuthenticatedClient();
+        $service = new Calendar($client);
+
+        $calendarList = $service->calendarList->listCalendarList();
+        $calendars = [];
+
+        foreach ($calendarList->getItems() as $cal) {
+            $calendars[] = [
+                'id'      => $cal->getId(),
+                'summary' => $cal->getSummary(),
+            ];
+        }
+
+        return $calendars;
+    }
+
+    // ─── Helpers ─────────────────────────────────────────────────────────────
+
+    /**
+     * Build and configure the base Google\Client.
+     */
+    private function buildClient(): Client
+    {
+        $client = new Client();
+        $client->setApplicationName(config('app.name', 'Therapist Lysander'));
+        $client->setClientId(config('google-calendar.client_id'));
+        $client->setClientSecret(config('google-calendar.client_secret'));
+        $client->setRedirectUri(config('google-calendar.redirect_uri'));
+        $client->setAccessType('offline');
+        $client->setPrompt('consent');
+        $client->setScopes([
+            Calendar::CALENDAR,
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile',
+        ]);
+
+        return $client;
+    }
+
+    /**
+     * Get the application timezone from SiteSettings.
+     */
+    private function getAppTimezone(): string
+    {
+        $tzSetting = SiteSetting::where('key', 'timezone')->first();
+
+        return $tzSetting?->value ?: config('app.timezone', 'Europe/Amsterdam');
+    }
+}

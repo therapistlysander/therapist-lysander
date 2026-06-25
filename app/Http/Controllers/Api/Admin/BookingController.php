@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SyncBookingToCalendarJob;
 use App\Models\Booking;
 use App\Models\PreIntakeResponse;
 use Illuminate\Http\JsonResponse;
@@ -43,13 +44,24 @@ class BookingController extends Controller
             'admin_notes' => ['nullable', 'string', 'max:2000'],
         ]);
 
+        $oldStatus = $booking->status;
         $booking->update($validated);
+
+        // Sync to Google Calendar on status change
+        if ($oldStatus !== $validated['status']) {
+            $this->syncBookingToCalendar($booking->fresh(), $oldStatus, $validated['status']);
+        }
 
         return response()->json($booking);
     }
 
     public function destroy(Booking $booking): JsonResponse
     {
+        // Remove Google Calendar event if exists
+        if ($booking->google_event_id) {
+            SyncBookingToCalendarJob::dispatch($booking, 'delete');
+        }
+
         $booking->delete();
 
         return response()->json(['message' => 'Booking deleted.']);
@@ -87,5 +99,19 @@ class BookingController extends Controller
         $preIntakeResponse->update($validated);
 
         return response()->json($preIntakeResponse);
+    }
+
+    /**
+     * Determine the correct calendar sync action based on status transition.
+     */
+    private function syncBookingToCalendar(Booking $booking, string $oldStatus, string $newStatus): void
+    {
+        match (true) {
+            $newStatus === 'confirmed' && $booking->scheduled_at =>
+                SyncBookingToCalendarJob::dispatch($booking, 'create'),
+            $newStatus === 'cancelled' && $booking->google_event_id =>
+                SyncBookingToCalendarJob::dispatch($booking, 'delete'),
+            default => null,
+        };
     }
 }

@@ -229,6 +229,7 @@
 
       <div class="step-section" id="slots-wrap" style="display:none;">
         <label class="step-section__label">{{ __('ui.booking.available_times') }}</label>
+        <p id="timezone-label" style="font-size:var(--size-xs);color:var(--color-text-light);margin-bottom:var(--space-3);"></p>
         <div class="time-slots" id="time-slots"></div>
       </div>
 
@@ -304,6 +305,10 @@ const state = {
   date: '', time: '',
   piGoals: '',
 };
+
+// Detect visitor's timezone
+const visitorTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+let serverTimezone = 'Europe/Amsterdam';
 
 let currentStep = 1;
 let inlinePicker;
@@ -420,6 +425,15 @@ function fetchAndRenderSlots(dateStr) {
     .then(r => r.json())
     .then(data => {
       grid.innerHTML = '';
+
+      // Update timezone label
+      if (data.timezone) {
+        serverTimezone = data.timezone;
+        const tzLabel = document.getElementById('timezone-label');
+        const friendlyTz = visitorTimezone.replace(/_/g, ' ');
+        tzLabel.textContent = 'Times shown in: ' + serverTimezone + ' (your timezone: ' + friendlyTz + ')';
+      }
+
       if (!data.available || !data.slots.length) {
         grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">' + __t.noSlots + '</div>';
         return;
@@ -465,6 +479,7 @@ function submitBooking() {
     time: state.time,
     notes: '',
     pi_brings: state.piGoals || null,
+    client_timezone: visitorTimezone,
   };
 
   fetch(bookingSubmitUrl, {

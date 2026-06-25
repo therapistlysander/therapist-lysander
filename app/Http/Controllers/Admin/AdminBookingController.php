@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SyncBookingToCalendarJob;
 use App\Models\Booking;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
@@ -60,6 +61,9 @@ class AdminBookingController extends Controller
         // Send notification if status actually changed
         if ($oldStatus !== $newStatus && $newStatus !== 'pending') {
             app(NotificationService::class)->sendBookingStatusChanged($booking, $newStatus);
+
+            // Sync to Google Calendar based on status change
+            $this->syncBookingToCalendar($booking->fresh(), $oldStatus, $newStatus);
         }
 
         return back()->with('success', 'Booking status updated.');
@@ -84,6 +88,9 @@ class AdminBookingController extends Controller
         ]);
 
         app(NotificationService::class)->sendBookingApproved($booking);
+
+        // Sync to Google Calendar
+        SyncBookingToCalendarJob::dispatch($booking->fresh(), 'create');
 
         return back()->with('success', 'Session scheduled and booking confirmed.');
     }
@@ -112,6 +119,11 @@ class AdminBookingController extends Controller
 
         app(NotificationService::class)->sendBookingApproved($booking);
 
+        // Sync to Google Calendar if booking has a scheduled time
+        if ($booking->scheduled_at) {
+            SyncBookingToCalendarJob::dispatch($booking->fresh(), 'create');
+        }
+
         return back()->with('success', 'Booking approved.');
     }
 
@@ -128,11 +140,21 @@ class AdminBookingController extends Controller
 
         app(NotificationService::class)->sendBookingRejected($booking);
 
+        // Remove Google Calendar event if exists
+        if ($booking->google_event_id) {
+            SyncBookingToCalendarJob::dispatch($booking->fresh(), 'delete');
+        }
+
         return back()->with('success', 'Booking rejected.');
     }
 
     public function destroy(Booking $booking)
     {
+        // Remove Google Calendar event if exists
+        if ($booking->google_event_id) {
+            SyncBookingToCalendarJob::dispatch($booking, 'delete');
+        }
+
         $booking->preIntakeResponse?->delete();
         $booking->delete();
         return redirect()->route('admin.bookings.index')->with('success', 'Booking deleted.');
@@ -145,11 +167,31 @@ class AdminBookingController extends Controller
             return back()->with('error', 'No bookings selected.');
         }
 
+        // Dispatch calendar deletion for bookings with Google events
+        $bookingsWithEvents = Booking::whereIn('id', $ids)->whereNotNull('google_event_id')->get();
+        foreach ($bookingsWithEvents as $booking) {
+            SyncBookingToCalendarJob::dispatch($booking, 'delete');
+        }
+
         // Delete associated pre-intake responses first
         \App\Models\PreIntakeResponse::whereIn('booking_id', $ids)->delete();
         Booking::whereIn('id', $ids)->delete();
 
         return redirect()->route('admin.bookings.index')
             ->with('success', count($ids) . ' booking(s) deleted.');
+    }
+
+    /**
+     * Determine the correct calendar sync action based on status transition.
+     */
+    private function syncBookingToCalendar(Booking $booking, string $oldStatus, string $newStatus): void
+    {
+        match (true) {
+            $newStatus === 'confirmed' && $booking->scheduled_at =>
+                SyncBookingToCalendarJob::dispatch($booking, 'create'),
+            $newStatus === 'cancelled' && $booking->google_event_id =>
+                SyncBookingToCalendarJob::dispatch($booking, 'delete'),
+            default => null,
+        };
     }
 }

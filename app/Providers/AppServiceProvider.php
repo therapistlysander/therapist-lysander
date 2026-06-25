@@ -13,6 +13,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Register GoogleCalendarService as singleton
+        $this->app->singleton(\App\Services\GoogleCalendarService::class);
+
         // Override translation loader to support database-driven UI translations
         $this->app->singleton('translation.loader', function ($app) {
             return new \App\Translation\DatabaseTranslationLoader(

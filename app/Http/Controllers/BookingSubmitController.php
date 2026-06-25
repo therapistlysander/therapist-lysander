@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\BookingConfig;
+use App\Models\GoogleCalendarToken;
 use App\Models\PreIntakeResponse;
+use App\Services\GoogleCalendarService;
 use App\Services\NotificationService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BookingSubmitController extends Controller
 {
@@ -46,6 +51,15 @@ class BookingSubmitController extends Controller
             ], 409);
         }
 
+        // Check Google Calendar for conflicts (fail open)
+        $googleConflict = $this->checkGoogleCalendarConflict($preferredDate);
+        if ($googleConflict) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This time slot is no longer available. Please choose another time.',
+            ], 409);
+        }
+
         // Create the booking
         $booking = Booking::create([
             'first_name'     => $firstName,
@@ -57,6 +71,7 @@ class BookingSubmitController extends Controller
             'reason'         => $request->input('notes'),
             'source'         => 'website',
             'status'         => 'pending',
+            'client_timezone' => $request->input('client_timezone'),
         ]);
 
         // Create pre-intake response if any pre-intake data provided
@@ -94,5 +109,30 @@ class BookingSubmitController extends Controller
             'booking_id' => $booking->id,
             'message'    => 'Booking request submitted successfully.',
         ], 201);
+    }
+
+    /**
+     * Check if the requested slot conflicts with Google Calendar.
+     * Fails open: returns false if Google is unavailable.
+     */
+    private function checkGoogleCalendarConflict(string $preferredDate): bool
+    {
+        $token = GoogleCalendarToken::where('is_active', true)->first();
+        if (!$token) {
+            return false;
+        }
+
+        try {
+            $calendar = app(GoogleCalendarService::class);
+            $config = BookingConfig::settings();
+
+            $slotStart = Carbon::parse($preferredDate);
+            $slotEnd = $slotStart->copy()->addMinutes($config->slot_duration);
+
+            return $calendar->isSlotBusy($slotStart, $slotEnd, $token->calendar_id);
+        } catch (\Throwable $e) {
+            Log::warning("GoogleCalendar: Busy check failed, allowing booking: {$e->getMessage()}");
+            return false; // Fail open
+        }
     }
 }

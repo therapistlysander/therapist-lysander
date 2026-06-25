@@ -26,6 +26,8 @@ class Booking extends Model
         'confirmed_at',
         'rejection_reason',
         'calendly_event_id',
+        'google_event_id',
+        'client_timezone',
     ];
 
     protected $casts = [

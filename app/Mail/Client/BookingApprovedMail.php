@@ -3,6 +3,7 @@
 namespace App\Mail\Client;
 
 use App\Models\Booking;
+use App\Models\SiteSetting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -27,6 +28,8 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
+        $timezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
+
         return new Content(
             view: 'emails.client.booking-approved',
             with: [
@@ -34,6 +37,8 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
                 'scheduledAt' => $this->booking->scheduled_at,
                 'meetingLink' => $this->booking->meeting_link,
                 'meetingPlatform' => $this->booking->meeting_platform,
+                'timezone' => $timezone,
+                'clientTimezone' => $this->booking->client_timezone,
             ],
         );
     }

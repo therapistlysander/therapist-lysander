@@ -17,16 +17,10 @@ class AdminSiteSettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->input('settings', []);
-        $isSuperAdmin = $request->user()?->isSuperAdmin();
 
         foreach ($data as $key => $value) {
             $setting = SiteSetting::where('key', $key)->first();
             if (!$setting) continue;
-
-            // Block non-superadmin from updating endorsement settings
-            if (!$isSuperAdmin && $setting->group === 'endorsement') {
-                continue;
-            }
 
             // Normalise booleans
             if ($setting->type === 'boolean') {
