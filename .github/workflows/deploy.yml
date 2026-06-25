@@ -36,6 +36,9 @@ jobs:
             npm install --ignore-scripts
             npm run build
 
+            echo "=== Run migrations ==="
+            php artisan migrate --force
+
             echo "=== Rebuild caches ==="
             php artisan view:clear
             php artisan config:clear
