@@ -156,7 +156,8 @@ class GoogleCalendarService
         $service = new Calendar($client);
         $timezone = $this->getAppTimezone();
 
-        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date);
+        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date)
+            ->setTimezone($timezone);
         $slotDuration = BookingConfig::settings()->slot_duration;
         $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
 
@@ -243,7 +244,8 @@ class GoogleCalendarService
 
         $existingEvent = $service->events->get($calendarId, $eventId);
 
-        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date);
+        $scheduledAt = Carbon::parse($booking->scheduled_at ?? $booking->preferred_date)
+            ->setTimezone($timezone);
         $slotDuration = BookingConfig::settings()->slot_duration;
         $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
 
