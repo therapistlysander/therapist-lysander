@@ -11,7 +11,9 @@ use Carbon\Carbon;
 use Google\Client;
 use Google\Service\Calendar;
 use Google\Service\Calendar\Event;
+use Google\Service\Calendar\EventAttendee;
 use Google\Service\Calendar\EventDateTime;
+use Google\Service\Calendar\EventReminders;
 use Google\Service\Calendar\FreeBusyRequest;
 use Google\Service\Calendar\FreeBusyRequestItem;
 use Illuminate\Support\Facades\Auth;
@@ -192,6 +194,30 @@ class GoogleCalendarService
         $end->setTimeZone($timezone);
         $event->setEnd($end);
 
+        // Set attendees (calendar invitations)
+        $attendees = [];
+
+        // Client attendee
+        if ($booking->email) {
+            $clientAttendee = new EventAttendee();
+            $clientAttendee->setEmail($booking->email);
+            $clientAttendee->setDisplayName($booking->full_name);
+            $attendees[] = $clientAttendee;
+        }
+
+        // Therapist (organizer) attendee
+        $token = GoogleCalendarToken::where('is_active', true)->first();
+        if ($token && $token->google_email) {
+            $therapistAttendee = new EventAttendee();
+            $therapistAttendee->setEmail($token->google_email);
+            $therapistAttendee->setDisplayName('Therapist');
+            $attendees[] = $therapistAttendee;
+        }
+
+        if (!empty($attendees)) {
+            $event->setAttendees($attendees);
+        }
+
         // Set reminders
         $reminder = new Calendar\EventReminder();
         $reminder->setMethod('popup');
@@ -201,7 +227,7 @@ class GoogleCalendarService
         $reminders->setOverrides([$reminder]);
         $event->setReminders($reminders);
 
-        $createdEvent = $service->events->insert($calendarId, $event);
+        $createdEvent = $service->events->insert($calendarId, $event, ['sendUpdates' => 'all']);
 
         return $createdEvent->getId();
     }
@@ -254,7 +280,29 @@ class GoogleCalendarService
         $end->setTimeZone($timezone);
         $existingEvent->setEnd($end);
 
-        $service->events->update($calendarId, $eventId, $existingEvent);
+        // Update attendees (calendar invitations)
+        $attendees = [];
+
+        if ($booking->email) {
+            $clientAttendee = new EventAttendee();
+            $clientAttendee->setEmail($booking->email);
+            $clientAttendee->setDisplayName($booking->full_name);
+            $attendees[] = $clientAttendee;
+        }
+
+        $token = GoogleCalendarToken::where('is_active', true)->first();
+        if ($token && $token->google_email) {
+            $therapistAttendee = new EventAttendee();
+            $therapistAttendee->setEmail($token->google_email);
+            $therapistAttendee->setDisplayName('Therapist');
+            $attendees[] = $therapistAttendee;
+        }
+
+        if (!empty($attendees)) {
+            $existingEvent->setAttendees($attendees);
+        }
+
+        $service->events->update($calendarId, $eventId, $existingEvent, ['sendUpdates' => 'all']);
     }
 
     /**
@@ -265,7 +313,7 @@ class GoogleCalendarService
         $client = $this->getAuthenticatedClient();
         $service = new Calendar($client);
 
-        $service->events->delete($calendarId, $eventId);
+        $service->events->delete($calendarId, $eventId, ['sendUpdates' => 'all']);
     }
 
     // ─── Availability ────────────────────────────────────────────────────────
