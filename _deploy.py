@@ -34,15 +34,12 @@ client.connect(HOST, username=USER, password=PASS, timeout=30)
 print("Connected!\n")
 
 steps = [
-    ("[1/9] Git stash + pull", f"cd {APP_DIR} && git stash && git remote set-url origin https://{GITHUB_TOKEN}@github.com/rakeshmaity271/therapistlysander.git && git pull origin main && git stash drop"),
-    ("[2/9] Composer install", f"cd {APP_DIR} && COMPOSER_ALLOW_SUPERUSER=1 composer install --optimize-autoloader --no-dev --no-interaction"),
-    ("[3/9] NPM install", f"cd {APP_DIR} && npm install --ignore-scripts"),
-    ("[4/9] NPM build", f"cd {APP_DIR} && npm run build"),
-    ("[5/9] Migrate", f"cd {APP_DIR} && php artisan migrate --force"),
-    ("[6/9] Seed UI translations", f"cd {APP_DIR} && php artisan db:seed --force"),
-    ("[7/9] Fix alignment", f"cd {APP_DIR} && php artisan content:fix-alignment"),
-    ("[8/9] Cache rebuild", f"cd {APP_DIR} && php artisan view:clear && php artisan config:clear && php artisan cache:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan event:cache"),
-    ("[9/9] Queue restart", f"cd {APP_DIR} && php artisan queue:restart"),
+    ("[1/6] Git stash + pull", f"cd {APP_DIR} && git stash && git remote set-url origin https://{GITHUB_TOKEN}@github.com/rakeshmaity271/therapistlysander.git && git pull origin main && git stash drop"),
+    ("[2/6] Composer install", f"cd {APP_DIR} && COMPOSER_ALLOW_SUPERUSER=1 composer install --optimize-autoloader --no-dev --no-interaction"),
+    ("[3/6] NPM install", f"cd {APP_DIR} && npm install --ignore-scripts"),
+    ("[4/6] NPM build", f"cd {APP_DIR} && npm run build"),
+    ("[5/6] Cache rebuild", f"cd {APP_DIR} && php artisan view:clear && php artisan config:clear && php artisan cache:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan event:cache"),
+    ("[6/6] Queue restart", f"cd {APP_DIR} && php artisan queue:restart"),
 ]
 
 for label, cmd in steps:

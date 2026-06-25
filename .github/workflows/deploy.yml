@@ -36,15 +36,6 @@ jobs:
             npm install --ignore-scripts
             npm run build
 
-            echo "=== Run migrations ==="
-            php artisan migrate --force
-
-            echo "=== Seed UI translations ==="
-            php artisan db:seed --force
-
-            echo "=== Fix content alignment ==="
-            php artisan content:fix-alignment || true
-
             echo "=== Rebuild caches ==="
             php artisan view:clear
             php artisan config:clear
