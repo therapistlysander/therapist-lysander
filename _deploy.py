@@ -12,7 +12,7 @@ HOST = "194.163.151.182"
 USER = "root"
 PASS = "rakeshmaity"
 APP_DIR = "/home/kodeclouds-therapistlysander/htdocs/therapistlysander.kodeclouds.com"
-GITHUB_TOKEN = "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"
+GITHUB_TOKEN = "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"
 
 def run(cmd, timeout=120):
     print(f"  > {cmd[:100]}{'...' if len(cmd) > 100 else ''}")
