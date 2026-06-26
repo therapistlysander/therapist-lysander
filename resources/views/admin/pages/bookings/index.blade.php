@@ -41,6 +41,7 @@
   .check-all { width: 16px; height: 16px; accent-color: #5a9e97; cursor: pointer; }
   .row-check { width: 16px; height: 16px; accent-color: #5a9e97; cursor: pointer; }
   tr.selected td { background: #f0fdf9 !important; }
+  thead th { white-space: nowrap; }
 
   /* Filter Bar */
   .filter-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }

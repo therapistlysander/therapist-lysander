@@ -125,6 +125,24 @@
   .empty-state { text-align: center; padding: 40px 20px; color: #9ca3af; }
   .empty-state__icon { width: 48px; height: 48px; margin: 0 auto 12px; color: #d1d5db; }
   .empty-state__text { font-size: 14px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .card__header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .card__header .btn-row { width: 100%; margin-top: 0 !important; }
+    .card__header .btn-row .btn-admin { flex: 1; justify-content: center; }
+    .info-grid { grid-template-columns: 1fr; gap: 8px; }
+    .info-label { font-size: 11px; }
+    .info-value { font-size: 13px; word-break: break-all; }
+    .synced-item { flex-wrap: wrap; gap: 8px; }
+    .synced-item__time { width: 100%; font-size: 12px; }
+    .how-it-works { font-size: 12px; }
+  }
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .card__header .btn-row { flex-direction: column; }
+  }
 </style>
 @endsection
 

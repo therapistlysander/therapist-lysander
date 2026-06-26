@@ -65,14 +65,14 @@
   .day-toggle input:checked + .day-toggle__track { background: #5a9e97; }
   .day-toggle__thumb { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
   .day-toggle input:checked ~ .day-toggle__thumb { transform: translateX(18px); }
-  .day-info { flex: 1; }
+  .day-info { flex: 1; min-width: 0; }
   .day-name { font-size: 14px; font-weight: 500; color: #1a2332; }
   .day-name.inactive { color: #9ca3af; }
-  .day-override { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .day-override { display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
   .day-override input[type="time"] { padding: 4px 8px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 12px; color: #374151; width: 100px; }
   .day-override input[type="time"]:focus { border-color: #5a9e97; outline: none; }
   .day-override span { font-size: 11px; color: #9ca3af; }
-  .day-status { font-size: 11px; padding: 3px 8px; border-radius: 999px; font-weight: 500; }
+  .day-status { font-size: 11px; padding: 3px 8px; border-radius: 999px; font-weight: 500; flex-shrink: 0; }
   .day-status--on { background: #d1fae5; color: #065f46; }
   .day-status--off { background: #f3f4f6; color: #9ca3af; }
 
@@ -104,6 +104,23 @@
   .btn-remove { background: none; border: none; color: #dc2626; cursor: pointer; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
   .btn-remove:hover { background: #fee2e2; }
   .empty-state { text-align: center; padding: 32px 16px; color: #9ca3af; font-size: 13px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .avail-row { grid-template-columns: 1fr; }
+    .config-grid { grid-template-columns: 1fr 1fr; }
+    .day-item { flex-wrap: wrap; gap: 8px; }
+    .day-info { width: calc(100% - 60px); }
+    .day-status { margin-left: auto; }
+    .day-override { width: 100%; }
+    .day-override input[type="time"] { flex: 1; min-width: 80px; }
+    .btn-save { width: 100%; justify-content: center; }
+    .add-block__row { grid-template-columns: 1fr; }
+    .card__body { padding: 16px; }
+  }
+  @media (max-width: 480px) {
+    .config-grid { grid-template-columns: 1fr; }
+  }
 </style>
 @endsection
 
