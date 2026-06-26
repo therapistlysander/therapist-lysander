@@ -24,20 +24,18 @@
 
     {{-- Quick approve --}}
     @if(!in_array($booking->status, ['confirmed','completed','cancelled']))
-    <form method="POST" action="{{ route('admin.bookings.approve', $booking) }}" style="display:inline;">
+    <form method="POST" action="{{ route('admin.bookings.approve', $booking) }}" style="display:inline;" id="approve-form">
       @csrf
-      <button type="submit" class="btn-admin btn-admin--primary" style="background:#10b981;border-color:#10b981;"
-        onclick="return confirm('Approve this booking?')">
+      <button type="button" class="btn-admin btn-admin--primary" style="background:#10b981;border-color:#10b981;" onclick="showConfirmModal('Approve Booking?', 'This will confirm the booking and notify the client.', function() { document.getElementById('approve-form').submit(); }, 'warning')">
         ✓ Approve
       </button>
     </form>
     @endif
 
     {{-- Delete --}}
-    <form method="POST" action="{{ route('admin.bookings.destroy', $booking) }}" style="display:inline;">
+    <form method="POST" action="{{ route('admin.bookings.destroy', $booking) }}" style="display:inline;" id="delete-form">
       @csrf @method('DELETE')
-      <button type="submit" class="btn-admin btn-admin--outline" style="color:#ef4444;border-color:#ef4444;"
-        onclick="return confirm('Permanently delete this booking?')">
+      <button type="button" class="btn-admin btn-admin--outline" style="color:#ef4444;border-color:#ef4444;" onclick="showConfirmModal('Delete Booking?', 'Permanently delete this booking? This cannot be undone.', function() { document.getElementById('delete-form').submit(); })">
         Delete
       </button>
     </form>
@@ -113,11 +111,10 @@
       @if($booking->status !== 'cancelled')
       <details style="margin-top:14px;">
         <summary style="font-size:12px;color:#ef4444;cursor:pointer;font-weight:600;">Reject booking…</summary>
-        <form method="POST" action="{{ route('admin.bookings.reject', $booking) }}" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+        <form method="POST" action="{{ route('admin.bookings.reject', $booking) }}" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;" id="reject-form">
           @csrf
           <textarea name="rejection_reason" class="admin-input" rows="3" placeholder="Optional reason for rejection…" style="resize:vertical;width:100%;">{{ $booking->rejection_reason }}</textarea>
-          <button type="submit" class="btn-admin btn-admin--outline" style="color:#ef4444;border-color:#ef4444;"
-            onclick="return confirm('Reject this booking?')">Confirm Rejection</button>
+          <button type="button" class="btn-admin btn-admin--outline" style="color:#ef4444;border-color:#ef4444;" onclick="showConfirmModal('Reject Booking?', 'This will reject the booking and notify the client.', function() { document.getElementById('reject-form').submit(); }, 'warning')">Confirm Rejection</button>
         </form>
       </details>
       @elseif($booking->rejection_reason)

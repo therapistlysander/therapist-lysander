@@ -223,6 +223,23 @@
     .admin-user-menu__item:hover { background: #f3f4f6; }
     .admin-user-menu__item--danger { color: #dc2626; }
     .admin-user-menu__item--danger:hover { background: #fef2f2; }
+
+    /* Confirmation Modal */
+    .confirm-modal { display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; }
+    .confirm-modal.visible { display: flex; }
+    .confirm-modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); }
+    .confirm-modal__content {
+      position: relative; background: white; border-radius: 12px; padding: 28px; max-width: 420px; width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15); z-index: 1;
+    }
+    .confirm-modal__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+    .confirm-modal__icon--danger { background: #fee2e2; color: #ef4444; }
+    .confirm-modal__icon--warning { background: #fef3c7; color: #f59e0b; }
+    .confirm-modal__icon--info { background: #dbeafe; color: #3b82f6; }
+    .confirm-modal__title { font-size: 16px; font-weight: 600; color: #1a2332; text-align: center; margin: 0 0 8px; }
+    .confirm-modal__text { font-size: 13px; color: #6b7280; text-align: center; line-height: 1.6; margin: 0 0 24px; }
+    .confirm-modal__actions { display: flex; gap: 12px; justify-content: center; }
+    .confirm-modal__actions .btn-admin { min-width: 120px; justify-content: center; }
   </style>
   @yield('page_styles')
 </head>
@@ -373,6 +390,22 @@
     @endif
 
     @yield('content')
+  </div>
+</div>
+
+{{-- Shared Confirmation Modal --}}
+<div class="confirm-modal" id="confirm-modal">
+  <div class="confirm-modal__backdrop" onclick="closeConfirmModal()"></div>
+  <div class="confirm-modal__content">
+    <div class="confirm-modal__icon confirm-modal__icon--danger" id="confirm-modal-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+    </div>
+    <h3 class="confirm-modal__title" id="confirm-modal-title">Are you sure?</h3>
+    <p class="confirm-modal__text" id="confirm-modal-text">This action cannot be undone.</p>
+    <div class="confirm-modal__actions">
+      <button type="button" class="btn-admin btn-admin--secondary" onclick="closeConfirmModal()">Cancel</button>
+      <button type="button" class="btn-admin btn-admin--danger" id="confirm-modal-confirm">Confirm</button>
+    </div>
   </div>
 </div>
 
@@ -535,6 +568,41 @@ document.querySelectorAll('[data-editor]').forEach(function(wrap) {
   .then(data => updateBadge(data.unread_count || 0))
   .catch(() => {});
 })();
+
+// Confirmation Modal Functions
+function showConfirmModal(title, message, onConfirm, type = 'danger') {
+  const modal = document.getElementById('confirm-modal');
+  const icon = document.getElementById('confirm-modal-icon');
+  const titleEl = document.getElementById('confirm-modal-title');
+  const textEl = document.getElementById('confirm-modal-text');
+  const confirmBtn = document.getElementById('confirm-modal-confirm');
+
+  titleEl.textContent = title;
+  textEl.textContent = message;
+
+  // Update icon style
+  icon.className = 'confirm-modal__icon confirm-modal__icon--' + type;
+
+  // Update confirm button style
+  confirmBtn.className = 'btn-admin btn-admin--' + (type === 'danger' ? 'danger' : 'primary');
+
+  // Set confirm action
+  confirmBtn.onclick = function() {
+    closeConfirmModal();
+    if (onConfirm) onConfirm();
+  };
+
+  modal.classList.add('visible');
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirm-modal').classList.remove('visible');
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeConfirmModal();
+});
 </script>
 </body>
 </html>

@@ -124,9 +124,9 @@
           <td>
             <div style="display:flex;gap:6px;align-items:center;">
               <a href="{{ route('admin.bookings.show', $booking) }}" class="btn-admin btn-admin--outline" style="font-size:11px;padding:4px 10px;">View</a>
-              <form method="POST" action="{{ route('admin.bookings.destroy', $booking) }}" style="margin:0;" onsubmit="return confirm('Delete this booking?')">
+              <form method="POST" action="{{ route('admin.bookings.destroy', $booking) }}" style="margin:0;" id="delete-form-{{ $booking->id }}">
                 @csrf @method('DELETE')
-                <button type="submit" class="btn-admin btn-admin--danger" style="font-size:11px;padding:4px 10px;">
+                <button type="button" class="btn-admin btn-admin--danger" style="font-size:11px;padding:4px 10px;" onclick="showConfirmModal('Delete Booking?', 'Are you sure you want to delete this booking? This cannot be undone.', function() { document.getElementById('delete-form-{{ $booking->id }}').submit(); })">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
                 </button>
               </form>
@@ -180,20 +180,25 @@ function clearSelection() {
 function bulkDelete() {
   const checked = document.querySelectorAll('.row-check:checked');
   if (checked.length === 0) return;
-  if (!confirm('Delete ' + checked.length + ' booking(s)? This cannot be undone.')) return;
 
-  const form = document.getElementById('bulk-form');
-  // Remove old hidden inputs
-  form.querySelectorAll('input[name="ids[]"]').forEach(el => el.remove());
-  // Add selected IDs
-  checked.forEach(cb => {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'ids[]';
-    input.value = cb.value;
-    form.appendChild(input);
-  });
-  form.submit();
+  showConfirmModal(
+    'Delete ' + checked.length + ' Booking(s)?',
+    'This action cannot be undone. All selected bookings will be permanently deleted.',
+    function() {
+      const form = document.getElementById('bulk-form');
+      // Remove old hidden inputs
+      form.querySelectorAll('input[name="ids[]"]').forEach(el => el.remove());
+      // Add selected IDs
+      checked.forEach(cb => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'ids[]';
+        input.value = cb.value;
+        form.appendChild(input);
+      });
+      form.submit();
+    }
+  );
 }
 </script>
 @endsection
