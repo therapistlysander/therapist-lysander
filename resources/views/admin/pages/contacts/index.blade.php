@@ -2,6 +2,48 @@
 @section('title', 'Contact Messages')
 @section('page_title', 'Contact Messages')
 
+@section('page_styles')
+<style>
+  /* Modern Dropdown */
+  .modern-dropdown { position: relative; display: inline-block; }
+  .modern-dropdown__trigger {
+    display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+    background: white; border: 1px solid #e5e7eb; border-radius: 8px;
+    font-size: 13px; color: #374151; cursor: pointer; min-width: 140px;
+    transition: all 0.15s;
+  }
+  .modern-dropdown__trigger:hover { border-color: #5a9e97; }
+  .modern-dropdown__trigger svg { width: 14px; height: 14px; color: #9ca3af; }
+  .modern-dropdown__menu {
+    display: none; position: absolute; top: calc(100% + 4px); left: 0;
+    min-width: 100%; background: white; border: 1px solid #e5e7eb;
+    border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    z-index: 100; overflow: hidden; padding: 4px;
+  }
+  .modern-dropdown__menu.open { display: block; }
+  .modern-dropdown__item {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 8px 12px; font-size: 13px; color: #374151;
+    border: none; background: none; cursor: pointer; border-radius: 6px;
+    transition: background 0.1s; text-align: left;
+  }
+  .modern-dropdown__item:hover { background: #f3f4f6; }
+  .modern-dropdown__item.active { background: #f0fdf9; color: #5a9e97; font-weight: 600; }
+  .modern-dropdown__item svg { width: 14px; height: 14px; }
+
+  /* Filter Bar */
+  .filter-bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .search-input {
+    display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+    background: white; border: 1px solid #e5e7eb; border-radius: 8px;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus-within { border-color: #5a9e97; }
+  .search-input input { border: none; outline: none; font-size: 13px; width: 180px; }
+  .search-input svg { width: 14px; height: 14px; color: #9ca3af; }
+</style>
+@endsection
+
 @section('content')
 <div class="admin-page-header">
   <h1>Contact Messages</h1>
@@ -9,14 +51,34 @@
 
 <div class="admin-table-wrap">
   <div class="admin-table-header">
-    <form method="GET" style="display:flex;gap:8px;flex-wrap:wrap;">
-      <input type="text" name="search" class="admin-input" style="width:200px;" placeholder="Search name or email…" value="{{ request('search') }}">
-      <select name="status" class="admin-select" style="width:140px;">
-        <option value="">All statuses</option>
-        @foreach(['new','read','replied','resolved'] as $s)
-          <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ ucfirst($s) }}</option>
-        @endforeach
-      </select>
+    <form method="GET" class="filter-bar">
+      <div class="search-input">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" name="search" placeholder="Search name or email…" value="{{ request('search') }}">
+      </div>
+
+      {{-- Status Dropdown --}}
+      <div class="modern-dropdown" id="status-dropdown">
+        <button type="button" class="modern-dropdown__trigger" onclick="toggleDropdown('status-dropdown')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+          <span id="status-label">{{ request('status') ? ucfirst(request('status')) : 'All Statuses' }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div class="modern-dropdown__menu">
+          <button type="button" class="modern-dropdown__item {{ !request('status') ? 'active' : '' }}" onclick="selectDropdown('status-dropdown', '', 'All Statuses')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            All Statuses
+          </button>
+          @foreach(['new','read','replied','resolved'] as $s)
+          <button type="button" class="modern-dropdown__item {{ request('status') === $s ? 'active' : '' }}" onclick="selectDropdown('status-dropdown', '{{ $s }}', '{{ ucfirst($s) }}')">
+            <span style="width:8px;height:8px;border-radius:50%;background:{{ ['new'=>'#3b82f6','read'=>'#f59e0b','replied'=>'#10b981','resolved'=>'#6b7280'][$s] }};"></span>
+            {{ ucfirst($s) }}
+          </button>
+          @endforeach
+        </div>
+        <input type="hidden" name="status" value="{{ request('status') }}">
+      </div>
+
       <button type="submit" class="btn-admin btn-admin--primary">Filter</button>
       @if(request('search') || request('status'))
         <a href="{{ route('admin.contacts.index') }}" class="btn-admin btn-admin--outline">Clear</a>
@@ -48,4 +110,51 @@
     <div style="padding:16px 20px;">{{ $contacts->links() }}</div>
   @endif
 </div>
+@endsection
+
+@section('page_scripts')
+<script>
+// Dropdown Functions
+function toggleDropdown(id) {
+  const dropdown = document.getElementById(id);
+  const menu = dropdown.querySelector('.modern-dropdown__menu');
+  const isOpen = menu.classList.contains('open');
+
+  // Close all dropdowns
+  document.querySelectorAll('.modern-dropdown__menu').forEach(m => m.classList.remove('open'));
+
+  // Toggle current
+  if (!isOpen) {
+    menu.classList.add('open');
+  }
+}
+
+function selectDropdown(id, value, label) {
+  const dropdown = document.getElementById(id);
+  const input = dropdown.querySelector('input[type="hidden"]');
+  const labelEl = dropdown.querySelector('[id$="-label"]');
+
+  input.value = value;
+  labelEl.textContent = label;
+
+  // Update active state
+  dropdown.querySelectorAll('.modern-dropdown__item').forEach(item => {
+    item.classList.remove('active');
+  });
+  event.target.closest('.modern-dropdown__item').classList.add('active');
+
+  // Close dropdown
+  dropdown.querySelector('.modern-dropdown__menu').classList.remove('open');
+
+  // Submit form
+  dropdown.closest('form').submit();
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.modern-dropdown')) {
+    document.querySelectorAll('.modern-dropdown__menu').forEach(m => m.classList.remove('open'));
+  }
+});
+</script>
 @endsection
