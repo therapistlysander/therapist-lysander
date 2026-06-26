@@ -97,6 +97,21 @@
   .empty-state { text-align: center; padding: 40px 20px; color: #9ca3af; }
   .empty-state__icon { width: 48px; height: 48px; margin: 0 auto 12px; color: #d1d5db; }
   .empty-state__text { font-size: 14px; }
+
+  /* Confirmation Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; }
+  .modal-overlay.visible { display: flex; }
+  .modal-overlay__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); }
+  .modal-overlay__content {
+    position: relative; background: white; border-radius: 12px; padding: 28px; max-width: 420px; width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15); z-index: 1;
+  }
+  .modal-overlay__icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .modal-overlay__icon--danger { background: #fee2e2; color: #ef4444; }
+  .modal-overlay__title { font-size: 16px; font-weight: 600; color: #1a2332; text-align: center; margin: 0 0 8px; }
+  .modal-overlay__text { font-size: 13px; color: #6b7280; text-align: center; line-height: 1.6; margin: 0 0 24px; }
+  .modal-overlay__actions { display: flex; gap: 12px; justify-content: center; }
+  .modal-overlay__actions .btn-admin { min-width: 120px; justify-content: center; }
 </style>
 @endsection
 
@@ -165,13 +180,13 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
           Open Google Calendar
         </a>
-        <form method="POST" action="{{ route('admin.google-calendar.disconnect') }}" onsubmit="return confirm('Are you sure you want to disconnect Google Calendar? Existing calendar events will not be removed automatically.')">
+        <form method="POST" action="{{ route('admin.google-calendar.disconnect') }}" id="disconnect-form" style="display:none;">
           @csrf
-          <button type="submit" class="btn-admin btn-admin--danger">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-            Disconnect
-          </button>
         </form>
+        <button type="button" class="btn-admin btn-admin--danger" onclick="document.getElementById('disconnect-modal').classList.add('visible')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+          Disconnect
+        </button>
       </div>
       @endif
     </div>
@@ -342,4 +357,21 @@
   </div>
 
 </div>
+
+{{-- Disconnect Confirmation Modal --}}
+<div class="modal-overlay" id="disconnect-modal">
+  <div class="modal-overlay__backdrop" onclick="this.parentElement.classList.remove('visible')"></div>
+  <div class="modal-overlay__content">
+    <div class="modal-overlay__icon modal-overlay__icon--danger">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+    </div>
+    <h3 class="modal-overlay__title">Disconnect Google Calendar?</h3>
+    <p class="modal-overlay__text">Existing calendar events will not be removed automatically. You can reconnect at any time.</p>
+    <div class="modal-overlay__actions">
+      <button type="button" class="btn-admin btn-admin--secondary" onclick="document.getElementById('disconnect-modal').classList.remove('visible')">Cancel</button>
+      <button type="button" class="btn-admin btn-admin--danger" onclick="document.getElementById('disconnect-form').submit()">Disconnect</button>
+    </div>
+  </div>
+</div>
+
 @endsection
