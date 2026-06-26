@@ -283,7 +283,7 @@
           <label>Calendar</label>
           <div class="form-dropdown" id="calendar-dropdown">
             <button type="button" class="form-dropdown__trigger" onclick="toggleFormDropdown('calendar-dropdown')">
-              <span id="calendar-label">{{ $calendars->firstWhere('id', $token->calendar_id)['summary'] ?? 'Select Calendar' }}</span>
+              <span id="calendar-label">{{ collect($calendars)->firstWhere('id', $token->calendar_id)['summary'] ?? 'Select Calendar' }}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <div class="form-dropdown__menu">
