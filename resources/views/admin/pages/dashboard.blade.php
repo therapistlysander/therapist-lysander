@@ -62,6 +62,23 @@
   .recent-item__meta { font-size: 11px; color: #9ca3af; margin-top: 2px; }
   .recent-item__status { margin-left: 12px; }
   .recent-item__time { font-size: 11px; color: #9ca3af; margin-left: 12px; white-space: nowrap; }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .charts-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .dashboard-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat-card { padding: 16px; gap: 12px; }
+    .stat-card__icon { width: 40px; height: 40px; }
+    .stat-card__value { font-size: 24px; }
+    .charts-grid { grid-template-columns: 1fr; gap: 16px; }
+    .chart-card__body { min-height: 180px; }
+    .chart-card__body canvas { max-height: 180px; }
+  }
+  @media (max-width: 480px) {
+    .dashboard-stats { grid-template-columns: 1fr; }
+  }
 </style>
 @endsection
 

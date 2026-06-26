@@ -52,6 +52,18 @@
   .search-input:focus-within { border-color: #5a9e97; }
   .search-input input { border: none; outline: none; font-size: 13px; width: 180px; }
   .search-input svg { width: 14px; height: 14px; color: #9ca3af; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .filter-bar { flex-direction: column; align-items: stretch; }
+    .search-input { width: 100%; }
+    .search-input input { width: 100%; }
+    .modern-dropdown { width: 100%; }
+    .modern-dropdown__trigger { width: 100%; }
+    .modern-dropdown__menu { width: 100%; }
+    .bulk-bar { flex-wrap: wrap; }
+    .bulk-bar__actions { margin-left: 0; width: 100%; justify-content: flex-end; }
+  }
 </style>
 @endsection
 
@@ -143,6 +155,7 @@
       <p>No bookings found.</p>
     </div>
   @else
+    <div class="admin-table-scroll">
     <table>
       <thead>
         <tr>
@@ -202,6 +215,7 @@
         @endforeach
       </tbody>
     </table>
+    </div>
     <div style="padding:16px 20px;">{{ $bookings->links() }}</div>
   @endif
 </div>

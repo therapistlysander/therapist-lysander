@@ -19,8 +19,13 @@
     .admin-sidebar {
       position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
       background: #1a2332; display: flex; flex-direction: column; z-index: 100;
-      overflow-y: auto;
+      overflow-y: auto; transition: transform 0.3s ease;
     }
+    .admin-sidebar__overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 99; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .admin-sidebar__overlay.visible { display: block; opacity: 1; }
     .admin-sidebar__brand {
       padding: 20px 20px 16px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -66,6 +71,12 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 13px; font-weight: 600;
     }
+    .admin-hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      padding: 8px; color: #6b7280; border-radius: 6px; transition: background 0.15s;
+    }
+    .admin-hamburger:hover { background: #f3f4f6; color: #374151; }
+    .admin-hamburger svg { width: 20px; height: 20px; }
 
     .admin-content { padding: 28px; flex: 1; }
 
@@ -86,7 +97,8 @@
     .admin-table-wrap { background: white; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
     .admin-table-header { padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
     .admin-table-header h2 { font-size: 15px; font-weight: 600; color: #1a2332; margin: 0; }
-    table { width: 100%; border-collapse: collapse; }
+    .admin-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
     thead th { background: #f9fafb; padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; border-bottom: 1px solid #e5e7eb; }
     tbody td { padding: 12px 16px; font-size: 13.5px; color: #374151; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
     tbody tr:last-child td { border-bottom: none; }
@@ -140,9 +152,43 @@
     .admin-detail__label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; width: 140px; flex-shrink: 0; padding-top: 1px; }
     .admin-detail__value { font-size: 13.5px; color: #1a2332; flex: 1; }
 
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .admin-content { padding: 20px; }
+      .admin-stats { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    }
+
     @media (max-width: 768px) {
+      .admin-hamburger { display: block; }
       .admin-sidebar { transform: translateX(-100%); }
+      .admin-sidebar.open { transform: translateX(0); }
       .admin-main { margin-left: 0; }
+      .admin-topbar { padding: 0 16px; }
+      .admin-content { padding: 16px; }
+      .admin-page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .admin-page-header h1 { font-size: 18px; }
+      .admin-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .admin-stat { padding: 16px; }
+      .admin-stat__num { font-size: 24px; }
+      .admin-table-header { flex-direction: column; align-items: stretch; gap: 8px; }
+      .admin-table-header form { width: 100%; }
+      table { font-size: 12px; }
+      thead th, tbody td { padding: 8px 10px; }
+      .admin-form__section { padding: 16px; }
+      .admin-detail { padding: 16px; }
+      .admin-detail__row { flex-direction: column; gap: 4px; }
+      .admin-detail__label { width: 100%; }
+      .admin-notif__dropdown { width: 280px; right: -60px; }
+      .admin-user-menu__btn span { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .admin-stats { grid-template-columns: 1fr; }
+      .admin-topbar__user { gap: 6px; }
+      .admin-notif__dropdown { width: 260px; right: -40px; }
+      .confirm-modal__content { padding: 20px; }
+      .confirm-modal__actions { flex-direction: column; }
+      .confirm-modal__actions .btn-admin { width: 100%; }
     }
 
     /* Rich text editor (Quill) */
@@ -245,8 +291,11 @@
 </head>
 <body>
 
+<!-- Sidebar Overlay -->
+<div class="admin-sidebar__overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
 <!-- Sidebar -->
-<aside class="admin-sidebar">
+<aside class="admin-sidebar" id="admin-sidebar">
   <div class="admin-sidebar__brand">
     <img src="/images/logo.png" alt="Therapist Lysander">
   </div>
@@ -336,7 +385,12 @@
 <!-- Main -->
 <div class="admin-main">
   <header class="admin-topbar">
-    <span class="admin-topbar__title">@yield('page_title', 'Dashboard')</span>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button type="button" class="admin-hamburger" id="hamburger-btn" onclick="toggleSidebar()" title="Toggle menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+      </button>
+      <span class="admin-topbar__title">@yield('page_title', 'Dashboard')</span>
+    </div>
     <div class="admin-topbar__user">
       {{-- Notification Bell --}}
       <div class="admin-notif" id="notif-wrap">
@@ -600,6 +654,26 @@ function closeConfirmModal() {
 // Close modal on Escape key
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeConfirmModal();
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+  const sidebar = document.getElementById('admin-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('visible');
+}
+
+// Close sidebar when clicking nav links on mobile
+document.querySelectorAll('.admin-nav__link').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (window.innerWidth <= 768) {
+      const sidebar = document.getElementById('admin-sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.remove('open');
+      overlay.classList.remove('visible');
+    }
+  });
 });
 </script>
 </body>
