@@ -55,7 +55,7 @@
   .btn-admin--google:hover { background: #f8f9fa; border-color: #c6c8ca; }
   .btn-admin--google svg { color: #4285f4; }
 
-  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 
   /* Form Fields */
   .field-group { margin-bottom: 16px; }
@@ -226,7 +226,7 @@
           <strong>Configuration missing:</strong> Google OAuth credentials are not set. Please add <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> to your <code>.env</code> file.
         </div>
         @else
-        <div class="btn-row">
+        <div class="btn-row" style="margin-top: 20px;">
           <a href="{{ route('admin.google-calendar.connect') }}" class="btn-admin btn-admin--google">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
             Connect Google Calendar
