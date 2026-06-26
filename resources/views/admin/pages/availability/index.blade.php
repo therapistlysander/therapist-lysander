@@ -22,6 +22,34 @@
   .config-field select:focus,
   .config-field input[type="time"]:focus { border-color: #5a9e97; outline: none; box-shadow: 0 0 0 3px rgba(90,158,151,0.1); }
 
+  /* Form Dropdown (modern styled select for forms) */
+  .form-dropdown { position: relative; }
+  .form-dropdown__trigger {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    width: 100%; padding: 9px 12px;
+    background: white; border: 1px solid #e5e7eb; border-radius: 8px;
+    font-size: 14px; color: #1a2332; cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-dropdown__trigger:hover { border-color: #5a9e97; }
+  .form-dropdown__trigger:focus { outline: none; border-color: #5a9e97; box-shadow: 0 0 0 3px rgba(90,158,151,0.1); }
+  .form-dropdown__trigger svg { width: 14px; height: 14px; color: #9ca3af; flex-shrink: 0; }
+  .form-dropdown__menu {
+    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: white; border: 1px solid #e5e7eb;
+    border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    z-index: 100; overflow: hidden; padding: 4px; max-height: 240px; overflow-y: auto;
+  }
+  .form-dropdown__menu.open { display: block; }
+  .form-dropdown__item {
+    display: block; width: 100%;
+    padding: 8px 12px; font-size: 14px; color: #1a2332;
+    border: none; background: none; cursor: pointer; border-radius: 6px;
+    transition: background 0.1s; text-align: left;
+  }
+  .form-dropdown__item:hover { background: #f3f4f6; }
+  .form-dropdown__item.active { background: #f0fdf9; color: #5a9e97; font-weight: 600; }
+
   .slot-preview { margin-top: 20px; padding-top: 20px; border-top: 1px solid #f3f4f6; }
   .slot-preview__label { font-size: 12px; font-weight: 500; color: #6b7280; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
   .slot-chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -100,11 +128,20 @@
         <div class="config-grid">
           <div class="config-field">
             <label>Session Duration</label>
-            <select name="slot_duration">
-              @foreach([15 => '15 minutes', 20 => '20 minutes', 30 => '30 minutes', 45 => '45 minutes', 50 => '50 minutes', 60 => '1 hour', 90 => '1.5 hours', 120 => '2 hours'] as $val => $label)
-                <option value="{{ $val }}" {{ $config->slot_duration == $val ? 'selected' : '' }}>{{ $label }}</option>
-              @endforeach
-            </select>
+            <div class="form-dropdown" id="duration-dropdown">
+              <button type="button" class="form-dropdown__trigger" onclick="toggleFormDropdown('duration-dropdown')">
+                <span id="duration-label">{{ collect([15 => '15 minutes', 20 => '20 minutes', 30 => '30 minutes', 45 => '45 minutes', 50 => '50 minutes', 60 => '1 hour', 90 => '1.5 hours', 120 => '2 hours'])->first(fn($v, $k) => $k == $config->slot_duration) ?? '30 minutes' }}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div class="form-dropdown__menu">
+                @foreach([15 => '15 minutes', 20 => '20 minutes', 30 => '30 minutes', 45 => '45 minutes', 50 => '50 minutes', 60 => '1 hour', 90 => '1.5 hours', 120 => '2 hours'] as $val => $label)
+                <button type="button" class="form-dropdown__item {{ $config->slot_duration == $val ? 'active' : '' }}" onclick="selectFormDropdown('duration-dropdown', '{{ $val }}', '{{ $label }}')">
+                  {{ $label }}
+                </button>
+                @endforeach
+              </div>
+              <input type="hidden" name="slot_duration" value="{{ $config->slot_duration }}">
+            </div>
           </div>
           <div class="config-field">
             <label>Start Time</label>
@@ -238,10 +275,21 @@
               </div>
               <div class="add-block__field">
                 <label>Block type</label>
-                <select name="block_type" onchange="toggleSlotsField(this)">
-                  <option value="full_day">Entire day</option>
-                  <option value="specific_slots">Specific time slots only</option>
-                </select>
+                <div class="form-dropdown" id="block-type-dropdown">
+                  <button type="button" class="form-dropdown__trigger" onclick="toggleFormDropdown('block-type-dropdown')">
+                    <span id="block-type-label">Entire day</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                  </button>
+                  <div class="form-dropdown__menu">
+                    <button type="button" class="form-dropdown__item active" onclick="selectFormDropdownWithCallback('block-type-dropdown', 'full_day', 'Entire day', function() { document.getElementById('slots-field').classList.remove('visible'); })">
+                      Entire day
+                    </button>
+                    <button type="button" class="form-dropdown__item" onclick="selectFormDropdownWithCallback('block-type-dropdown', 'specific_slots', 'Specific time slots only', function() { document.getElementById('slots-field').classList.add('visible'); })">
+                      Specific time slots only
+                    </button>
+                  </div>
+                  <input type="hidden" name="block_type" value="full_day">
+                </div>
               </div>
             </div>
             <div class="add-block__row">
@@ -296,5 +344,50 @@ function toggleSlotsField(select) {
     field.classList.remove('visible');
   }
 }
+
+// Form Dropdown Functions (for form fields - no auto-submit)
+function toggleFormDropdown(id) {
+  const dropdown = document.getElementById(id);
+  const menu = dropdown.querySelector('.form-dropdown__menu');
+  const isOpen = menu.classList.contains('open');
+
+  // Close all dropdowns
+  document.querySelectorAll('.form-dropdown__menu').forEach(m => m.classList.remove('open'));
+
+  // Toggle current
+  if (!isOpen) {
+    menu.classList.add('open');
+  }
+}
+
+function selectFormDropdown(id, value, label) {
+  const dropdown = document.getElementById(id);
+  const input = dropdown.querySelector('input[type="hidden"]');
+  const labelEl = dropdown.querySelector('[id$="-label"]');
+
+  input.value = value;
+  labelEl.textContent = label;
+
+  // Update active state
+  dropdown.querySelectorAll('.form-dropdown__item').forEach(item => {
+    item.classList.remove('active');
+  });
+  event.target.closest('.form-dropdown__item').classList.add('active');
+
+  // Close dropdown
+  dropdown.querySelector('.form-dropdown__menu').classList.remove('open');
+}
+
+function selectFormDropdownWithCallback(id, value, label, callback) {
+  selectFormDropdown(id, value, label);
+  if (callback) callback();
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.form-dropdown')) {
+    document.querySelectorAll('.form-dropdown__menu').forEach(m => m.classList.remove('open'));
+  }
+});
 </script>
 @endsection

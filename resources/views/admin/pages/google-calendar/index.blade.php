@@ -63,6 +63,34 @@
   .field-group select { width: 100%; padding: 9px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px; color: #1a2332; background: white; }
   .field-group select:focus { border-color: #5a9e97; outline: none; box-shadow: 0 0 0 3px rgba(90,158,151,0.1); }
 
+  /* Form Dropdown (modern styled select for forms) */
+  .form-dropdown { position: relative; }
+  .form-dropdown__trigger {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    width: 100%; padding: 9px 12px;
+    background: white; border: 1px solid #e5e7eb; border-radius: 8px;
+    font-size: 14px; color: #1a2332; cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .form-dropdown__trigger:hover { border-color: #5a9e97; }
+  .form-dropdown__trigger:focus { outline: none; border-color: #5a9e97; box-shadow: 0 0 0 3px rgba(90,158,151,0.1); }
+  .form-dropdown__trigger svg { width: 14px; height: 14px; color: #9ca3af; flex-shrink: 0; }
+  .form-dropdown__menu {
+    display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+    background: white; border: 1px solid #e5e7eb;
+    border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+    z-index: 100; overflow: hidden; padding: 4px; max-height: 240px; overflow-y: auto;
+  }
+  .form-dropdown__menu.open { display: block; }
+  .form-dropdown__item {
+    display: block; width: 100%;
+    padding: 8px 12px; font-size: 14px; color: #1a2332;
+    border: none; background: none; cursor: pointer; border-radius: 6px;
+    transition: background 0.1s; text-align: left;
+  }
+  .form-dropdown__item:hover { background: #f3f4f6; }
+  .form-dropdown__item.active { background: #f0fdf9; color: #5a9e97; font-weight: 600; }
+
   /* Alerts */
   .alert { padding: 14px 18px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
   .alert--success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
@@ -252,14 +280,21 @@
         @csrf
         @method('PATCH')
         <div class="field-group">
-          <label for="calendar_id">Calendar</label>
-          <select name="calendar_id" id="calendar_id">
-            @foreach($calendars as $cal)
-            <option value="{{ $cal['id'] }}" {{ $token->calendar_id === $cal['id'] ? 'selected' : '' }}>
-              {{ $cal['summary'] }} ({{ $cal['id'] }})
-            </option>
-            @endforeach
-          </select>
+          <label>Calendar</label>
+          <div class="form-dropdown" id="calendar-dropdown">
+            <button type="button" class="form-dropdown__trigger" onclick="toggleFormDropdown('calendar-dropdown')">
+              <span id="calendar-label">{{ $calendars->firstWhere('id', $token->calendar_id)['summary'] ?? 'Select Calendar' }}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="form-dropdown__menu">
+              @foreach($calendars as $cal)
+              <button type="button" class="form-dropdown__item {{ $token->calendar_id === $cal['id'] ? 'active' : '' }}" onclick="selectFormDropdown('calendar-dropdown', '{{ $cal['id'] }}', '{{ addslashes($cal['summary']) }}')">
+                {{ $cal['summary'] }}
+              </button>
+              @endforeach
+            </div>
+            <input type="hidden" name="calendar_id" value="{{ $token->calendar_id }}">
+          </div>
         </div>
         <button type="submit" class="btn-admin btn-admin--primary">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
@@ -343,4 +378,48 @@
 
 </div>
 
+@endsection
+
+@section('page_scripts')
+<script>
+// Form Dropdown Functions (for form fields - no auto-submit)
+function toggleFormDropdown(id) {
+  const dropdown = document.getElementById(id);
+  const menu = dropdown.querySelector('.form-dropdown__menu');
+  const isOpen = menu.classList.contains('open');
+
+  // Close all dropdowns
+  document.querySelectorAll('.form-dropdown__menu').forEach(m => m.classList.remove('open'));
+
+  // Toggle current
+  if (!isOpen) {
+    menu.classList.add('open');
+  }
+}
+
+function selectFormDropdown(id, value, label) {
+  const dropdown = document.getElementById(id);
+  const input = dropdown.querySelector('input[type="hidden"]');
+  const labelEl = dropdown.querySelector('[id$="-label"]');
+
+  input.value = value;
+  labelEl.textContent = label;
+
+  // Update active state
+  dropdown.querySelectorAll('.form-dropdown__item').forEach(item => {
+    item.classList.remove('active');
+  });
+  event.target.closest('.form-dropdown__item').classList.add('active');
+
+  // Close dropdown
+  dropdown.querySelector('.form-dropdown__menu').classList.remove('open');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.form-dropdown')) {
+    document.querySelectorAll('.form-dropdown__menu').forEach(m => m.classList.remove('open'));
+  }
+});
+</script>
 @endsection
