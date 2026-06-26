@@ -7,8 +7,8 @@
 <style>
   .gcal-layout { display: flex; flex-direction: column; gap: 24px; }
 
-  .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
-  .card__header { padding: 20px 24px; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; }
+  .card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; }
+  .card__header { padding: 20px 24px; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; justify-content: space-between; border-radius: 12px 12px 0 0; }
   .card__header h2 { font-size: 15px; font-weight: 600; margin: 0; color: #1a2332; display: flex; align-items: center; gap: 10px; }
   .card__header p { font-size: 12px; color: #9ca3af; margin: 3px 0 0; }
   .card__body { padding: 24px; }
