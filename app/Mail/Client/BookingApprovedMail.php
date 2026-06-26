@@ -28,17 +28,29 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
-        $timezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
+        $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
+        $clientTimezone = $this->booking->client_timezone;
+
+        // Convert scheduled_at from server timezone to client's timezone
+        $scheduledAt = $this->booking->scheduled_at;
+        $displayScheduledAt = $scheduledAt;
+        if ($scheduledAt && $clientTimezone) {
+            $displayScheduledAt = \Carbon\Carbon::parse($scheduledAt, $serverTimezone)
+                ->setTimezone($clientTimezone)
+                ->format('l, j F Y \a\t H:i');
+        } elseif ($scheduledAt) {
+            $displayScheduledAt = \Carbon\Carbon::parse($scheduledAt, $serverTimezone)
+                ->format('l, j F Y \a\t H:i');
+        }
 
         return new Content(
             view: 'emails.client.booking-approved',
             with: [
                 'firstName' => $this->booking->first_name,
-                'scheduledAt' => $this->booking->scheduled_at,
+                'displayScheduledAt' => $displayScheduledAt,
                 'meetingLink' => $this->booking->meeting_link,
                 'meetingPlatform' => $this->booking->meeting_platform,
-                'timezone' => $timezone,
-                'clientTimezone' => $this->booking->client_timezone,
+                'clientTimezone' => $clientTimezone,
             ],
         );
     }

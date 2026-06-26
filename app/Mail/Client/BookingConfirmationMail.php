@@ -35,7 +35,20 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
             'initial'   => 'Initial Session',
         ];
 
-        $timezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
+        $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
+        $clientTimezone = $this->booking->client_timezone;
+
+        // Convert preferred_date from server timezone to client's timezone
+        $preferredDate = $this->booking->preferred_date;
+        $displayDate = $preferredDate;
+        if ($preferredDate && $clientTimezone) {
+            $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
+                ->setTimezone($clientTimezone)
+                ->format('l, j F Y \a\t H:i');
+        } elseif ($preferredDate) {
+            $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
+                ->format('l, j F Y \a\t H:i');
+        }
 
         return new Content(
             view: 'emails.client.booking-confirmation',
@@ -43,9 +56,8 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
                 'firstName' => $this->booking->first_name,
                 'sessionType' => $this->booking->session_type,
                 'sessionFormat' => $formatLabels[$this->booking->session_format] ?? ucfirst($this->booking->session_format),
-                'preferredDate' => $this->booking->preferred_date,
-                'timezone' => $timezone,
-                'clientTimezone' => $this->booking->client_timezone,
+                'displayDate' => $displayDate,
+                'clientTimezone' => $clientTimezone,
             ],
         );
     }

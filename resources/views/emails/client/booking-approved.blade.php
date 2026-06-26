@@ -9,18 +9,14 @@
 
 <div class="highlight-box">
     <table style="width:100%;border-collapse:collapse;">
-        @if($scheduledAt)
+        @if($displayScheduledAt)
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Date & time:</td>
             <td style="padding:4px 0;color:#1a2332;">
-                {{ \Carbon\Carbon::parse($scheduledAt)->format('l, j F Y \a\t H:i') }}
-                <span style="font-size:11px;color:#9ca3af;">
-                    ({{ $timezone }}
-                    @if(!empty($clientTimezone))
-                        / {{ $clientTimezone }}
-                    @endif
-                    )
-                </span>
+                {{ $displayScheduledAt }}
+                @if(!empty($clientTimezone))
+                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $clientTimezone) }})</span>
+                @endif
             </td>
         </tr>
         @endif

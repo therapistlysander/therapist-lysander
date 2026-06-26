@@ -302,13 +302,76 @@ function showToast(message, type) {
 
 const state = {
   type: 'online', format: 'intake', name: '', email: '',
-  date: '', time: '',
+  date: '', time: '', localTime: '',
   piGoals: '',
 };
 
 // Detect visitor's timezone
 const visitorTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-let serverTimezone = 'Europe/Amsterdam';
+const serverTimezone = 'Europe/Amsterdam';
+
+/**
+ * Convert a slot time from Amsterdam timezone to visitor's local timezone.
+ * @param {string} slotTime - Time in H:i format (e.g. "10:00")
+ * @param {string} dateStr - Date in YYYY-MM-DD format
+ * @returns {string} - Converted time in H:i format (visitor's local time)
+ */
+function convertSlotToLocal(slotTime, dateStr) {
+  // Create a date string interpreted as Amsterdam timezone
+  // We use the trick of creating a date and adjusting for timezone difference
+  const [hours, minutes] = slotTime.split(':').map(Number);
+
+  // Create date in Amsterdam timezone using Intl
+  const amsterdamDate = new Date(dateStr + 'T' + slotTime + ':00');
+
+  // Use Intl to format this date in Amsterdam timezone to get the correct UTC offset
+  const amsterdamFormatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: serverTimezone,
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  });
+
+  // Get what 10:00 Amsterdam looks like as a UTC timestamp
+  // We create a date, format it in Amsterdam, then parse back
+  const testDate = new Date(dateStr + 'T12:00:00Z'); // noon UTC as reference
+  const amsterdamParts = new Intl.DateTimeFormat('en-US', {
+    timeZone: serverTimezone,
+    year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: 'numeric', second: 'numeric',
+    hour12: false
+  }).formatToParts(testDate);
+
+  const getPart = (type) => amsterdamParts.find(p => p.type === type)?.value;
+  const utcYear = parseInt(getPart('year'));
+  const utcMonth = parseInt(getPart('month')) - 1;
+  const utcDay = parseInt(getPart('day'));
+  const utcHour = parseInt(getPart('hour'));
+  const utcMinute = parseInt(getPart('minute'));
+
+  // Now we know: 12:00 UTC = utcHour:utcMinute Amsterdam time
+  // So Amsterdam offset = (utcHour - 12) hours
+  const amsterdamOffsetHours = utcHour - 12;
+  const amsterdamOffsetMinutes = utcMinute;
+
+  // Create the slot time as if it were UTC, then adjust by Amsterdam offset
+  const slotDate = new Date(Date.UTC(
+    parseInt(dateStr.split('-')[0]),
+    parseInt(dateStr.split('-')[1]) - 1,
+    parseInt(dateStr.split('-')[2]),
+    hours - amsterdamOffsetHours,
+    minutes - amsterdamOffsetMinutes
+  ));
+
+  // Format in visitor's timezone
+  const visitorFormatter = new Intl.DateTimeFormat('en-GB', {
+    timeZone: visitorTimezone,
+    hour: '2-digit', minute: '2-digit',
+    hour12: false
+  });
+
+  return visitorFormatter.format(slotDate);
+}
 
 let currentStep = 1;
 let inlinePicker;
@@ -426,26 +489,26 @@ function fetchAndRenderSlots(dateStr) {
     .then(data => {
       grid.innerHTML = '';
 
-      // Update timezone label
-      if (data.timezone) {
-        serverTimezone = data.timezone;
-        const tzLabel = document.getElementById('timezone-label');
-        const friendlyTz = visitorTimezone.replace(/_/g, ' ');
-        tzLabel.textContent = 'Times shown in: ' + serverTimezone + ' (your timezone: ' + friendlyTz + ')';
-      }
+      // Update timezone label - show only visitor's timezone
+      const tzLabel = document.getElementById('timezone-label');
+      const friendlyTz = visitorTimezone.replace(/_/g, ' ');
+      tzLabel.textContent = 'Times shown in your local timezone: ' + friendlyTz;
 
       if (!data.available || !data.slots.length) {
         grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">' + __t.noSlots + '</div>';
         return;
       }
       data.slots.forEach(slot => {
+        const localTime = convertSlotToLocal(slot, dateStr);
         const div = document.createElement('div');
         div.className = 'time-slot';
-        div.textContent = slot;
+        div.textContent = localTime;
+        div.dataset.originalTime = slot; // Store Amsterdam time for submission
         div.addEventListener('click', () => {
           document.querySelectorAll('#time-slots .time-slot').forEach(s => s.classList.remove('selected'));
           div.classList.add('selected');
-          state.time = slot;
+          state.time = slot; // Store original Amsterdam time
+          state.localTime = localTime; // Store converted time for display
           showSummary();
           const btn = document.getElementById('btn-submit');
           btn.style.opacity = '1'; btn.style.pointerEvents = 'auto';
@@ -460,7 +523,8 @@ function fetchAndRenderSlots(dateStr) {
 
 function showSummary() {
   document.getElementById('sum-name').textContent = state.name;
-  document.getElementById('sum-datetime').textContent = state.date + ' at ' + state.time;
+  const displayTime = state.localTime || state.time;
+  document.getElementById('sum-datetime').textContent = state.date + ' at ' + displayTime;
   document.getElementById('sum-email').textContent = state.email;
   document.getElementById('summary-section').style.display = 'block';
 }
