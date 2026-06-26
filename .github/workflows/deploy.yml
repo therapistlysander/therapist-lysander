@@ -37,7 +37,7 @@ jobs:
             npm run build
 
             echo "=== Run migrations ==="
-            php artisan migrate
+            php artisan migrate --force
 
             echo "=== Rebuild caches ==="
             php artisan view:clear
