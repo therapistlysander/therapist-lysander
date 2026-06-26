@@ -175,6 +175,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
     Route::get('/password', [AdminPasswordController::class, 'edit'])->name('password.edit');
     Route::patch('/password', [AdminPasswordController::class, 'update'])->name('password.update');
 
+    // Profile (all admin roles)
+    Route::get('/profile', [AdminDashboardController::class, 'profile'])->name('profile');
+    Route::patch('/profile', [AdminDashboardController::class, 'updateProfile'])->name('profile.update');
+
     // ── Super admin only routes ──
     Route::middleware('superadmin')->group(function () {
 

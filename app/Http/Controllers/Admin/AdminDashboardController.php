@@ -7,6 +7,9 @@ use App\Models\Booking;
 use App\Models\ContactSubmission;
 use App\Models\Testimonial;
 use App\Models\Faq;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class AdminDashboardController extends Controller
 {
@@ -62,5 +65,26 @@ class AdminDashboardController extends Controller
             'stats', 'recentBookings', 'recentContacts',
             'statusChartData', 'bookingsOverTime', 'sessionTypeChartData'
         ));
+    }
+
+    public function profile()
+    {
+        return view('admin.pages.profile', [
+            'user' => auth()->user(),
+        ]);
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+        ]);
+
+        $user->update($validated);
+
+        return back()->with('success', 'Profile updated successfully.');
     }
 }
