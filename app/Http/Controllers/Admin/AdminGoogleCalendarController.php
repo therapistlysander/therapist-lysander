@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\WarmCalendarCacheJob;
+use App\Models\Booking;
 use App\Models\GoogleCalendarToken;
 use App\Services\GoogleCalendarService;
 use Illuminate\Http\Request;
@@ -20,6 +21,12 @@ class AdminGoogleCalendarController extends Controller
         $token = GoogleCalendarToken::where('user_id', auth()->id())->first();
         $calendars = [];
         $connectionError = null;
+        $syncedBookings = collect();
+        $stats = [
+            'total_synced' => 0,
+            'upcoming' => 0,
+            'this_week' => 0,
+        ];
 
         if ($token && $token->is_active) {
             try {
@@ -29,9 +36,27 @@ class AdminGoogleCalendarController extends Controller
                 $connectionError = $e->getMessage();
                 Log::warning("GoogleCalendar: Failed to list calendars: {$e->getMessage()}");
             }
+
+            // Get bookings synced to Google Calendar
+            $syncedBookings = Booking::whereNotNull('google_event_id')
+                ->where('status', 'confirmed')
+                ->orderBy('scheduled_at', 'desc')
+                ->limit(10)
+                ->get();
+
+            // Calculate stats
+            $stats['total_synced'] = Booking::whereNotNull('google_event_id')->count();
+            $stats['upcoming'] = Booking::whereNotNull('google_event_id')
+                ->where('status', 'confirmed')
+                ->where('scheduled_at', '>', now())
+                ->count();
+            $stats['this_week'] = Booking::whereNotNull('google_event_id')
+                ->where('status', 'confirmed')
+                ->whereBetween('scheduled_at', [now()->startOfWeek(), now()->endOfWeek()])
+                ->count();
         }
 
-        return view('admin.pages.google-calendar.index', compact('token', 'calendars', 'connectionError'));
+        return view('admin.pages.google-calendar.index', compact('token', 'calendars', 'connectionError', 'syncedBookings', 'stats'));
     }
 
     /**
