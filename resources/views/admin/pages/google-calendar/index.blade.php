@@ -145,11 +145,35 @@
   {{-- Connection Status --}}
   <div class="card">
     <div class="card__header">
-      <h2>
-        <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
-        Connection Status
-      </h2>
-      <p>Connect your Google account to sync bookings with Google Calendar.</p>
+      <div>
+        <h2>
+          <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
+          Connection Status
+        </h2>
+        <p>Connect your Google account to sync bookings with Google Calendar.</p>
+      </div>
+      @if($token && $token->is_active)
+      <div class="btn-row" style="margin-top: 0;">
+        <form method="POST" action="{{ route('admin.google-calendar.test-sync') }}">
+          @csrf
+          <button type="submit" class="btn-admin btn-admin--secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Test Connection
+          </button>
+        </form>
+        <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" class="btn-admin btn-admin--google">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+          Open Google Calendar
+        </a>
+        <form method="POST" action="{{ route('admin.google-calendar.disconnect') }}" onsubmit="return confirm('Are you sure you want to disconnect Google Calendar? Existing calendar events will not be removed automatically.')">
+          @csrf
+          <button type="submit" class="btn-admin btn-admin--danger">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+            Disconnect
+          </button>
+        </form>
+      </div>
+      @endif
     </div>
     <div class="card__body">
       @if($token && $token->is_active)
@@ -184,27 +208,6 @@
           <strong>Warning:</strong> Could not fetch calendar list. {{ $connectionError }}
         </div>
         @endif
-
-        <div class="btn-row">
-          <form method="POST" action="{{ route('admin.google-calendar.test-sync') }}">
-            @csrf
-            <button type="submit" class="btn-admin btn-admin--secondary">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-              Test Connection
-            </button>
-          </form>
-          <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" class="btn-admin btn-admin--google">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-            Open Google Calendar
-          </a>
-          <form method="POST" action="{{ route('admin.google-calendar.disconnect') }}" onsubmit="return confirm('Are you sure you want to disconnect Google Calendar? Existing calendar events will not be removed automatically.')">
-            @csrf
-            <button type="submit" class="btn-admin btn-admin--danger">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-              Disconnect
-            </button>
-          </form>
-        </div>
       @else
         <div class="status-badge status-badge--disconnected">
           <span class="status-dot status-dot--gray"></span>
