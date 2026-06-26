@@ -131,7 +131,7 @@
     </div>
   </div>
 
-  <div class="chart-card" style="grid-column: span 2;">
+  <div class="chart-card">
     <div class="chart-card__header">
       <span class="chart-card__title">Bookings (Last 30 Days)</span>
     </div>
