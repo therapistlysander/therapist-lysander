@@ -169,6 +169,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
     Route::get('/google-calendar/callback', [AdminGoogleCalendarController::class, 'callback'])->name('google-calendar.callback');
     Route::post('/google-calendar/disconnect', [AdminGoogleCalendarController::class, 'disconnect'])->name('google-calendar.disconnect');
     Route::patch('/google-calendar/settings', [AdminGoogleCalendarController::class, 'updateSettings'])->name('google-calendar.settings');
+    Route::post('/google-calendar/credentials', [AdminGoogleCalendarController::class, 'saveCredentials'])->name('google-calendar.credentials');
     Route::post('/google-calendar/test-sync', [AdminGoogleCalendarController::class, 'testSync'])->name('google-calendar.test-sync');
 
     // Change Password (all admin roles)

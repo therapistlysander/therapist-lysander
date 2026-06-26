@@ -403,15 +403,45 @@ class GoogleCalendarService
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
     /**
-     * Build and configure the base Google\Client.
+     * Get a Google Calendar config value from SiteSetting, falling back to env/config.
      */
+    private function getGoogleConfig(string $key): ?string
+    {
+        $settingKey = match ($key) {
+            'client_id'     => 'google_client_id',
+            'client_secret' => 'google_client_secret',
+            'redirect_uri'  => 'google_calendar_redirect_uri',
+            'calendar_id'   => 'google_calendar_id',
+            default         => null,
+        };
+
+        if ($settingKey) {
+            $setting = SiteSetting::where('key', $settingKey)->first();
+            if ($setting && $setting->getRawOriginal('value')) {
+                return $setting->getRawOriginal('value');
+            }
+        }
+
+        return config("google-calendar.{$key}");
+    }
+
+    /**
+     * Check if Google OAuth credentials are configured.
+     */
+    public static function isConfigured(): bool
+    {
+        $service = new static();
+        return !empty($service->getGoogleConfig('client_id'))
+            && !empty($service->getGoogleConfig('client_secret'));
+    }
+
     private function buildClient(): Client
     {
         $client = new Client();
         $client->setApplicationName(config('app.name', 'Therapist Lysander'));
-        $client->setClientId(config('google-calendar.client_id'));
-        $client->setClientSecret(config('google-calendar.client_secret'));
-        $client->setRedirectUri(config('google-calendar.redirect_uri'));
+        $client->setClientId($this->getGoogleConfig('client_id'));
+        $client->setClientSecret($this->getGoogleConfig('client_secret'));
+        $client->setRedirectUri($this->getGoogleConfig('redirect_uri'));
         $client->setAccessType('offline');
         $client->setPrompt('consent');
         $client->setScopes([

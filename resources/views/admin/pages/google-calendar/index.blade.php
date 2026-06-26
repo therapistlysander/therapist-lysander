@@ -126,6 +126,18 @@
   .empty-state__icon { width: 48px; height: 48px; margin: 0 auto 12px; color: #d1d5db; }
   .empty-state__text { font-size: 14px; }
 
+  /* Form Inputs */
+  .cred-form .field-group input[type="text"],
+  .cred-form .field-group input[type="password"] {
+    width: 100%; padding: 9px 12px; border: 1px solid #e5e7eb; border-radius: 8px;
+    font-size: 14px; color: #1a2332; background: white; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .cred-form .field-group input:focus {
+    border-color: #5a9e97; outline: none; box-shadow: 0 0 0 3px rgba(90,158,151,0.1);
+  }
+  .cred-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+  @media (max-width: 640px) { .cred-grid { grid-template-columns: 1fr; } }
+
   /* Responsive */
   @media (max-width: 768px) {
     .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -267,12 +279,57 @@
         </div>
         @endif
 
-        @if(!config('google-calendar.client_id'))
-        <div class="alert alert--error" style="margin-top: 16px;">
-          <strong>Configuration missing:</strong> Google OAuth credentials are not set. Please add <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> to your <code>.env</code> file.
+        @php
+          $isConfigured = \App\Services\GoogleCalendarService::isConfigured();
+          $savedClientId = \App\Models\SiteSetting::where('key', 'google_client_id')->first()?->getRawOriginal('value') ?? '';
+          $savedClientSecret = \App\Models\SiteSetting::where('key', 'google_client_secret')->first()?->getRawOriginal('value') ?? '';
+          $savedRedirectUri = \App\Models\SiteSetting::where('key', 'google_calendar_redirect_uri')->first()?->getRawOriginal('value') ?? '';
+          $savedCalendarId = \App\Models\SiteSetting::where('key', 'google_calendar_id')->first()?->getRawOriginal('value') ?? '';
+        @endphp
+
+        {{-- OAuth Credentials Form --}}
+        <div class="cred-form" style="margin-top: 20px;">
+          <form method="POST" action="{{ route('admin.google-calendar.credentials') }}">
+            @csrf
+            <p style="font-size: 13px; color: #6b7280; margin-bottom: 16px;">
+              Enter your Google OAuth credentials below. You can obtain these from the
+              <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color: #5a9e97; text-decoration: underline;">Google Cloud Console</a>.
+            </p>
+            <div class="cred-grid">
+              <div class="field-group">
+                <label for="google_client_id">Google Client ID <span style="color: #ef4444;">*</span></label>
+                <input type="text" id="google_client_id" name="google_client_id" value="{{ old('google_client_id', $savedClientId) }}" placeholder="xxxx.apps.googleusercontent.com" required>
+              </div>
+              <div class="field-group">
+                <label for="google_client_secret">Google Client Secret <span style="color: #ef4444;">*</span></label>
+                <input type="text" id="google_client_secret" name="google_client_secret" value="{{ old('google_client_secret', $savedClientSecret) }}" placeholder="GOCSPX-..." required>
+              </div>
+              <div class="field-group">
+                <label for="google_calendar_redirect_uri">Redirect URI <span style="color: #9ca3af; font-size: 11px; text-transform: none; letter-spacing: 0;">(optional)</span></label>
+                <input type="text" id="google_calendar_redirect_uri" name="google_calendar_redirect_uri" value="{{ old('google_calendar_redirect_uri', $savedRedirectUri ?: route('admin.google-calendar.callback')) }}" placeholder="https://...">
+              </div>
+              <div class="field-group">
+                <label for="google_calendar_id">Calendar ID <span style="color: #9ca3af; font-size: 11px; text-transform: none; letter-spacing: 0;">(optional)</span></label>
+                <input type="text" id="google_calendar_id" name="google_calendar_id" value="{{ old('google_calendar_id', $savedCalendarId) }}" placeholder="primary or your-calendar-id@group.calendar.google.com">
+              </div>
+            </div>
+            <div class="btn-row" style="margin-top: 8px;">
+              <button type="submit" class="btn-admin btn-admin--primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Save Credentials
+              </button>
+              @if($isConfigured)
+              <span style="font-size: 12px; color: #059669; display: flex; align-items: center; gap: 4px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Credentials configured
+              </span>
+              @endif
+            </div>
+          </form>
         </div>
-        @else
-        <div class="btn-row" style="margin-top: 20px;">
+
+        @if($isConfigured)
+        <div class="btn-row" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f3f4f6;">
           <a href="{{ route('admin.google-calendar.connect') }}" class="btn-admin btn-admin--google">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg>
             Connect Google Calendar

@@ -64,8 +64,8 @@ class AdminGoogleCalendarController extends Controller
      */
     public function connect()
     {
-        if (!config('google-calendar.client_id') || !config('google-calendar.client_secret')) {
-            return back()->with('error', 'Google OAuth credentials are not configured. Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in your environment.');
+        if (!GoogleCalendarService::isConfigured()) {
+            return back()->with('error', 'Google OAuth credentials are not configured. Please enter your Client ID and Client Secret below.');
         }
 
         try {
@@ -77,6 +77,39 @@ class AdminGoogleCalendarController extends Controller
             Log::error("GoogleCalendar: Failed to generate auth URL: {$e->getMessage()}");
             return back()->with('error', 'Failed to initiate Google OAuth. Please try again.');
         }
+    }
+
+    /**
+     * Save Google OAuth credentials from the admin form.
+     */
+    public function saveCredentials(Request $request)
+    {
+        $request->validate([
+            'google_client_id'     => 'required|string|max:255',
+            'google_client_secret' => 'required|string|max:255',
+            'google_calendar_redirect_uri' => 'nullable|url|max:255',
+            'google_calendar_id'   => 'nullable|string|max:255',
+        ]);
+
+        $fields = [
+            'google_client_id'             => ['Google Client ID', 'text'],
+            'google_client_secret'         => ['Google Client Secret', 'text'],
+            'google_calendar_redirect_uri' => ['Google Calendar Redirect URI', 'text'],
+            'google_calendar_id'           => ['Google Calendar ID', 'text'],
+        ];
+
+        foreach ($fields as $key => [$label, $type]) {
+            $value = $request->input($key, '');
+            \App\Models\SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value, 'group' => 'google_calendar', 'type' => $type, 'label' => $label]
+            );
+        }
+
+        // Clear config cache so new values take effect
+        \Artisan::call('config:clear');
+
+        return back()->with('success', 'Google OAuth credentials saved.');
     }
 
     /**
