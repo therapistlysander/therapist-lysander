@@ -124,12 +124,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group(function () {
 
-    // Smart redirect: superadmin → dashboard, admin → bookings
+    // Smart redirect: all users → dashboard
     Route::get('/', function () {
-        return auth()->user()?->isSuperAdmin()
-            ? redirect()->route('admin.dashboard')
-            : redirect()->route('admin.bookings.index');
+        return redirect()->route('admin.dashboard');
     });
+
+    // Dashboard (all admin roles)
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Bookings (all admin roles)
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
@@ -176,9 +177,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
 
     // ── Super admin only routes ──
     Route::middleware('superadmin')->group(function () {
-
-        // Dashboard
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         // Contacts
         Route::get('/contacts', [AdminContactController::class, 'index'])->name('contacts.index');

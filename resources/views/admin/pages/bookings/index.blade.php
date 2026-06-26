@@ -31,17 +31,6 @@
   .modern-dropdown__item.active { background: #f0fdf9; color: #5a9e97; font-weight: 600; }
   .modern-dropdown__item svg { width: 14px; height: 14px; }
 
-  /* Charts Section */
-  .charts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
-  .chart-card {
-    background: white; border: 1px solid #e8ede9; border-radius: 12px;
-    padding: 20px; display: flex; flex-direction: column;
-  }
-  .chart-card__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-  .chart-card__title { font-size: 13px; font-weight: 600; color: #1a2332; text-transform: uppercase; letter-spacing: 0.05em; }
-  .chart-card__body { flex: 1; position: relative; min-height: 200px; }
-  .chart-card__body canvas { max-height: 200px; }
-
   /* Bulk Bar */
   .bulk-bar { display: none; align-items: center; gap: 12px; padding: 12px 20px; background: #fef3c7; border-bottom: 1px solid #fde68a; }
   .bulk-bar.visible { display: flex; }
@@ -68,60 +57,6 @@
 
 @section('content')
 
-{{-- Stats Row --}}
-<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
-  @foreach([
-    ['label'=>'Total','value'=>$stats['total'],'color'=>'#5a7a76','icon'=>'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'],
-    ['label'=>'Pending','value'=>$stats['pending'],'color'=>'#f59e0b','icon'=>'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
-    ['label'=>'Confirmed','value'=>$stats['confirmed'],'color'=>'#10b981','icon'=>'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
-    ['label'=>'Completed','value'=>$stats['completed'],'color'=>'#6366f1','icon'=>'M5 13l4 4L19 7'],
-  ] as $s)
-  <div style="background:#fff;border:1px solid #e8ede9;border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px;">
-    <div style="width:48px;height:48px;border-radius:10px;background:{{ $s['color'] }}15;display:flex;align-items:center;justify-content:center;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="{{ $s['color'] }}" stroke-width="1.5" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $s['icon'] }}"/></svg>
-    </div>
-    <div>
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#9ca3af;font-weight:600;">{{ $s['label'] }}</div>
-      <div style="font-size:28px;font-weight:700;color:{{ $s['color'] }};line-height:1;">{{ $s['value'] }}</div>
-    </div>
-  </div>
-  @endforeach
-</div>
-
-{{-- Charts Section --}}
-<div class="charts-grid">
-  {{-- Status Distribution Chart --}}
-  <div class="chart-card">
-    <div class="chart-card__header">
-      <span class="chart-card__title">Status Distribution</span>
-    </div>
-    <div class="chart-card__body">
-      <canvas id="statusChart"></canvas>
-    </div>
-  </div>
-
-  {{-- Bookings Over Time Chart --}}
-  <div class="chart-card" style="grid-column: span 2;">
-    <div class="chart-card__header">
-      <span class="chart-card__title">Bookings (Last 30 Days)</span>
-    </div>
-    <div class="chart-card__body">
-      <canvas id="timelineChart"></canvas>
-    </div>
-  </div>
-
-  {{-- Session Types Chart --}}
-  <div class="chart-card">
-    <div class="chart-card__header">
-      <span class="chart-card__title">Session Types</span>
-    </div>
-    <div class="chart-card__body">
-      <canvas id="sessionTypeChart"></canvas>
-    </div>
-  </div>
-</div>
-
-{{-- Bookings Table --}}
 <div class="admin-table-wrap">
   {{-- Filter Bar --}}
   <div class="admin-table-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 20px;">
@@ -166,7 +101,7 @@
             All Types
           </button>
           <button type="button" class="modern-dropdown__item {{ request('type') === 'online' ? 'active' : '' }}" onclick="selectDropdown('type-dropdown', 'online', 'Online')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 19h18a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             Online
           </button>
           <button type="button" class="modern-dropdown__item {{ request('type') === 'in-person' ? 'active' : '' }}" onclick="selectDropdown('type-dropdown', 'in-person', 'In-person')">
@@ -273,7 +208,6 @@
 @endsection
 
 @section('page_scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 // Dropdown Functions
 function toggleDropdown(id) {
@@ -315,107 +249,6 @@ function selectDropdown(id, value, label) {
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.modern-dropdown')) {
     document.querySelectorAll('.modern-dropdown__menu').forEach(m => m.classList.remove('open'));
-  }
-});
-
-// Chart.js Defaults
-Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
-Chart.defaults.color = '#6b7280';
-
-// Status Distribution Chart (Donut)
-const statusCtx = document.getElementById('statusChart').getContext('2d');
-new Chart(statusCtx, {
-  type: 'doughnut',
-  data: {
-    labels: @json($statusChartData['labels']),
-    datasets: [{
-      data: @json($statusChartData['data']),
-      backgroundColor: ['#f59e0b', '#10b981', '#6366f1', '#ef4444', '#9ca3af'],
-      borderWidth: 0,
-      hoverOffset: 4
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: { padding: 12, usePointStyle: true, pointStyle: 'circle', font: { size: 11 } }
-      }
-    },
-    cutout: '65%'
-  }
-});
-
-// Bookings Over Time Chart (Line)
-const timelineCtx = document.getElementById('timelineChart').getContext('2d');
-new Chart(timelineCtx, {
-  type: 'line',
-  data: {
-    labels: @json(array_column($bookingsOverTime, 'date')),
-    datasets: [{
-      label: 'Bookings',
-      data: @json(array_column($bookingsOverTime, 'count')),
-      borderColor: '#5a9e97',
-      backgroundColor: 'rgba(90, 158, 151, 0.1)',
-      borderWidth: 2,
-      fill: true,
-      tension: 0.4,
-      pointRadius: 3,
-      pointHoverRadius: 5
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: { stepSize: 1, font: { size: 11 } },
-        grid: { color: '#f3f4f6' }
-      },
-      x: {
-        ticks: { maxTicksLimit: 10, font: { size: 11 } },
-        grid: { display: false }
-      }
-    }
-  }
-});
-
-// Session Types Chart (Bar)
-const sessionTypeCtx = document.getElementById('sessionTypeChart').getContext('2d');
-new Chart(sessionTypeCtx, {
-  type: 'bar',
-  data: {
-    labels: @json($sessionTypeChartData['labels']),
-    datasets: [{
-      data: @json($sessionTypeChartData['data']),
-      backgroundColor: ['#5a9e97', '#6366f1', '#f59e0b', '#10b981'],
-      borderRadius: 6,
-      borderSkipped: false
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: { stepSize: 1, font: { size: 11 } },
-        grid: { color: '#f3f4f6' }
-      },
-      x: {
-        ticks: { font: { size: 11 } },
-        grid: { display: false }
-      }
-    }
   }
 });
 
