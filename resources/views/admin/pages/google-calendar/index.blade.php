@@ -1,7 +1,7 @@
 @extends('admin.layouts.admin')
 
-@section('title', 'Google Calendar')
-@section('page_title', 'Google Calendar')
+@section('title', 'Google Calendar Settings')
+@section('page_title', 'Google Calendar Settings')
 
 @section('page_styles')
 <style>
