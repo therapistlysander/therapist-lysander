@@ -15,12 +15,21 @@ class DatabaseTranslationLoader extends FileLoader
         // Load file-based translations first
         $fileTranslations = parent::load($locale, $group, $namespace);
 
-        // Apply DB overrides for all groups (nav, home, booking, about, etc.)
-        if ($namespace === null) {
+        // Apply DB overrides for non-package translations
+        // ('*' is Laravel's default namespace for non-package calls like __('ui.nav.fees'))
+        if ($namespace === '*' || $namespace === null) {
             $this->loadDbOverrides();
-            
-            if (isset($this->dbOverrides[$locale][$group])) {
-                $fileTranslations = array_replace_recursive($fileTranslations, $this->dbOverrides[$locale][$group]);
+
+            // DB stores records with group='nav', key='home'
+            // But __('ui.nav.home') calls load() with group='ui'
+            // So we need to nest DB overrides under the file group name
+            if (isset($this->dbOverrides[$locale])) {
+                $nested = [];
+                foreach ($this->dbOverrides[$locale] as $dbGroup => $keys) {
+                    // Nest: dbOverrides['nav']['home'] -> ['nav' => ['home' => value]]
+                    $nested[$dbGroup] = $keys;
+                }
+                $fileTranslations = array_replace_recursive($fileTranslations, $nested);
             }
         }
 
