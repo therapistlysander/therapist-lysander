@@ -170,11 +170,17 @@
           </div>
           <div class="config-field">
             <label>Break Start</label>
-            <input type="time" name="break_start" value="{{ $config->break_start }}">
+            <input type="time" name="break_start" id="break_start" value="{{ $config->break_start }}" {{ !$config->break_start ? 'disabled' : '' }}>
           </div>
           <div class="config-field">
             <label>Break End</label>
-            <input type="time" name="break_end" value="{{ $config->break_end }}">
+            <input type="time" name="break_end" id="break_end" value="{{ $config->break_end }}" {{ !$config->break_end ? 'disabled' : '' }}>
+          </div>
+          <div class="config-field" style="display: flex; align-items: flex-end; padding-bottom: 4px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; text-transform: none; font-size: 13px; color: #374151; letter-spacing: 0;">
+              <input type="checkbox" id="enable-break" {{ $config->break_start ? 'checked' : '' }} onchange="toggleBreak(this)" style="width: 16px; height: 16px; accent-color: #5a9e97;">
+              Enable break
+            </label>
           </div>
         </div>
 
@@ -334,6 +340,22 @@
 
 @section('page_scripts')
 <script>
+function toggleBreak(checkbox) {
+  const startInput = document.getElementById('break_start');
+  const endInput = document.getElementById('break_end');
+  if (checkbox.checked) {
+    startInput.disabled = false;
+    endInput.disabled = false;
+    if (!startInput.value) startInput.value = '12:00';
+    if (!endInput.value) endInput.value = '13:30';
+  } else {
+    startInput.disabled = true;
+    endInput.disabled = true;
+    startInput.value = '';
+    endInput.value = '';
+  }
+}
+
 function toggleDayUI(checkbox, idx) {
   const name = document.getElementById('dayname-' + idx);
   const override = document.getElementById('dayoverride-' + idx);
