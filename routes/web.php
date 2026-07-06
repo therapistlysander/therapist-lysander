@@ -35,6 +35,41 @@ Route::get('/', function () {
     return redirect("/{$locale}");
 })->name('root');
 
+// TEMP diagnostic route — remove after debugging
+Route::get('/_diag/translations', function () {
+    $loader = app('translation.loader');
+    $loaderClass = get_class($loader);
+    $dbTableExists = \Schema::hasTable('ui_translations');
+    $dbCount = $dbTableExists ? \App\Models\UiTranslation::count() : 0;
+    $nlViewFees = __('ui.home.view_fees', [], 'nl');
+    $enViewFees = __('ui.home.view_fees', [], 'en');
+
+    // Check if DB loader has overrides
+    $hasDbOverrides = false;
+    if ($loader instanceof \App\Translation\DatabaseTranslationLoader) {
+        $ref = new \ReflectionProperty($loader, 'dbOverrides');
+        $ref->setAccessible(true);
+        $overrides = $ref->getValue($loader);
+        $hasDbOverrides = !empty($overrides);
+        $dbOverrideValue = $overrides['nl']['ui']['home']['view_fees'] ?? 'NOT FOUND';
+    } else {
+        $dbOverrideValue = 'N/A - wrong loader class';
+    }
+
+    return response()->json([
+        'loader_class' => $loaderClass,
+        'is_db_loader' => $loader instanceof \App\Translation\DatabaseTranslationLoader,
+        'db_table_exists' => $dbTableExists,
+        'db_row_count' => $dbCount,
+        'has_db_overrides' => $hasDbOverrides ?? false,
+        'db_override_nl_view_fees' => $dbOverrideValue,
+        'resolved_nl' => $nlViewFees,
+        'resolved_en' => $enViewFees,
+        'current_locale' => app()->getLocale(),
+        'lang_path' => app()->langPath(),
+    ]);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Locale switch endpoint
