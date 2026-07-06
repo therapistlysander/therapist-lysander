@@ -44,27 +44,58 @@ Route::get('/_diag/translations', function () {
     $nlViewFees = __('ui.home.view_fees', [], 'nl');
     $enViewFees = __('ui.home.view_fees', [], 'en');
 
-    // Check if DB loader has overrides
-    $hasDbOverrides = false;
-    if ($loader instanceof \App\Translation\DatabaseTranslationLoader) {
-        $ref = new \ReflectionProperty($loader, 'dbOverrides');
+    // Check the translator's INTERNAL loader (may differ from container binding)
+    $translator = app('translator');
+    $translatorClass = get_class($translator);
+    $internalLoader = 'unknown';
+    $internalLoaderClass = 'unknown';
+    try {
+        $ref = new \ReflectionProperty($translator, 'loader');
         $ref->setAccessible(true);
-        $overrides = $ref->getValue($loader);
-        $hasDbOverrides = !empty($overrides);
-        $dbOverrideValue = $overrides['nl']['ui']['home']['view_fees'] ?? 'NOT FOUND';
-    } else {
-        $dbOverrideValue = 'N/A - wrong loader class';
+        $internalLoader = $ref->getValue($translator);
+        $internalLoaderClass = get_class($internalLoader);
+    } catch (\Throwable $e) {
+        $internalLoaderClass = 'ERROR: ' . $e->getMessage();
     }
 
+    // Check loaded translations cache
+    $loadedCache = [];
+    try {
+        $loadedRef = new \ReflectionProperty($translator, 'loaded');
+        $loadedRef->setAccessible(true);
+        $loaded = $loadedRef->getValue($translator);
+        $loadedCache = array_keys($loaded);
+    } catch (\Throwable $e) {
+        $loadedCache = ['ERROR: ' . $e->getMessage()];
+    }
+
+    // Check if DB loader has overrides
+    $hasDbOverrides = false;
+    $dbOverrideValue = 'N/A';
+    if ($internalLoader instanceof \App\Translation\DatabaseTranslationLoader) {
+        $ref = new \ReflectionProperty($internalLoader, 'dbOverrides');
+        $ref->setAccessible(true);
+        $overrides = $ref->getValue($internalLoader);
+        $hasDbOverrides = !empty($overrides);
+        $dbOverrideValue = $overrides['nl']['ui']['home']['view_fees'] ?? 'NOT FOUND in overrides';
+    }
+
+    // Check AppServiceProvider boot marker
+    $bootMarker = \App\Providers\AppServiceProvider::$bootRan ? 'boot_ran_true' : 'boot_NOT_ran';
+
     return response()->json([
-        'loader_class' => $loaderClass,
-        'is_db_loader' => $loader instanceof \App\Translation\DatabaseTranslationLoader,
+        'container_loader_class' => $loaderClass,
+        'translator_class' => $translatorClass,
+        'translator_internal_loader' => $internalLoaderClass,
+        'is_db_loader_internal' => $internalLoader instanceof \App\Translation\DatabaseTranslationLoader,
         'db_table_exists' => $dbTableExists,
         'db_row_count' => $dbCount,
-        'has_db_overrides' => $hasDbOverrides ?? false,
+        'has_db_overrides' => $hasDbOverrides,
         'db_override_nl_view_fees' => $dbOverrideValue,
         'resolved_nl' => $nlViewFees,
         'resolved_en' => $enViewFees,
+        'loaded_cache_keys' => $loadedCache,
+        'boot_marker' => $bootMarker,
         'current_locale' => app()->getLocale(),
         'lang_path' => app()->langPath(),
     ]);

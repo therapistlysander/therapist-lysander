@@ -8,6 +8,8 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    public static bool $bootRan = false;
+
     /**
      * Register any application services.
      */
@@ -22,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        self::$bootRan = true;
+
         // Override translation loader AFTER all providers have registered
         $dbLoader = new \App\Translation\DatabaseTranslationLoader(
             $this->app['files'],
