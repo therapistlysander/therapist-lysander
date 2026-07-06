@@ -544,6 +544,7 @@ function submitBooking() {
     notes: '',
     pi_brings: state.piGoals || null,
     client_timezone: visitorTimezone,
+    preferred_language: currentLocale,
   };
 
   fetch(bookingSubmitUrl, {

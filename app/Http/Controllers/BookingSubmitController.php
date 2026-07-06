@@ -72,6 +72,7 @@ class BookingSubmitController extends Controller
             'source'         => 'website',
             'status'         => 'pending',
             'client_timezone' => $request->input('client_timezone'),
+            'preferred_language' => $request->input('preferred_language'),
         ]);
 
         // Create pre-intake response if any pre-intake data provided

@@ -30,8 +30,8 @@
     @endif
     @if($booking->session_format)
     <tr style="border-bottom:1px solid #f3f4f6;">
-        <td style="padding:10px 0;font-weight:600;color:#6b7280;font-size:13px;vertical-align:top;">Session format:</td>
-        <td style="padding:10px 0;color:#1a2332;">{{ ucfirst($booking->session_format) }}</td>
+        <td style="padding:10px 0;font-weight:600;color:#6b7280;font-size:13px;vertical-align:top;">Appointment type:</td>
+        <td style="padding:10px 0;color:#1a2332;">{{ match($booking->session_format) { 'intake' => 'Introductory Call', 'standard' => 'Standard Session', 'emdr' => 'EMDR Session', 'initial' => 'Initial Session', default => ucfirst($booking->session_format) } }}</td>
     </tr>
     @endif
     @if($booking->preferred_date)

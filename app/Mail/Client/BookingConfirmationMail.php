@@ -21,18 +21,31 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
 
     public function envelope(): Envelope
     {
+        $isDutch = $this->booking->preferred_language === 'nl';
+
         return new Envelope(
-            subject: 'Your booking request was received',
+            subject: $isDutch
+                ? 'Je boekingsverzoek is ontvangen'
+                : 'Your booking request was received',
         );
     }
 
     public function content(): Content
     {
-        $formatLabels = [
-            'intake'    => 'Introduction Call',
-            'standard'  => 'Standard Session',
+        $isDutch = $this->booking->preferred_language === 'nl';
+
+        $typeLabels = [
+            'intake'    => $isDutch ? 'Kennismakingsgesprek' : 'Introductory Call',
+            'standard'  => $isDutch ? 'Standaard sessie' : 'Standard Session',
             'emdr'      => 'EMDR Session',
-            'initial'   => 'Initial Session',
+            'initial'   => $isDutch ? 'Eerste sessie' : 'Initial Session',
+        ];
+
+        $formatLabels = [
+            'intake'    => $isDutch ? 'Kennismakingsgesprek' : 'Introductory Call',
+            'standard'  => $isDutch ? 'Standaard sessie' : 'Standard Session',
+            'emdr'      => 'EMDR Session',
+            'initial'   => $isDutch ? 'Eerste sessie' : 'Initial Session',
         ];
 
         $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
@@ -44,20 +57,27 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
         if ($preferredDate && $clientTimezone) {
             $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
                 ->setTimezone($clientTimezone)
-                ->format('l, j F Y \a\t H:i');
+                ->locale($isDutch ? 'nl' : 'en')
+                ->isoFormat('dddd, D MMMM YYYY [om] HH:mm');
         } elseif ($preferredDate) {
             $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
-                ->format('l, j F Y \a\t H:i');
+                ->locale($isDutch ? 'nl' : 'en')
+                ->isoFormat('dddd, D MMMM YYYY [om] HH:mm');
         }
 
+        $view = $isDutch
+            ? 'emails.client.booking-confirmation-nl'
+            : 'emails.client.booking-confirmation';
+
         return new Content(
-            view: 'emails.client.booking-confirmation',
+            view: $view,
             with: [
-                'firstName' => $this->booking->first_name,
-                'sessionType' => $this->booking->session_type,
-                'sessionFormat' => $formatLabels[$this->booking->session_format] ?? ucfirst($this->booking->session_format),
-                'displayDate' => $displayDate,
-                'clientTimezone' => $clientTimezone,
+                'firstName'       => $this->booking->first_name,
+                'sessionType'     => $this->booking->session_type,
+                'appointmentType' => $typeLabels[$this->booking->session_format] ?? ucfirst($this->booking->session_format),
+                'sessionFormat'   => $formatLabels[$this->booking->session_format] ?? ucfirst($this->booking->session_format),
+                'displayDate'     => $displayDate,
+                'clientTimezone'  => $clientTimezone,
             ],
         );
     }
