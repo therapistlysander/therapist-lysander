@@ -106,29 +106,47 @@ Route::get('/_debug_translations', function () {
     try {
         $navRecords = \App\Models\UiTranslation::where('group', 'nav')->get();
         $results['db_nav_count'] = $navRecords->count();
-        $results['db_nav_records'] = $navRecords->map(fn($r) => [
-            'key' => $r->key, 'locale' => $r->locale, 'value' => $r->value,
-        ])->toArray();
     } catch (\Throwable $e) {
         $results['db_error'] = $e->getMessage();
     }
 
-    // 2. Check what __() returns for nav keys
-    $results['translation_nav_home'] = __('ui.nav.home');
-    $results['translation_nav_fees'] = __('ui.nav.fees');
-    $results['translation_nav_approach'] = __('ui.nav.approach');
+    // 2. Check container binding
+    $results['container_loader_class'] = get_class(app('translation.loader'));
 
-    // 3. Check DatabaseTranslationLoader directly
+    // 3. Check translator's internal loader
     try {
-        $loader = app('translation.loader');
-        $loaderClass = get_class($loader);
-        $results['loader_class'] = $loaderClass;
+        $translator = app('translator');
+        $translatorClass = get_class($translator);
+        $results['translator_class'] = $translatorClass;
 
-        $loaded = $loader->load('nl', 'nav');
-        $results['loader_nl_nav'] = $loaded;
+        $ref = new \ReflectionProperty($translator, 'loader');
+        $ref->setAccessible(true);
+        $internalLoader = $ref->getValue($translator);
+        $results['translator_internal_loader_class'] = get_class($internalLoader);
+
+        // Check internal loaded cache
+        $loadedRef = new \ReflectionProperty($translator, 'loaded');
+        $loadedRef->setAccessible(true);
+        $loaded = $loadedRef->getValue($translator);
+        $results['translator_loaded_keys'] = array_keys($loaded);
     } catch (\Throwable $e) {
-        $results['loader_error'] = $e->getMessage();
+        $results['translator_error'] = $e->getMessage();
     }
+
+    // 4. Test DB loader manually
+    try {
+        $dbLoader = new \App\Translation\DatabaseTranslationLoader(
+            app('files'),
+            app()['path.lang']
+        );
+        $nlNav = $dbLoader->load('nl', 'nav');
+        $results['manual_db_loader_nl_nav'] = $nlNav;
+    } catch (\Throwable $e) {
+        $results['manual_db_loader_error'] = $e->getMessage();
+    }
+
+    // 5. Check what __() returns
+    $results['translation_nav_fees'] = __('ui.nav.fees');
 
     return response()->json($results, 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 });
