@@ -103,6 +103,10 @@ class AdminUiTranslationController extends Controller
 
         UiTranslation::clearCache();
 
+        // Clear all Laravel caches so translation changes reflect immediately
+        \Illuminate\Support\Facades\Cache::flush();
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+
         return redirect()
             ->route('admin.ui-translations.edit', $group)
             ->with('success', 'Translations saved successfully.');
