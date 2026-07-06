@@ -9,6 +9,7 @@ class DatabaseTranslationLoader extends FileLoader
 {
     protected bool $dbLoaded = false;
     protected array $dbOverrides = [];
+    public ?string $loadError = null;
 
     public function load($locale, $group, $namespace = null): array
     {
@@ -71,8 +72,8 @@ class DatabaseTranslationLoader extends FileLoader
                     }
                 }
             }
-        } catch (\Exception $e) {
-            // Silently fail if DB not available yet (e.g., during migration)
+        } catch (\Throwable $e) {
+            $this->loadError = get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine();
         }
 
         $this->dbLoaded = true;

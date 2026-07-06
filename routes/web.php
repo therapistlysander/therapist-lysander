@@ -72,12 +72,14 @@ Route::get('/_diag/translations', function () {
     // Check if DB loader has overrides
     $hasDbOverrides = false;
     $dbOverrideValue = 'N/A';
+    $dbLoadError = null;
     if ($internalLoader instanceof \App\Translation\DatabaseTranslationLoader) {
         $ref = new \ReflectionProperty($internalLoader, 'dbOverrides');
         $ref->setAccessible(true);
         $overrides = $ref->getValue($internalLoader);
         $hasDbOverrides = !empty($overrides);
         $dbOverrideValue = $overrides['nl']['ui']['home']['view_fees'] ?? 'NOT FOUND in overrides';
+        $dbLoadError = $internalLoader->loadError;
     }
 
     // Check AppServiceProvider boot marker
@@ -91,6 +93,7 @@ Route::get('/_diag/translations', function () {
         'db_table_exists' => $dbTableExists,
         'db_row_count' => $dbCount,
         'has_db_overrides' => $hasDbOverrides,
+        'db_load_error' => $dbLoadError,
         'db_override_nl_view_fees' => $dbOverrideValue,
         'resolved_nl' => $nlViewFees,
         'resolved_en' => $enViewFees,
