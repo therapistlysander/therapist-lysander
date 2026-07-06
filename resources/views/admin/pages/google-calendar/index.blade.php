@@ -346,16 +346,18 @@
     <div class="card__header">
       <h2>
         <svg class="card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        Calendar Selection
+        Calendar Settings
       </h2>
-      <p>Choose which Google Calendar to sync bookings with.</p>
+      <p>Choose which calendars to use for bookings and availability checking.</p>
     </div>
     <div class="card__body">
       <form method="POST" action="{{ route('admin.google-calendar.settings') }}">
         @csrf
         @method('PATCH')
-        <div class="field-group">
-          <label>Calendar</label>
+
+        {{-- Write Target Calendar (single select) --}}
+        <div class="field-group" style="margin-bottom: 24px;">
+          <label style="font-weight: 600; margin-bottom: 4px;">Booking Calendar <span style="font-weight: 400; color: #9ca3af; font-size: 12px;">— appointments are created here</span></label>
           <div class="form-dropdown" id="calendar-dropdown">
             <button type="button" class="form-dropdown__trigger" onclick="toggleFormDropdown('calendar-dropdown')">
               <span id="calendar-label">{{ collect($calendars)->firstWhere('id', $token->calendar_id)['summary'] ?? 'Select Calendar' }}</span>
@@ -371,9 +373,32 @@
             <input type="hidden" name="calendar_id" value="{{ $token->calendar_id }}">
           </div>
         </div>
+
+        {{-- Availability Calendars (multi-select) --}}
+        <div class="field-group" style="margin-bottom: 24px;">
+          <label style="font-weight: 600; margin-bottom: 4px;">Availability Calendars <span style="font-weight: 400; color: #9ca3af; font-size: 12px;">— check busy times across these (read-only)</span></label>
+          <p style="font-size: 12px; color: #6b7280; margin-bottom: 12px;">
+            Select all calendars to check for conflicts. Busy times from any selected calendar will block booking slots. No event details are read — only free/busy status.
+          </p>
+          @php
+            $selectedIds = $token->availability_calendar_ids ?? [$token->calendar_id];
+          @endphp
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            @foreach($calendars as $cal)
+            <label style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 8px; cursor: pointer; font-size: 14px; color: #1a2332;">
+              <input type="checkbox" name="availability_calendar_ids[]" value="{{ $cal['id'] }}" {{ in_array($cal['id'], $selectedIds) ? 'checked' : '' }} style="width: 16px; height: 16px; accent-color: #5a9e97;">
+              <span>{{ $cal['summary'] }}</span>
+              @if($cal['id'] === $token->calendar_id)
+                <span style="font-size: 11px; color: #5a9e97; background: #f0f9f8; padding: 2px 8px; border-radius: 4px; margin-left: auto;">write target</span>
+              @endif
+            </label>
+            @endforeach
+          </div>
+        </div>
+
         <button type="submit" class="btn-admin btn-admin--primary">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-          Save Calendar
+          Save Calendar Settings
         </button>
       </form>
     </div>
@@ -440,7 +465,7 @@
           <li><strong>Booking confirmed</strong> — A Google Calendar event is created with the client details, session info, and meeting link.</li>
           <li><strong>Booking rescheduled</strong> — The existing calendar event is updated with the new time.</li>
           <li><strong>Booking cancelled</strong> — The calendar event is automatically removed.</li>
-          <li><strong>Availability checking</strong> — Google Calendar busy times are checked alongside website bookings to prevent double-bookings.</li>
+          <li><strong>Availability checking</strong> — Busy times are checked across all selected calendars (including personal) to prevent double-bookings. Only free/busy status is read — no event details are exposed.</li>
           <li><strong>Timezone-aware</strong> — Events are created in the configured timezone (Europe/Amsterdam) with correct start and end times.</li>
           <li><strong>Calendar invitations</strong> — Clients receive email invitations with the appointment details in their local timezone.</li>
         </ul>

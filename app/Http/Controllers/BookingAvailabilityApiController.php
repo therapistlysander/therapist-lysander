@@ -141,6 +141,7 @@ class BookingAvailabilityApiController extends Controller
 
     /**
      * Get Google Calendar busy slots for a given date.
+     * Checks all configured availability calendars (multi-calendar support).
      * Returns array of 'H:i' strings to subtract from available slots.
      * Fails open: returns empty array if Google API is unavailable.
      */
@@ -151,16 +152,17 @@ class BookingAvailabilityApiController extends Controller
             return [];
         }
 
-        $cacheKey = "gcal_busy_{$date->toDateString()}";
+        $calendarIds = $token->getAvailabilityCalendarIds();
+        $cacheKey = "gcal_busy_{$date->toDateString()}_" . md5(implode(',', $calendarIds));
         $cacheTtl = config('google-calendar.cache_ttl', 300);
 
-        $busySlots = Cache::remember($cacheKey, now()->addSeconds($cacheTtl), function () use ($token, $date, $timezone) {
+        $busySlots = Cache::remember($cacheKey, now()->addSeconds($cacheTtl), function () use ($token, $date, $timezone, $calendarIds) {
             try {
                 $calendar = app(GoogleCalendarService::class);
                 $start = $date->copy()->startOfDay();
                 $end = $date->copy()->endOfDay();
 
-                return $calendar->getBusySlots($start, $end, $token->calendar_id);
+                return $calendar->getBusySlotsForCalendars($start, $end, $calendarIds);
             } catch (\Throwable $e) {
                 Log::warning("GoogleCalendar: Failed to fetch busy slots for {$date->toDateString()}: {$e->getMessage()}");
                 return []; // Fail open

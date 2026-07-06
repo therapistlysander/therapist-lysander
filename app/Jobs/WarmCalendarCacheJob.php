@@ -30,6 +30,7 @@ class WarmCalendarCacheJob implements ShouldQueue
 
     /**
      * Execute the job.
+     * Warms the cache for all configured availability calendars.
      */
     public function handle(GoogleCalendarService $calendar): void
     {
@@ -39,6 +40,7 @@ class WarmCalendarCacheJob implements ShouldQueue
             return;
         }
 
+        $calendarIds = $token->getAvailabilityCalendarIds();
         $tzSetting = SiteSetting::where('key', 'timezone')->first();
         $timezone = $tzSetting?->value ?: config('app.timezone', 'Europe/Amsterdam');
         $cacheTtl = config('google-calendar.cache_ttl', 300);
@@ -47,7 +49,7 @@ class WarmCalendarCacheJob implements ShouldQueue
         $end = $start->copy()->addDays(60);
 
         try {
-            $busySlots = $calendar->getBusySlots($start, $end, $token->calendar_id);
+            $busySlots = $calendar->getBusySlotsForCalendars($start, $end, $calendarIds);
 
             // Cache per-date for efficient per-request lookups
             $slotsByDate = [];
@@ -56,8 +58,9 @@ class WarmCalendarCacheJob implements ShouldQueue
                 $slotsByDate[$dateKey][] = $slot;
             }
 
+            $cacheSuffix = md5(implode(',', $calendarIds));
             foreach ($slotsByDate as $date => $slots) {
-                Cache::put("gcal_busy_{$date}", $slots, now()->addSeconds($cacheTtl));
+                Cache::put("gcal_busy_{$date}_{$cacheSuffix}", $slots, now()->addSeconds($cacheTtl));
             }
 
             // Also cache the full range for bulk lookups
@@ -66,6 +69,7 @@ class WarmCalendarCacheJob implements ShouldQueue
             $token->update(['last_synced_at' => now()]);
 
             Log::info('GoogleCalendar: Cache warmed successfully', [
+                'calendars'    => count($calendarIds),
                 'dates_cached' => count($slotsByDate),
                 'total_slots'  => count($busySlots),
             ]);

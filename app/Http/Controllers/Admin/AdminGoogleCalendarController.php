@@ -172,23 +172,35 @@ class AdminGoogleCalendarController extends Controller
     }
 
     /**
-     * Update calendar settings (selected calendar).
+     * Update calendar settings (write target + availability calendars).
      */
     public function updateSettings(Request $request)
     {
         $request->validate([
-            'calendar_id' => 'required|string|max:255',
+            'calendar_id'                  => 'required|string|max:255',
+            'availability_calendar_ids'    => 'nullable|array',
+            'availability_calendar_ids.*'  => 'string|max:255',
         ]);
 
         $token = GoogleCalendarToken::where('user_id', auth()->id())->first();
 
         if ($token) {
-            $token->update(['calendar_id' => $request->calendar_id]);
+            $availabilityIds = $request->input('availability_calendar_ids', []);
 
-            // Clear cached busy slots when calendar changes
+            // Ensure the write-target calendar is always included in availability checks
+            if (!in_array($request->calendar_id, $availabilityIds)) {
+                $availabilityIds[] = $request->calendar_id;
+            }
+
+            $token->update([
+                'calendar_id'               => $request->calendar_id,
+                'availability_calendar_ids' => $availabilityIds,
+            ]);
+
+            // Clear cached busy slots when calendars change
             Cache::forget('google_calendar_busy_slots');
 
-            // Re-warm cache with new calendar
+            // Re-warm cache with new calendar selection
             WarmCalendarCacheJob::dispatch();
         }
 

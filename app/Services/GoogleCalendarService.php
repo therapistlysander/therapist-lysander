@@ -325,34 +325,61 @@ class GoogleCalendarService
      */
     public function getBusySlots(Carbon $start, Carbon $end, string $calendarId): array
     {
+        return $this->getBusySlotsForCalendars($start, $end, [$calendarId]);
+    }
+
+    /**
+     * Get busy time slots from multiple Google Calendars in a single FreeBusy request.
+     * Returns merged busy periods across all calendars.
+     *
+     * @param array $calendarIds Array of calendar IDs to check.
+     * @return array Array of ['start' => 'H:i', 'end' => 'H:i', 'start_dt' => Carbon, 'end_dt' => Carbon].
+     */
+    public function getBusySlotsForCalendars(Carbon $start, Carbon $end, array $calendarIds): array
+    {
+        if (empty($calendarIds)) {
+            return [];
+        }
+
         $client = $this->getAuthenticatedClient();
         $service = new Calendar($client);
 
-        $calendarItem = new FreeBusyRequestItem();
-        $calendarItem->setId($calendarId);
+        // Build FreeBusy request items for all calendars
+        $items = [];
+        foreach ($calendarIds as $calId) {
+            $item = new FreeBusyRequestItem();
+            $item->setId($calId);
+            $items[] = $item;
+        }
 
         $request = new FreeBusyRequest();
         $request->setTimeMin($start->toIso8601String());
         $request->setTimeMax($end->toIso8601String());
         $request->setTimeZone($this->getAppTimezone());
-        $request->setItems([$calendarItem]);
+        $request->setItems($items);
 
         $response = $service->freebusy->query($request);
         $busySlots = [];
 
+        // Merge busy periods from all calendars
         $calendars = $response->getCalendars();
-        if (isset($calendars[$calendarId])) {
-            foreach ($calendars[$calendarId]->getBusy() as $busy) {
-                $busyStart = Carbon::parse($busy->getStart());
-                $busyEnd = Carbon::parse($busy->getEnd());
-                $busySlots[] = [
-                    'start' => $busyStart->format('H:i'),
-                    'end'   => $busyEnd->format('H:i'),
-                    'start_dt' => $busyStart,
-                    'end_dt'   => $busyEnd,
-                ];
+        foreach ($calendarIds as $calId) {
+            if (isset($calendars[$calId])) {
+                foreach ($calendars[$calId]->getBusy() as $busy) {
+                    $busyStart = Carbon::parse($busy->getStart());
+                    $busyEnd = Carbon::parse($busy->getEnd());
+                    $busySlots[] = [
+                        'start' => $busyStart->format('H:i'),
+                        'end'   => $busyEnd->format('H:i'),
+                        'start_dt' => $busyStart,
+                        'end_dt'   => $busyEnd,
+                    ];
+                }
             }
         }
+
+        // Sort by start time for consistent ordering
+        usort($busySlots, fn($a, $b) => $a['start_dt'] <=> $b['start_dt']);
 
         return $busySlots;
     }
