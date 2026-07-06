@@ -43,7 +43,23 @@
       </div>
 
       @foreach($locales as $li => $locale)
-      @php $lc = $localeContent[$locale] ?? []; @endphp
+      @php
+        $lc = $localeContent[$locale] ?? [];
+        // For repeater fields: if this locale doesn't have them but another does, inherit structure
+        foreach (['items', 'stats', 'steps', 'cards', 'groups'] as $repField) {
+            $anyLocaleData = collect($localeContent)->first(fn($c) => !empty($c[$repField]));
+            if (empty($lc[$repField]) && $anyLocaleData) {
+                $subFields = ['items' => ['title','description','key','label','value'], 'stats' => ['value','label'], 'steps' => ['title','description','duration','badge'], 'cards' => ['title','subtitle','description'], 'groups' => ['title']];
+                $lc[$repField] = array_map(function($ref) use ($subFields, $repField) {
+                    $row = [];
+                    foreach ($subFields[$repField] as $sf) { $row[$sf] = ''; }
+                    // Preserve non-editable keys
+                    foreach (['key','label','value'] as $k) { if (isset($ref[$k])) $row[$k] = $ref[$k]; }
+                    return $row;
+                }, $anyLocaleData);
+            }
+        }
+      @endphp
       <div class="locale-panel" data-locale="{{ $locale }}" style="display:{{ $li === 0 ? 'flex' : 'none' }};flex-direction:column;gap:20px;">
 
         {{-- Text Content --}}

@@ -161,11 +161,10 @@
         ['key'=>'schema','title'=>'Schema Therapy','description'=>'Schema therapy focuses on deep-rooted emotional patterns that can contribute to recurring difficulties in relationships, self-esteem, and emotional wellbeing. It helps people better understand and care for the different parts of themselves, creating lasting change through greater self-awareness, self-compassion, and emotional flexibility.'],
         ['key'=>'somatic','title'=>'Somatic Approaches','description'=>'Emotions, stress, and trauma are often experienced not only in our thoughts, but also in the body. Where relevant, I incorporate body awareness, nervous system regulation, and attention to physical sensations as part of the therapeutic process, helping clients develop a deeper understanding of their physical and emotional experiences.'],
       ];
-      $tabLabels = ['cbt'=>__('ui.home.tab_cbt'),'act'=>__('ui.home.tab_act'),'emdr'=>__('ui.home.tab_emdr'),'schema'=>__('ui.home.tab_schema'),'somatic'=>__('ui.home.tab_somatic')];
     @endphp
     <div class="approach-tabs" role="tablist" aria-label="Therapeutic approaches">
       @foreach($approachItems as $i => $approach)
-      <button class="approach-tab {{ $i === 0 ? 'active' : '' }}" role="tab" aria-selected="{{ $i === 0 ? 'true' : 'false' }}" data-panel="{{ $approach['key'] ?? Str::slug($approach['title']) }}">{{ $tabLabels[$approach['key']] ?? (Str::before($approach['title'], ' (') ?: $approach['title']) }}</button>
+      <button class="approach-tab {{ $i === 0 ? 'active' : '' }}" role="tab" aria-selected="{{ $i === 0 ? 'true' : 'false' }}" data-panel="{{ $approach['key'] ?? Str::slug($approach['title']) }}">{{ Str::before($approach['title'], ' (') ?: $approach['title'] }}</button>
       @endforeach
     </div>
     @foreach($approachItems as $i => $approach)
