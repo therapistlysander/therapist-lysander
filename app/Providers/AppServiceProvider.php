@@ -23,16 +23,27 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Override translation loader AFTER all providers have registered
-        // (must be in boot(), not register(), to survive core TranslationServiceProvider)
-        $this->app->singleton('translation.loader', function ($app) {
-            return new \App\Translation\DatabaseTranslationLoader(
-                $app['files'],
-                $app['path.lang']
-            );
-        });
+        $dbLoader = new \App\Translation\DatabaseTranslationLoader(
+            $this->app['files'],
+            $this->app['path.lang']
+        );
 
-        // Clear the translator singleton so it picks up the new loader
-        $this->app->forgetInstance('translator');
+        // Replace loader on the translator (may already be resolved)
+        $translator = $this->app->make('translator');
+        try {
+            $ref = new \ReflectionProperty($translator, 'loader');
+            $ref->setAccessible(true);
+            $ref->setValue($translator, $dbLoader);
+
+            // Clear the translator's loaded cache so it reloads from new loader
+            $loadedRef = new \ReflectionProperty($translator, 'loaded');
+            $loadedRef->setAccessible(true);
+            $loadedRef->setValue($translator, []);
+        } catch (\Throwable $e) {
+            // Fallback: just rebind for next resolution
+            $this->app->instance('translation.loader', $dbLoader);
+            $this->app->forgetInstance('translator');
+        }
 
         $this->configureDynamicMail();
         $this->registerBladeDirectives();
