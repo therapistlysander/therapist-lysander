@@ -32,6 +32,25 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDynamicMail();
         $this->registerBladeDirectives();
+        $this->registerDatabaseTranslationLoader();
+    }
+
+    /**
+     * Force the Translator to use DatabaseTranslationLoader.
+     * Must be done in boot() after all providers are registered.
+     */
+    private function registerDatabaseTranslationLoader(): void
+    {
+        try {
+            $translator = $this->app->make('translator');
+            $dbLoader = new \App\Translation\DatabaseTranslationLoader(
+                $this->app['files'],
+                $this->app['path.lang']
+            );
+            $translator->setLoader($dbLoader);
+        } catch (\Throwable $e) {
+            // Silently fail if translator not available
+        }
     }
 
     /**
