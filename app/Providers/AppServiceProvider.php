@@ -95,10 +95,14 @@ class AppServiceProvider extends ServiceProvider
 
             $loadedRef->setValue($translator, $loaded);
 
-            // Verify
+            // Verify - capture exact structure
             $loadedAfter = $loadedRef->getValue($translator);
             self::$injectDebug['loaded_after_keys'] = array_keys($loadedAfter);
-            self::$injectDebug['nl_ui_view_fees'] = $loadedAfter['*']['ui']['nl']['view_fees'] ?? 'NOT_SET';
+            self::$injectDebug['ui_keys'] = array_keys($loadedAfter['*']['ui'] ?? []);
+            self::$injectDebug['nl_keys_sample'] = array_slice(array_keys($loadedAfter['*']['ui']['nl'] ?? []), 0, 5);
+            self::$injectDebug['nl_view_fees_value'] = $loadedAfter['*']['ui']['nl']['view_fees'] ?? 'NOT_SET';
+            self::$injectDebug['home_keys_from_db'] = array_keys($overrides['nl']['home'] ?? []);
+            self::$injectDebug['home_view_fees_from_db'] = $overrides['nl']['home']['view_fees'] ?? 'NOT_IN_OVERRIDES';
             self::$injectDebug['status'] = 'success';
 
         } catch (\Throwable $e) {
