@@ -375,7 +375,7 @@ function convertSlotToLocal(slotTime, dateStr) {
 
 let currentStep = 1;
 let inlinePicker;
-let scheduleData = { inactive_days: [5, 6], fully_blocked_dates: [] };
+let scheduleData = { inactive_days: [0, 4, 5, 6], fully_blocked_dates: [] };
 
 // Load schedule data on page load (working days + blocked dates)
 const schedulePromise = fetch('/api/availability/schedule')

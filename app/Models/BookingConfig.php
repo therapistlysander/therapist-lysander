@@ -22,9 +22,9 @@ class BookingConfig extends Model
     public static function settings(): self
     {
         return static::first() ?? new static([
-            'slot_duration'      => 30,
+            'slot_duration'      => 60,
             'default_start_time' => '09:00',
-            'default_end_time'   => '17:00',
+            'default_end_time'   => '16:00',
             'break_start'        => '12:00',
             'break_end'          => '13:30',
         ]);
