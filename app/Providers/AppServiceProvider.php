@@ -26,31 +26,56 @@ class AppServiceProvider extends ServiceProvider
     {
         self::$bootRan = true;
 
-        // Override translation loader AFTER all providers have registered
-        $dbLoader = new \App\Translation\DatabaseTranslationLoader(
-            $this->app['files'],
-            $this->app['path.lang']
-        );
-
-        // Replace loader on the translator (may already be resolved)
-        $translator = $this->app->make('translator');
-        try {
-            $ref = new \ReflectionProperty($translator, 'loader');
-            $ref->setAccessible(true);
-            $ref->setValue($translator, $dbLoader);
-
-            // Clear the translator's loaded cache so it reloads from new loader
-            $loadedRef = new \ReflectionProperty($translator, 'loaded');
-            $loadedRef->setAccessible(true);
-            $loadedRef->setValue($translator, []);
-        } catch (\Throwable $e) {
-            // Fallback: just rebind for next resolution
-            $this->app->instance('translation.loader', $dbLoader);
-            $this->app->forgetInstance('translator');
-        }
+        // Load DB translation overrides directly into the translator's cache
+        $this->injectDbTranslations();
 
         $this->configureDynamicMail();
         $this->registerBladeDirectives();
+    }
+
+    /**
+     * Load all UI translations from DB and merge them into
+     * the translator's loaded cache, bypassing the broken loader chain.
+     */
+    private function injectDbTranslations(): void
+    {
+        try {
+            if (!\Schema::hasTable('ui_translations')) {
+                return;
+            }
+
+            $dbTranslations = \App\Models\UiTranslation::all();
+
+            // Build nested arrays per locale
+            $overrides = [];
+            foreach ($dbTranslations as $t) {
+                $overrides[$t->locale][$t->group][$t->key] = $t->value;
+            }
+
+            // Get the translator and inject into its loaded cache
+            $translator = app('translator');
+            $loadedRef = new \ReflectionProperty($translator, 'loaded');
+            $loadedRef->setAccessible(true);
+            $loaded = $loadedRef->getValue($translator);
+
+            foreach ($overrides as $locale => $groups) {
+                foreach ($groups as $group => $keys) {
+                    // Merge DB values into the translator's loaded cache
+                    if (!isset($loaded['*'][$group][$locale])) {
+                        $loaded['*'][$group][$locale] = [];
+                    }
+                    $loaded['*'][$group][$locale] = array_replace(
+                        $loaded['*'][$group][$locale],
+                        $keys
+                    );
+                }
+            }
+
+            $loadedRef->setValue($translator, $loaded);
+        } catch (\Throwable $e) {
+            // Log but don't break the app
+            report($e);
+        }
     }
 
     /**
