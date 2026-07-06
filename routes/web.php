@@ -98,6 +98,41 @@ Route::get('/api/availability/schedule', [BookingAvailabilityApiController::clas
 // Dynamic XML sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
+// Temporary debug route for translation diagnostics
+Route::get('/_debug_translations', function () {
+    $results = [];
+
+    // 1. Check if ui_translations table exists and has nav records
+    try {
+        $navRecords = \App\Models\UiTranslation::where('group', 'nav')->get();
+        $results['db_nav_count'] = $navRecords->count();
+        $results['db_nav_records'] = $navRecords->map(fn($r) => [
+            'key' => $r->key, 'locale' => $r->locale, 'value' => $r->value,
+        ])->toArray();
+    } catch (\Throwable $e) {
+        $results['db_error'] = $e->getMessage();
+    }
+
+    // 2. Check what __() returns for nav keys
+    $results['translation_nav_home'] = __('ui.nav.home');
+    $results['translation_nav_fees'] = __('ui.nav.fees');
+    $results['translation_nav_approach'] = __('ui.nav.approach');
+
+    // 3. Check DatabaseTranslationLoader directly
+    try {
+        $loader = app('translation.loader');
+        $loaderClass = get_class($loader);
+        $results['loader_class'] = $loaderClass;
+
+        $loaded = $loader->load('nl', 'nav');
+        $results['loader_nl_nav'] = $loaded;
+    } catch (\Throwable $e) {
+        $results['loader_error'] = $e->getMessage();
+    }
+
+    return response()->json($results, 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Admin authentication routes
