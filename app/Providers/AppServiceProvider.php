@@ -48,6 +48,14 @@ class AppServiceProvider extends ServiceProvider
                 $this->app['path.lang']
             );
             $translator->setLoader($dbLoader);
+
+            // Force reload of all translation groups by resetting internal loaded cache
+            $ref = new \ReflectionProperty($translator, 'loaded');
+            $ref->setAccessible(true);
+            $ref->setValue($translator, []);
+
+            // Also replace the container binding so debug tools see the right loader
+            $this->app->instance('translation.loader', $dbLoader);
         } catch (\Throwable $e) {
             // Silently fail if translator not available
         }
