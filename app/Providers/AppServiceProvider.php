@@ -15,14 +15,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register GoogleCalendarService as singleton
         $this->app->singleton(\App\Services\GoogleCalendarService::class);
-
-        // Override translation loader to support database-driven UI translations
-        $this->app->singleton('translation.loader', function ($app) {
-            return new \App\Translation\DatabaseTranslationLoader(
-                $app['files'],
-                $app['path.lang']
-            );
-        });
     }
 
     /**
@@ -30,6 +22,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Override translation loader AFTER all providers have registered
+        // (must be in boot(), not register(), to survive core TranslationServiceProvider)
+        $this->app->singleton('translation.loader', function ($app) {
+            return new \App\Translation\DatabaseTranslationLoader(
+                $app['files'],
+                $app['path.lang']
+            );
+        });
+
+        // Clear the translator singleton so it picks up the new loader
+        $this->app->forgetInstance('translator');
+
         $this->configureDynamicMail();
         $this->registerBladeDirectives();
     }
