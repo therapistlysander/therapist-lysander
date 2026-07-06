@@ -9,8 +9,6 @@ class DatabaseTranslationLoader extends FileLoader
 {
     protected bool $dbLoaded = false;
     protected array $dbOverrides = [];
-    public ?string $loadError = null;
-    public array $debugInfo = [];
 
     public function load($locale, $group, $namespace = null): array
     {
@@ -32,23 +30,16 @@ class DatabaseTranslationLoader extends FileLoader
     protected function loadDbOverrides(): void
     {
         if ($this->dbLoaded) {
-            $this->debugInfo['skipped'] = 'already_loaded';
             return;
         }
 
         try {
-            $hasTable = \Schema::hasTable('ui_translations');
-            $this->debugInfo['has_table'] = $hasTable;
-
-            if (!$hasTable) {
+            if (!\Schema::hasTable('ui_translations')) {
                 $this->dbLoaded = true;
                 return;
             }
 
             $translations = UiTranslation::all();
-            $this->debugInfo['row_count'] = $translations->count();
-            $this->debugInfo['sample_keys'] = $translations->take(3)->pluck('key')->toArray();
-            $this->debugInfo['sample_groups'] = $translations->take(3)->pluck('group')->toArray();
 
             foreach ($translations as $translation) {
                 $locale = $translation->locale;
@@ -65,7 +56,6 @@ class DatabaseTranslationLoader extends FileLoader
                 }
 
                 // Support nested keys with dot notation (e.g., "home.how_it_works")
-                // But since group.key is already split, the key might contain dots for nested values
                 $keys = explode('.', $key);
                 $ref = &$this->dbOverrides[$locale][$group];
                 
@@ -79,10 +69,12 @@ class DatabaseTranslationLoader extends FileLoader
                         $ref = &$ref[$k];
                     }
                 }
+
+                // Reset reference to avoid corruption across iterations
+                unset($ref);
             }
         } catch (\Throwable $e) {
-            $this->loadError = get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine();
-            $this->debugInfo['exception'] = $this->loadError;
+            // Silently fail if DB not available yet (e.g., during migration)
         }
 
         $this->dbLoaded = true;

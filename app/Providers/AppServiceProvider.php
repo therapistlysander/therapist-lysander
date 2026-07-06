@@ -8,10 +8,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public static bool $bootRan = false;
-    public static ?string $injectError = null;
-    public static array $injectDebug = [];
-
     /**
      * Register any application services.
      */
@@ -19,6 +15,14 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register GoogleCalendarService as singleton
         $this->app->singleton(\App\Services\GoogleCalendarService::class);
+
+        // Override translation loader to support database-driven UI translations
+        $this->app->singleton('translation.loader', function ($app) {
+            return new \App\Translation\DatabaseTranslationLoader(
+                $app['files'],
+                $app['path.lang']
+            );
+        });
     }
 
     /**
@@ -26,99 +30,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        self::$bootRan = true;
-
-        // Load DB translation overrides directly into the translator's cache
-        $this->injectDbTranslations();
-
         $this->configureDynamicMail();
         $this->registerBladeDirectives();
-    }
-
-    /**
-     * Load all UI translations from DB and merge them into
-     * the translator's loaded cache, bypassing the broken loader chain.
-     */
-    private function injectDbTranslations(): void
-    {
-        try {
-            if (!\Schema::hasTable('ui_translations')) {
-                self::$injectDebug['status'] = 'no_table';
-                return;
-            }
-
-            $dbTranslations = \App\Models\UiTranslation::all();
-            self::$injectDebug['db_count'] = $dbTranslations->count();
-
-            // Build nested arrays per locale
-            $overrides = [];
-            foreach ($dbTranslations as $t) {
-                $overrides[$t->locale][$t->group][$t->key] = $t->value;
-            }
-            self::$injectDebug['locales'] = array_keys($overrides);
-            self::$injectDebug['groups'] = array_keys($overrides['nl'] ?? []);
-
-            // Get the translator and inject into its loaded cache
-            $translator = app('translator');
-
-            // Try to find the loaded property (might be in parent class)
-            $loadedRef = null;
-            $class = new \ReflectionClass($translator);
-            while ($class) {
-                if ($class->hasProperty('loaded')) {
-                    $loadedRef = $class->getProperty('loaded');
-                    break;
-                }
-                $class = $class->getParentClass();
-            }
-
-            if (!$loadedRef) {
-                self::$injectDebug['error'] = 'loaded_property_not_found';
-                return;
-            }
-
-            $loadedRef->setAccessible(true);
-            $loaded = $loadedRef->getValue($translator);
-            self::$injectDebug['loaded_before'] = array_keys($loaded);
-
-            foreach ($overrides as $locale => $groups) {
-                foreach ($groups as $group => $keys) {
-                    if (!isset($loaded['*'][$group][$locale])) {
-                        $loaded['*'][$group][$locale] = [];
-                    }
-                    $loaded['*'][$group][$locale] = array_replace(
-                        $loaded['*'][$group][$locale],
-                        $keys
-                    );
-                }
-            }
-
-            $loadedRef->setValue($translator, $loaded);
-
-            // Verify - test basic set/get on the property
-            $testArr = $loaded;
-            $testArr['*']['_test'] = ['en' => ['hello' => 'WORLD']];
-            $loadedRef->setValue($translator, $testArr);
-            $readBack = $loadedRef->getValue($translator);
-            self::$injectDebug['test_readback'] = $readBack['*']['_test']['en']['hello'] ?? 'READBACK_FAILED';
-
-            // Now set the real loaded back
-            $loadedRef->setValue($translator, $loaded);
-
-            // Verify - capture exact structure
-            $loadedAfter = $loadedRef->getValue($translator);
-            self::$injectDebug['loaded_after_keys'] = array_keys($loadedAfter);
-            self::$injectDebug['ui_keys'] = array_keys($loadedAfter['*']['ui'] ?? []);
-            self::$injectDebug['nl_keys_sample'] = array_slice(array_keys($loadedAfter['*']['ui']['nl'] ?? []), 0, 5);
-            self::$injectDebug['nl_view_fees_value'] = $loadedAfter['*']['ui']['nl']['view_fees'] ?? 'NOT_SET';
-            self::$injectDebug['home_keys_from_db'] = array_keys($overrides['nl']['home'] ?? []);
-            self::$injectDebug['home_view_fees_from_db'] = $overrides['nl']['home']['view_fees'] ?? 'NOT_IN_OVERRIDES';
-            self::$injectDebug['status'] = 'success';
-
-        } catch (\Throwable $e) {
-            self::$injectError = get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine();
-            self::$injectDebug['exception'] = self::$injectError;
-        }
     }
 
     /**
