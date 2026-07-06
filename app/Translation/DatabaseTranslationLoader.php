@@ -15,12 +15,12 @@ class DatabaseTranslationLoader extends FileLoader
         // Load file-based translations first
         $fileTranslations = parent::load($locale, $group, $namespace);
 
-        // Only apply DB overrides for 'ui' group (our ui.php translations)
-        if ($group === 'ui' && $namespace === null) {
+        // Apply DB overrides for all groups (nav, home, booking, about, etc.)
+        if ($namespace === null) {
             $this->loadDbOverrides();
             
-            if (isset($this->dbOverrides[$locale])) {
-                return array_replace_recursive($fileTranslations, $this->dbOverrides[$locale]);
+            if (isset($this->dbOverrides[$locale][$group])) {
+                $fileTranslations = array_replace_recursive($fileTranslations, $this->dbOverrides[$locale][$group]);
             }
         }
 
