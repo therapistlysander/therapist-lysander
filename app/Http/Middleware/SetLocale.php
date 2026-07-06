@@ -26,20 +26,23 @@ class SetLocale
     {
         try {
             $translator = app('translator');
-            $loader = $translator->getLoader();
 
-            // Only swap if not already using our DB loader
-            if (!($loader instanceof \App\Translation\DatabaseTranslationLoader)) {
+            // Check if loader is already our DB loader via reflection
+            $loaderRef = new \ReflectionProperty($translator, 'loader');
+            $loaderRef->setAccessible(true);
+            $currentLoader = $loaderRef->getValue($translator);
+
+            if (!($currentLoader instanceof \App\Translation\DatabaseTranslationLoader)) {
                 $dbLoader = new \App\Translation\DatabaseTranslationLoader(
                     app('files'),
                     app()['path.lang']
                 );
-                $translator->setLoader($dbLoader);
+                $loaderRef->setValue($translator, $dbLoader);
 
-                // Clear translator's internal cache so it reloads with DB overrides
-                $ref = new \ReflectionProperty($translator, 'loaded');
-                $ref->setAccessible(true);
-                $ref->setValue($translator, []);
+                // Clear translator's internal loaded cache
+                $loadedRef = new \ReflectionProperty($translator, 'loaded');
+                $loadedRef->setAccessible(true);
+                $loadedRef->setValue($translator, []);
             }
         } catch (\Throwable $e) {
             // Silently fail
