@@ -168,11 +168,11 @@
             <label>End Time</label>
             <input type="time" name="default_end_time" value="{{ $config->default_end_time }}">
           </div>
-          <div class="config-field">
+          <div class="config-field" id="break-start-field" style="{{ !$config->break_start ? 'display:none;' : '' }}">
             <label>Break Start</label>
             <input type="time" name="break_start" id="break_start" value="{{ $config->break_start }}" {{ !$config->break_start ? 'disabled' : '' }}>
           </div>
-          <div class="config-field">
+          <div class="config-field" id="break-end-field" style="{{ !$config->break_end ? 'display:none;' : '' }}">
             <label>Break End</label>
             <input type="time" name="break_end" id="break_end" value="{{ $config->break_end }}" {{ !$config->break_end ? 'disabled' : '' }}>
           </div>
@@ -341,14 +341,20 @@
 @section('page_scripts')
 <script>
 function toggleBreak(checkbox) {
+  const startField = document.getElementById('break-start-field');
+  const endField = document.getElementById('break-end-field');
   const startInput = document.getElementById('break_start');
   const endInput = document.getElementById('break_end');
   if (checkbox.checked) {
+    startField.style.display = '';
+    endField.style.display = '';
     startInput.disabled = false;
     endInput.disabled = false;
     if (!startInput.value) startInput.value = '12:00';
     if (!endInput.value) endInput.value = '13:30';
   } else {
+    startField.style.display = 'none';
+    endField.style.display = 'none';
     startInput.disabled = true;
     endInput.disabled = true;
     startInput.value = '';
