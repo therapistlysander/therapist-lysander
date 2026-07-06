@@ -145,8 +145,20 @@ Route::get('/_debug_translations', function () {
         $results['manual_db_loader_error'] = $e->getMessage();
     }
 
-    // 5. Check what __() returns
-    $results['translation_nav_fees'] = __('ui.nav.fees');
+    // 5. Install DB loader manually and test
+    try {
+        $t = app('translator');
+        $dbLoader = new \App\Translation\DatabaseTranslationLoader(app('files'), app()['path.lang']);
+        $lRef = new \ReflectionProperty($t, 'loader');
+        $lRef->setAccessible(true);
+        $lRef->setValue($t, $dbLoader);
+        $loadedRef = new \ReflectionProperty($t, 'loaded');
+        $loadedRef->setAccessible(true);
+        $loadedRef->setValue($t, []);
+        $results['after_swap_nav_fees'] = __('ui.nav.fees');
+    } catch (\Throwable $e) {
+        $results['after_swap_error'] = $e->getMessage();
+    }
 
     return response()->json($results, 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 });
