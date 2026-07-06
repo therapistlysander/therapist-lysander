@@ -101,6 +101,8 @@ Route::get('/_diag/translations', function () {
         'resolved_en' => $enViewFees,
         'loaded_cache_keys' => $loadedCache,
         'boot_marker' => $bootMarker,
+        'inject_error' => \App\Providers\AppServiceProvider::$injectError,
+        'inject_debug' => \App\Providers\AppServiceProvider::$injectDebug,
         'current_locale' => app()->getLocale(),
         'lang_path' => app()->langPath(),
     ]);

@@ -9,6 +9,8 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     public static bool $bootRan = false;
+    public static ?string $injectError = null;
+    public static array $injectDebug = [];
 
     /**
      * Register any application services.
@@ -41,26 +43,46 @@ class AppServiceProvider extends ServiceProvider
     {
         try {
             if (!\Schema::hasTable('ui_translations')) {
+                self::$injectDebug['status'] = 'no_table';
                 return;
             }
 
             $dbTranslations = \App\Models\UiTranslation::all();
+            self::$injectDebug['db_count'] = $dbTranslations->count();
 
             // Build nested arrays per locale
             $overrides = [];
             foreach ($dbTranslations as $t) {
                 $overrides[$t->locale][$t->group][$t->key] = $t->value;
             }
+            self::$injectDebug['locales'] = array_keys($overrides);
+            self::$injectDebug['groups'] = array_keys($overrides['nl'] ?? []);
 
             // Get the translator and inject into its loaded cache
             $translator = app('translator');
-            $loadedRef = new \ReflectionProperty($translator, 'loaded');
+
+            // Try to find the loaded property (might be in parent class)
+            $loadedRef = null;
+            $class = new \ReflectionClass($translator);
+            while ($class) {
+                if ($class->hasProperty('loaded')) {
+                    $loadedRef = $class->getProperty('loaded');
+                    break;
+                }
+                $class = $class->getParentClass();
+            }
+
+            if (!$loadedRef) {
+                self::$injectDebug['error'] = 'loaded_property_not_found';
+                return;
+            }
+
             $loadedRef->setAccessible(true);
             $loaded = $loadedRef->getValue($translator);
+            self::$injectDebug['loaded_before'] = array_keys($loaded);
 
             foreach ($overrides as $locale => $groups) {
                 foreach ($groups as $group => $keys) {
-                    // Merge DB values into the translator's loaded cache
                     if (!isset($loaded['*'][$group][$locale])) {
                         $loaded['*'][$group][$locale] = [];
                     }
@@ -72,9 +94,16 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $loadedRef->setValue($translator, $loaded);
+
+            // Verify
+            $loadedAfter = $loadedRef->getValue($translator);
+            self::$injectDebug['loaded_after_keys'] = array_keys($loadedAfter);
+            self::$injectDebug['nl_ui_view_fees'] = $loadedAfter['*']['ui']['nl']['view_fees'] ?? 'NOT_SET';
+            self::$injectDebug['status'] = 'success';
+
         } catch (\Throwable $e) {
-            // Log but don't break the app
-            report($e);
+            self::$injectError = get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine();
+            self::$injectDebug['exception'] = self::$injectError;
         }
     }
 
