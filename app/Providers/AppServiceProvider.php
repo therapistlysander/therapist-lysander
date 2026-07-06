@@ -95,6 +95,16 @@ class AppServiceProvider extends ServiceProvider
 
             $loadedRef->setValue($translator, $loaded);
 
+            // Verify - test basic set/get on the property
+            $testArr = $loaded;
+            $testArr['*']['_test'] = ['en' => ['hello' => 'WORLD']];
+            $loadedRef->setValue($translator, $testArr);
+            $readBack = $loadedRef->getValue($translator);
+            self::$injectDebug['test_readback'] = $readBack['*']['_test']['en']['hello'] ?? 'READBACK_FAILED';
+
+            // Now set the real loaded back
+            $loadedRef->setValue($translator, $loaded);
+
             // Verify - capture exact structure
             $loadedAfter = $loadedRef->getValue($translator);
             self::$injectDebug['loaded_after_keys'] = array_keys($loadedAfter);
