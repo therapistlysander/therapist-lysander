@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // Update global booking config
         DB::table('booking_config')->update([
-            'slot_duration'      => 60,
+            'slot_duration'      => 30,
             'default_start_time' => '09:00',
             'default_end_time'   => '16:00',
             'break_start'        => '12:00',
