@@ -16,7 +16,34 @@ class SetLocale
         $request->session()->put('locale', $locale);
         URL::defaults(['locale' => $locale]);
 
+        // Swap in DatabaseTranslationLoader for DB-driven UI translations
+        $this->installDatabaseTranslationLoader();
+
         return $next($request);
+    }
+
+    private function installDatabaseTranslationLoader(): void
+    {
+        try {
+            $translator = app('translator');
+            $loader = $translator->getLoader();
+
+            // Only swap if not already using our DB loader
+            if (!($loader instanceof \App\Translation\DatabaseTranslationLoader)) {
+                $dbLoader = new \App\Translation\DatabaseTranslationLoader(
+                    app('files'),
+                    app()['path.lang']
+                );
+                $translator->setLoader($dbLoader);
+
+                // Clear translator's internal cache so it reloads with DB overrides
+                $ref = new \ReflectionProperty($translator, 'loaded');
+                $ref->setAccessible(true);
+                $ref->setValue($translator, []);
+            }
+        } catch (\Throwable $e) {
+            // Silently fail
+        }
     }
 
     private function detectLocale(Request $request): string
