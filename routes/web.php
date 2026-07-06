@@ -150,6 +150,12 @@ Route::get('/_debug_translations', function () {
         $t = app('translator');
         $results['current_locale'] = app()->getLocale();
         $dbLoader = new \App\Translation\DatabaseTranslationLoader(app('files'), app()['path.lang']);
+
+        // Direct test of what the loader returns
+        $loaderResult = $dbLoader->load('nl', 'nav');
+        $results['loader_returns_fees'] = $loaderResult['fees'] ?? 'NOT FOUND';
+
+        // Set loader and clear cache
         $lRef = new \ReflectionProperty($t, 'loader');
         $lRef->setAccessible(true);
         $lRef->setValue($t, $dbLoader);
@@ -157,23 +163,23 @@ Route::get('/_debug_translations', function () {
         $loadedRef->setAccessible(true);
         $loadedRef->setValue($t, []);
 
-        // Direct loader test
-        $directLoad = $dbLoader->load(app()->getLocale(), 'nav');
-        $results['direct_loader_fees'] = $directLoad['fees'] ?? 'NOT FOUND';
-
-        // Now test __()
+        // Now test __() - this should trigger the loader
         $results['after_swap_nav_fees'] = __('ui.nav.fees');
 
-        // Check what was loaded
-        $loadedRef2 = new \ReflectionProperty($t, 'loaded');
-        $loadedRef2->setAccessible(true);
-        $loaded2 = $loadedRef2->getValue($t);
-        $results['loaded_after_call'] = array_keys($loaded2);
-        if (isset($loaded2['*']['nav'][app()->getLocale()])) {
-            $results['loaded_nav_fees'] = $loaded2['*']['nav'][app()->getLocale()]['fees'] ?? 'NOT IN CACHE';
+        // Check what got cached
+        $loaded2 = $loadedRef->getValue($t);
+        if (isset($loaded2['ui']['nav']['nl']['fees'])) {
+            $results['cached_fees'] = $loaded2['ui']['nav']['nl']['fees'];
+        } else {
+            $results['cached_structure'] = [];
+            foreach ($loaded2 as $ns => $groups) {
+                foreach ($groups as $g => $locales) {
+                    $results['cached_structure'][] = "$ns.$g." . implode(',', array_keys($locales));
+                }
+            }
         }
     } catch (\Throwable $e) {
-        $results['after_swap_error'] = $e->getMessage() . ' at line ' . $e->getLine();
+        $results['after_swap_error'] = $e->getMessage() . ' at line ' . $e->getLine() . ': ' . $e->getTraceAsString();
     }
 
     return response()->json($results, 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
