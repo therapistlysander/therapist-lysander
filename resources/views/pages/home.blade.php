@@ -212,7 +212,7 @@
       @endforeach
     </div>
     <div style="margin-top:var(--space-8);text-align:left;">
-      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($process?->content['cta_url'] ?? null) }}" class="btn btn--outline-white">{{ $process?->content['cta_label'] ?? __('ui.home.view_fees') }}</a>
+      <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($process?->content['cta_url'] ?? null) }}" class="btn btn--outline-white">{{ __('ui.home.view_fees') }}</a>
     </div>
   </div>
 </section>
