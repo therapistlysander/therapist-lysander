@@ -80,6 +80,7 @@ Route::get('/_diag/translations', function () {
         $hasDbOverrides = !empty($overrides);
         $dbOverrideValue = $overrides['nl']['ui']['home']['view_fees'] ?? 'NOT FOUND in overrides';
         $dbLoadError = $internalLoader->loadError;
+        $dbDebugInfo = $internalLoader->debugInfo;
     }
 
     // Check AppServiceProvider boot marker
@@ -94,6 +95,7 @@ Route::get('/_diag/translations', function () {
         'db_row_count' => $dbCount,
         'has_db_overrides' => $hasDbOverrides,
         'db_load_error' => $dbLoadError,
+        'db_debug_info' => $dbDebugInfo ?? null,
         'db_override_nl_view_fees' => $dbOverrideValue,
         'resolved_nl' => $nlViewFees,
         'resolved_en' => $enViewFees,
