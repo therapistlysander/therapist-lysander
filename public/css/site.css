@@ -1720,11 +1720,22 @@ strong { font-weight: 600; }
 }
 .ts-slide__icon {
   font-family: Georgia, serif;
-  font-size: 3.5rem;
+  font-size: 4rem;
   line-height: 1;
   color: var(--color-teal-light);
-  margin-bottom: var(--space-2);
   user-select: none;
+}
+.ts-slide__icon--open {
+  margin-bottom: var(--space-2);
+  display: block;
+}
+.ts-slide__icon--close {
+  display: inline;
+  font-size: 2.5rem;
+  line-height: 0;
+  vertical-align: middle;
+  margin-left: 4px;
+  color: var(--color-teal-light);
 }
 .ts-slide__quote {
   font-size: var(--size-lg);
