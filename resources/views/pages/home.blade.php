@@ -232,9 +232,8 @@
       <div class="ts-slider__track">
         @foreach($sliderTestimonials as $i => $t)
         <div class="ts-slide {{ $i === 0 ? 'ts-slide--active' : '' }}" role="group" aria-roledescription="slide" aria-label="{{ $i + 1 }} of {{ $sliderCount }}">
-          <span class="ts-slide__icon ts-slide__icon--open" aria-hidden="true">&ldquo;</span>
+          <span class="ts-slide__icon" aria-hidden="true">&ldquo;</span>
           <blockquote class="ts-slide__quote">{!! $t->short_description ?: ($t->body ?: ($t->quote ?: $t->headline)) !!}</blockquote>
-          <span class="ts-slide__icon ts-slide__icon--close" aria-hidden="true">&rdquo;</span>
           <p class="ts-slide__name">&mdash; {{ $t->client_name }}</p>
         </div>
         @endforeach
