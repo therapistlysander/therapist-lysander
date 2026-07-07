@@ -171,11 +171,12 @@
             <div class="repeater" data-field="items" data-locale="{{ $locale }}">
               @php
                 $itemHasDesc = collect($lc['items'] ?? [])->contains(fn($i) => !empty($i['description'] ?? ''));
-                $itemHasHeading = collect($lc['items'] ?? [])->contains(fn($i) => isset($i['heading']) || isset($i['tab_label']));
+                // Show tab_label + heading fields when items have descriptions (approach tabs pattern)
+                $showTabFields = $itemHasDesc;
               @endphp
               @foreach($lc['items'] ?? [] as $i => $item)
               <div class="repeater-row" style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;">
-                @if($itemHasHeading)
+                @if($showTabFields)
                 <div style="display:grid;grid-template-columns:120px 1fr;gap:8px;margin-bottom:6px;">
                   <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][tab_label]" class="admin-input" value="{{ $item['tab_label'] ?? '' }}" placeholder="Tab label (short)">
                   <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][heading]" class="admin-input" value="{{ $item['heading'] ?? '' }}" placeholder="Section heading">
