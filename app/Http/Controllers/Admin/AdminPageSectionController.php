@@ -198,6 +198,12 @@ class AdminPageSectionController extends Controller
             }
 
             $section->setTranslation('content', $locale, $content);
+
+            // Temporary debug logging
+            \Log::info("Section {$section->section_key} [$locale] saved", [
+                'items_count' => count($content['items'] ?? []),
+                'first_item' => $content['items'][0] ?? null,
+            ]);
         }
 
         // ── Image handling (shared across locales — stored in English content) ──
