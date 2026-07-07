@@ -171,33 +171,44 @@
             <div class="repeater" data-field="items" data-locale="{{ $locale }}">
               @php
                 $itemHasDesc = collect($lc['items'] ?? [])->contains(fn($i) => !empty($i['description'] ?? ''));
-                // Show tab_label + heading fields when items have descriptions (approach tabs pattern)
+                // Show tab fields when items have descriptions (approach tabs pattern)
                 $showTabFields = $itemHasDesc;
               @endphp
               @foreach($lc['items'] ?? [] as $i => $item)
-              <div class="repeater-row" style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;position:relative;">
+              <div class="repeater-row item-card" style="border:1px solid #d1d5db;border-radius:10px;padding:16px;margin-bottom:12px;background:#fafbfc;position:relative;">
                 @if($showTabFields)
-                <div style="display:grid;grid-template-columns:120px 1fr;gap:8px;margin-bottom:6px;">
-                  <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][tab_label]" class="admin-input" value="{{ $item['tab_label'] ?? '' }}" placeholder="Tab label (short)">
-                  <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][heading]" class="admin-input" value="{{ $item['heading'] ?? '' }}" placeholder="Section heading">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                  <div>
+                    <label style="display:block;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Tab Title</label>
+                    <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][title]" class="admin-input" value="{{ $item['title'] ?? '' }}" placeholder="e.g. CGT, ACT">
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Tab Heading</label>
+                    <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][heading]" class="admin-input" value="{{ $item['heading'] ?? '' }}" placeholder="e.g. Schematherapie">
+                  </div>
+                </div>
+                <div style="margin-bottom:4px;">
+                  <label style="display:block;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">Tab Content</label>
+                  <textarea name="translations[{{ $locale }}][items][{{ $i }}][description]" class="admin-input" rows="3" placeholder="Tab description text..." style="resize:vertical;">{{ $item['description'] ?? '' }}</textarea>
+                </div>
+                @else
+                <div style="display:grid;grid-template-columns:1fr 32px;gap:8px;align-items:center;">
+                  <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][title]" class="admin-input" value="{{ $item['title'] ?? '' }}" placeholder="Title">
                 </div>
                 @endif
-                <div style="display:grid;grid-template-columns:{{ $itemHasDesc ? '1fr 1fr' : '1fr' }} 32px;gap:8px;align-items:center;">
-                  <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][title]" class="admin-input" value="{{ $item['title'] ?? '' }}" placeholder="Title">
-                  @if($itemHasDesc)
-                  <input type="text" name="translations[{{ $locale }}][items][{{ $i }}][description]" class="admin-input" value="{{ $item['description'] ?? '' }}" placeholder="Description">
-                  @endif
-                  @if(!empty($item['key'] ?? ''))
-                  <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][key]" value="{{ $item['key'] }}">
-                  @endif
-                  @if(!empty($item['label'] ?? ''))
-                  <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][label]" value="{{ $item['label'] }}">
-                  @endif
-                  @if(!empty($item['value'] ?? ''))
-                  <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][value]" value="{{ $item['value'] }}">
-                  @endif
-                  <button type="button" class="repeater-remove" title="Remove">&times;</button>
-                </div>
+                @if(!empty($item['key'] ?? ''))
+                <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][key]" value="{{ $item['key'] }}">
+                @endif
+                @if(!empty($item['label'] ?? ''))
+                <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][label]" value="{{ $item['label'] }}">
+                @endif
+                @if(!empty($item['value'] ?? ''))
+                <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][value]" value="{{ $item['value'] }}">
+                @endif
+                @if(!empty($item['tab_label'] ?? ''))
+                <input type="hidden" name="translations[{{ $locale }}][items][{{ $i }}][tab_label]" value="{{ $item['tab_label'] }}">
+                @endif
+                <button type="button" class="repeater-remove" style="position:absolute;top:10px;right:10px;" title="Remove">&times;</button>
               </div>
               @endforeach
               <button type="button" class="repeater-add btn-admin btn-admin--outline" data-field="items" data-fields="title{{ $itemHasDesc ? ',description' : '' }}" data-cols="{{ $itemHasDesc ? '1fr 1fr' : '1fr' }} 32px" data-locale="{{ $locale }}" style="font-size:12px;margin-top:4px;">+ Add item</button>
