@@ -1720,22 +1720,22 @@ strong { font-weight: 600; }
 }
 .ts-slide__icon {
   font-family: Georgia, serif;
-  font-size: 4rem;
+  font-size: 4.5rem;
   line-height: 1;
-  color: var(--color-teal-light);
+  color: var(--color-accent-light);
   user-select: none;
 }
 .ts-slide__icon--open {
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
   display: block;
 }
 .ts-slide__icon--close {
   display: inline;
-  font-size: 2.5rem;
+  font-size: 3rem;
   line-height: 0;
   vertical-align: middle;
   margin-left: 4px;
-  color: var(--color-teal-light);
+  color: var(--color-accent-light);
 }
 .ts-slide__quote {
   font-size: var(--size-lg);
