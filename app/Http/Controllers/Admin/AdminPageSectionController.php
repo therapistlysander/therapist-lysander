@@ -124,7 +124,7 @@ class AdminPageSectionController extends Controller
         // Array/repeater schemas
         $arraySchemas = [
             'steps'  => ['title', 'description', 'duration', 'badge'],
-            'items'  => ['title', 'description', 'key', 'label', 'value'],
+            'items'  => ['title', 'description', 'key', 'label', 'value', 'tab_label', 'heading'],
             'cards'  => ['title', 'subtitle', 'description'],
             'stats'  => ['value', 'label'],
             'groups' => ['title'],

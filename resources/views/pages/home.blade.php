@@ -164,12 +164,12 @@
     @endphp
     <div class="approach-tabs" role="tablist" aria-label="Therapeutic approaches">
       @foreach($approachItems as $i => $approach)
-      <button class="approach-tab {{ $i === 0 ? 'active' : '' }}" role="tab" aria-selected="{{ $i === 0 ? 'true' : 'false' }}" data-panel="{{ $approach['key'] ?? Str::slug($approach['title']) }}">{{ Str::before($approach['title'], ' (') ?: $approach['title'] }}</button>
+      <button class="approach-tab {{ $i === 0 ? 'active' : '' }}" role="tab" aria-selected="{{ $i === 0 ? 'true' : 'false' }}" data-panel="{{ $approach['key'] ?? Str::slug($approach['title']) }}">{{ $approach['tab_label'] ?? (Str::before($approach['title'], ' (') ?: $approach['title']) }}</button>
       @endforeach
     </div>
     @foreach($approachItems as $i => $approach)
     <div class="approach-panel {{ $i === 0 ? 'active' : '' }} fade-in" id="panel-{{ $approach['key'] ?? Str::slug($approach['title']) }}" role="tabpanel">
-      <h3>{{ $approach['title'] }}</h3>
+      <h3>{{ $approach['heading'] ?? $approach['title'] }}</h3>
       <p>{{ $approach['description'] }}</p>
     </div>
     @endforeach
