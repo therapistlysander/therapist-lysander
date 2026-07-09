@@ -46,7 +46,7 @@
 
   .faq-cta { background: var(--color-bg-dark); border-radius: var(--radius-md); padding: var(--space-6) var(--space-8); display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); margin-top: var(--space-10); max-width: 100%; overflow: hidden; }
   .faq-cta h3 { color: var(--color-white); margin-bottom: var(--space-2); }
-  .faq-cta p { color: rgba(255,255,255,0.65); font-size: var(--size-sm); margin: 0; }
+  .faq-cta p { color: rgba(255,255,255,0.7); font-size: var(--size-base); margin: 0; }
 
   @media (max-width: 860px) {
     .faq-page-grid { grid-template-columns: minmax(0, 1fr); }

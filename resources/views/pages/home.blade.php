@@ -302,12 +302,7 @@
     <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.common.ready_to_begin') }}</span>
     <h2>{{ $ctaBottom?->content['heading'] ?? __('ui.common.ready_to_begin_subtitle') }}</h2>
     <p>{!! $ctaBottom?->content['body'] ?? "Whether you're struggling with trauma, anxiety, depression, or simply feeling stuck — I'm here. The first conversation is free and without commitment." !!}</p>
-    @if(!empty($ctaBottom?->content['additional_text']))
-    <p style="margin-top:var(--space-2);font-size:var(--size-sm);color:rgba(255,255,255,0.8);">{{ $ctaBottom?->content['additional_text'] }}</p>
-    @else
-    <p style="margin-top:var(--space-2);font-size:var(--size-sm);color:rgba(255,255,255,0.8);">{{ __('ui.common.ready_to_begin_additional') }}</p>
-    @endif
-    <div class="cta-section__actions">
+    <div class="cta-section__actions" style="margin-top:var(--space-8);">
       <a href="{{ \App\Providers\AppServiceProvider::localizeUrl($ctaBottom?->content['cta_primary_url'] ?? null) }}" class="btn btn--primary btn--lg">{{ $ctaBottom?->content['cta_primary_label'] ?? __('ui.common.book_intro_call') }}</a>
     </div>
   </div>

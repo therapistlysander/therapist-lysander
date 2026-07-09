@@ -867,7 +867,7 @@ strong { font-weight: 600; }
   color: var(--color-teal);
   letter-spacing: 0.05em;
   font-weight: 500;
-  margin-top: var(--space-5);
+  margin-top: var(--space-8);
 }
 
 /* --- Testimonial carousel --- */
@@ -982,7 +982,7 @@ strong { font-weight: 600; }
 .testimonial-long__text p + p { margin-top: var(--space-4); }
 .testimonial-long__text strong { color: var(--color-text); font-weight: 600; }
 .testimonial-long__sig {
-  margin-top: var(--space-4);
+  margin-top: var(--space-6);
   font-family: var(--font-heading);
   font-size: var(--size-lg);
   color: var(--color-accent);
@@ -1672,6 +1672,18 @@ strong { font-weight: 600; }
   .nav__mobile { top: 56px; }
   .hero { padding-top: 56px; }
   .page-hero { padding-top: calc(56px + var(--space-6)); }
+}
+
+/* --- Desktop: slightly larger eyebrow / section labels --- */
+@media (min-width: 769px) {
+  .section-label,
+  .hero__eyebrow,
+  .page-hero__eyebrow {
+    font-size: 0.8125rem;
+  }
+  .trauma-types {
+    max-width: 620px;
+  }
 }
 
 /* Landscape mobile — keep hero compact */
