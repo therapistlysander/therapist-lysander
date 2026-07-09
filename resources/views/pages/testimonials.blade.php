@@ -7,7 +7,7 @@
 @php
   $hero      = $sections['testimonials_hero'] ?? null;
   $cta       = $sections['testimonials_cta'] ?? null;
-  $heroImage = $hero?->content['image'] ?? '/images/testimonials-v2-top.png';
+  $heroImage = $hero?->content['image'] ?? '/images/1cea4c553e34803a-a3c153_bbf1019446e34069a3b96c18f172e810-mv2.jpg';
 @endphp
 
 @section('page_styles')
