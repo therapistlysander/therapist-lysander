@@ -241,7 +241,7 @@
         @foreach($testimonials as $t)
         <div class="testimonial-card fade-in">
           <div class="testimonial-card__quote-mark">&ldquo;</div>
-          <p class="testimonial-card__text">{{ $t->body ? Str::limit(strip_tags($t->body), 120) : ($t->headline ?? $t->short_description ?? '') }}</p>
+          <p class="testimonial-card__text">{{ $t->body ? strip_tags($t->body) : ($t->headline ?? $t->short_description ?? '') }}</p>
           <div class="testimonial-card__divider"></div>
           <p class="testimonial-card__name">&mdash; {{ $t->client_name }}</p>
           <p class="testimonial-card__role">Client</p>
