@@ -121,7 +121,7 @@
           </div>
         </div>
         <div class="grid-2__media">
-          <img src="{{ $emdr?->content['image'] ?? '/images/4e854682cd76d19d-30f861_eb190602eba243f586aac2f6026db98b-mv2.jpg' }}" alt="Calm landscape" loading="lazy" width="600" height="740">
+          <img src="{{ $emdr?->content['image'] ?? '/images/ff96a9dc8ea72c2c-11062b_aa33e58c18774e7db74c68e74a6c231e-mv2.jpg' }}" alt="Misty mountain landscape" loading="lazy" width="600" height="740">
         </div>
       </div>
     </div>
@@ -131,7 +131,7 @@
     <div class="container">
       <div class="grid-2 fade-in" style="gap:var(--space-4);">
         <div class="grid-2__media" style="order:-1;margin-top:var(--space-2);">
-          <img src="{{ $why?->content['image'] ?? '/images/24946176bc4178fd-d0220c_d40feae8ad4e4961b519d527fe1eb369-mv2_d_1440_1920_s_2.jpg' }}" alt="Lysander Verschuur, Psychologist" loading="lazy" width="600" height="750">
+          <img src="{{ $why?->content['image'] ?? '/images/8d05ae73f3a7dbe5-11062b_a417184e892349f89eb10b97fd3d5a91-mv2.jpg' }}" alt="Warm therapeutic space" loading="lazy" width="600" height="750">
         </div>
         <div>
           <span class="section-label">{{ __('ui.approach.my_perspective') }}</span>
