@@ -52,10 +52,10 @@
 
 <section class="section section--white" aria-labelledby="process-heading">
   <div class="container">
-    <div class="section-header fade-in" style="text-align:center;">
+    <div class="section-header fade-in">
       <span class="section-label">{{ __('ui.fees.what_to_expect') }}</span>
       <h2 id="process-heading" class="section-title">{{ $process?->content['heading'] ?? 'What to Expect' }}</h2>
-      <p style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;margin:0 auto;">{{ $process?->content['subheading'] ?? 'Therapy begins with a free introductory call, followed by an introduction call where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.' }}</p>
+      <p style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;">{{ $process?->content['subheading'] ?? 'Therapy begins with a free introductory call, followed by an introduction call where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.' }}</p>
     </div>
     @php $processSteps = $process?->content['steps'] ?? [
       ['title'=>__('ui.fees.process_free_title'),'description'=>__('ui.fees.process_free_desc'),'duration'=>__('ui.fees.process_free_duration'),'badge'=>__('ui.common.free')],

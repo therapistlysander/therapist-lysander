@@ -80,7 +80,7 @@
 
   <section class="section section--white" aria-labelledby="treatment-heading">
     <div class="container">
-      <div class="section-header fade-in" style="text-align:center;">
+      <div class="section-header fade-in">
         <span class="section-label">{{ __('ui.approach.treatment_label') }}</span>
         <h2 id="treatment-heading" class="section-title">{{ $treatments?->content['heading'] ?? 'Trauma-focused treatment' }}</h2>
       </div>

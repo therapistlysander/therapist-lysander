@@ -17,7 +17,7 @@ return [
         'contact'           => 'Contact',
         'booking_cta'       => 'Book a Free 30-Min Intro Call',
         'toggle_menu'       => 'Toggle menu',
-        'identity_title'    => 'Psychologist &amp; Trauma Therapist',
+        'identity_title'    => 'Psychologist & Trauma Therapist',
         'main_navigation'   => 'Main navigation',
         'mobile_navigation' => 'Mobile navigation',
     ],
@@ -35,7 +35,7 @@ return [
         'book_intro_call'   => 'Book a Free Intro Call',
         'online_worldwide'  => 'Online sessions worldwide',
         'all_rights'        => 'All rights reserved.',
-        'psychotherapy'     => 'Psychotherapy &amp; Trauma Therapy',
+        'psychotherapy'     => 'Psychotherapy & Trauma Therapy',
     ],
 
     /*
@@ -44,7 +44,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'layout' => [
-        'default_title'       => 'Therapist Lysander | Psychologist &amp; Trauma Therapist',
+        'default_title'       => 'Therapist Lysander | Psychologist & Trauma Therapist',
         'default_description' => 'Online therapy for adults struggling with trauma, PTSD, anxiety, self-worth difficulties, and emotional overwhelm.',
     ],
 

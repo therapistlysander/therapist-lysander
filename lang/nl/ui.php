@@ -17,7 +17,7 @@ return [
         'contact'           => 'Contact',
         'booking_cta'       => 'Boek een Gratis Kennismakingsgesprek',
         'toggle_menu'       => 'Menu openen/sluiten',
-        'identity_title'    => 'Psycholoog &amp; Traumatherapeut',
+        'identity_title'    => 'Psycholoog & Traumatherapeut',
         'main_navigation'   => 'Hoofdnavigatie',
         'mobile_navigation' => 'Mobiele navigatie',
     ],
@@ -35,7 +35,7 @@ return [
         'book_intro_call'   => 'Gratis Kennismakingsgesprek',
         'online_worldwide'  => 'Online sessies wereldwijd',
         'all_rights'        => 'Alle rechten voorbehouden.',
-        'psychotherapy'     => 'Psychotherapie &amp; Traumatherapie',
+        'psychotherapy'     => 'Psychotherapie & Traumatherapie',
     ],
 
     /*
@@ -44,7 +44,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'layout' => [
-        'default_title'       => 'Therapist Lysander | Psycholoog &amp; Traumatherapeut',
+        'default_title'       => 'Therapist Lysander | Psycholoog & Traumatherapeut',
         'default_description' => 'Online therapie voor volwassenen die worstelen met trauma, PTSS, angst, eigenwaarde-problemen en emotionele overweldiging.',
     ],
 

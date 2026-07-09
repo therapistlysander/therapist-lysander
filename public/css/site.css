@@ -1018,9 +1018,9 @@ strong { font-weight: 600; }
 }
 .quote-block p {
   font-family: var(--font-heading);
-  font-size: clamp(var(--size-lg), 2vw, var(--size-xl));
+  font-size: clamp(var(--size-base), 1.8vw, var(--size-lg));
   color: var(--color-accent-dark);
-  line-height: 1.4;
+  line-height: 1.35;
   font-style: italic;
 }
 
@@ -1338,7 +1338,7 @@ strong { font-weight: 600; }
   margin: 0 auto var(--space-3);
 }
 .page-hero__text {
-  font-size: var(--size-lg);
+  font-size: var(--size-md);
   color: var(--color-text-muted);
   max-width: 560px;
   margin: 0 auto;
@@ -1408,8 +1408,8 @@ strong { font-weight: 600; }
   justify-content: center;
   font-size: var(--size-sm);
   color: rgba(255,255,255,0.55);
-  padding: var(--space-2) 0;
-  min-height: 44px;
+  padding: var(--space-1) 0;
+  min-height: 36px;
   transition: color var(--transition);
 }
 .footer__col a:hover { color: var(--color-white); }
@@ -1547,14 +1547,15 @@ strong { font-weight: 600; }
   .t-carousel__track { grid-template-columns: minmax(0, 1fr); }
   .stats { gap: var(--space-6); }
   .stats__item { flex: 1 1 0; min-width: 0; }
-  .footer__grid { grid-template-columns: minmax(0, 1fr); text-align: center; }
-  .footer__bottom { flex-wrap: wrap; justify-content: center; padding-bottom: var(--space-4); }
+  .footer__grid { grid-template-columns: minmax(0, 1fr); text-align: center; gap: var(--space-4); }
+  .footer__bottom { flex-wrap: wrap; justify-content: center; padding-bottom: var(--space-3); gap: var(--space-2); }
+  .footer__col a { padding: var(--space-1) 0; min-height: 32px; }
   .time-slots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero__actions { flex-direction: column; }
   .hero__actions .btn { justify-content: center; width: 100%; white-space: normal; text-align: center; line-height: 1.4; }
   .cta-section__actions { flex-direction: column; align-items: center; }
   .cta-section__actions .btn { width: 100%; max-width: 100%; justify-content: center; white-space: normal; text-align: center; line-height: 1.3; font-size: 0.9rem; padding: var(--space-3) var(--space-4); }
-  .btn--lg { padding: var(--space-4) var(--space-8); font-size: var(--size-sm); }
+  .btn--lg { padding: var(--space-3) var(--space-6); font-size: 0.8rem; }
   .btn--whatsapp { width: 100%; justify-content: center; white-space: normal; text-align: center; font-size: var(--size-xs); letter-spacing: 0.05em; padding: var(--space-4) var(--space-4); }
   .whatsapp-cta { padding: var(--space-6) var(--space-4); }
   .page-hero { padding: calc(72px + var(--space-6)) 0 var(--space-6); }
@@ -1575,7 +1576,7 @@ strong { font-weight: 600; }
     max-height: 240px;
   }
   .hero__image img {
-    object-position: center 20%;
+    object-position: center 28%;
   }
   .hero__eyebrow {
     font-size: 0.75rem;
@@ -1611,7 +1612,7 @@ strong { font-weight: 600; }
   }
   .hero__subtitle {
     font-size: var(--size-sm);
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-4);
   }
   .hero__actions {
     gap: var(--space-2);
@@ -1652,6 +1653,30 @@ strong { font-weight: 600; }
 
   /* Footer center-alignment on mobile */
   .footer__grid { grid-template-columns: minmax(0, 1fr); }
+
+  /* Testimonials slider compactness */
+  .ts-slider__track { min-height: 160px; }
+  .ts-slide { padding: var(--space-4) var(--space-3); }
+  .ts-slide__quote { font-size: var(--size-base); margin-bottom: var(--space-3); }
+  .ts-slide__icon { font-size: 2.5rem; margin-bottom: var(--space-1); }
+  .ts-slider__controls { margin-top: var(--space-2); }
+
+  /* Endorsement card mobile spacing */
+  .endorsement-card { padding: var(--space-6); }
+  .endorsement-card__heading { margin-bottom: var(--space-6); }
+  .endorsement-card__quote { line-height: 1.45; font-size: var(--size-base); }
+  .endorsement-card__attribution { margin-top: var(--space-8); }
+
+  /* Section header reduced margin on mobile */
+  .section-header { margin-bottom: var(--space-6); }
+
+  /* Trauma types reduced top spacing */
+  .trauma-types { margin-top: var(--space-4); }
+
+  /* Footer brand compact */
+  .footer__brand { margin-bottom: var(--space-6); }
+  .footer__brand-tagline { margin-bottom: var(--space-2); }
+  .footer { padding: var(--space-6) 0 var(--space-3); }
 }
 
 /* Extra-small screens (< 380px) */

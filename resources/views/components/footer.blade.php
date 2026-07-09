@@ -26,7 +26,6 @@
         <a href="mailto:therapistlysander@gmail.com">therapistlysander@gmail.com</a>
         <a href="https://wa.me/66935309052" target="_blank" rel="noopener noreferrer">WhatsApp: +66 93 530 9052</a>
         <a href="{{ route('booking') }}">{{ __('ui.footer.book_intro_call') }}</a>
-        <p style="color:rgba(255,255,255,0.4);font-size:var(--size-xs);margin-top:var(--space-3);">{{ __('ui.footer.online_worldwide') }}</p>
       </div>
     </div>
     <div class="footer__bottom">
