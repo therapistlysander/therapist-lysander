@@ -117,7 +117,7 @@
 </section>
 
 <!-- What Therapy With Me Is Like -->
-<section class="section section--alt" aria-label="What therapy with me is like">
+<section class="section section--white" aria-label="What therapy with me is like">
   <div class="container">
     <div class="fade-in" style="max-width:var(--max-w-text);">
       <span class="section-label">{{ $therapyApproach?->content['subheading'] ?? __('ui.home.therapy_approach_label') }}</span>
@@ -146,7 +146,7 @@
 </section>
 
 <!-- Therapeutic approaches -->
-<section class="section section--white" id="approaches" aria-labelledby="approaches-heading">
+<section class="section section--alt" id="approaches" aria-labelledby="approaches-heading">
   <div class="container">
     <div class="section-header fade-in">
       <span class="section-label">{{ __('ui.home.methods_label') }}</span>
