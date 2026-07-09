@@ -114,6 +114,7 @@ class BookingSubmitController extends Controller
 
     /**
      * Check if the requested slot conflicts with Google Calendar.
+     * Checks all configured availability calendars (multi-calendar support).
      * Fails open: returns false if Google is unavailable.
      */
     private function checkGoogleCalendarConflict(string $preferredDate): bool
@@ -130,7 +131,24 @@ class BookingSubmitController extends Controller
             $slotStart = Carbon::parse($preferredDate);
             $slotEnd = $slotStart->copy()->addMinutes($config->slot_duration);
 
-            return $calendar->isSlotBusy($slotStart, $slotEnd, $token->calendar_id);
+            // Check across all availability calendars (Therapist + Personal, etc.)
+            $calendarIds = $token->getAvailabilityCalendarIds();
+            $busySlots = $calendar->getBusySlotsForCalendars(
+                $slotStart->copy()->startOfDay(),
+                $slotEnd->copy()->endOfDay(),
+                $calendarIds
+            );
+
+            foreach ($busySlots as $busy) {
+                $busyStart = $busy['start_dt'];
+                $busyEnd = $busy['end_dt'];
+
+                if ($slotStart < $busyEnd && $slotEnd > $busyStart) {
+                    return true;
+                }
+            }
+
+            return false;
         } catch (\Throwable $e) {
             Log::warning("GoogleCalendar: Busy check failed, allowing booking: {$e->getMessage()}");
             return false; // Fail open

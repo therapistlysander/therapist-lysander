@@ -378,7 +378,7 @@
         <div class="field-group" style="margin-bottom: 24px;">
           <label style="font-weight: 600; margin-bottom: 4px;">Availability Calendars <span style="font-weight: 400; color: #9ca3af; font-size: 12px;">— check busy times across these (read-only)</span></label>
           <p style="font-size: 12px; color: #6b7280; margin-bottom: 12px;">
-            Select all calendars to check for conflicts. Busy times from any selected calendar will block booking slots. No event details are read — only free/busy status.
+            Select the calendars whose busy times should block booking slots. Typically: <strong>Therapist Lysander Calendar</strong> and <strong>Shared Personal Calendar</strong>. Do <strong>not</strong> select the Sessions calendar — it contains only placeholder planning blocks and must not affect availability. No event details are read — only free/busy status.
           </p>
           @php
             $selectedIds = $token->availability_calendar_ids ?? [$token->calendar_id];
@@ -465,7 +465,7 @@
           <li><strong>Booking confirmed</strong> — A Google Calendar event is created with the client details, session info, and meeting link.</li>
           <li><strong>Booking rescheduled</strong> — The existing calendar event is updated with the new time.</li>
           <li><strong>Booking cancelled</strong> — The calendar event is automatically removed.</li>
-          <li><strong>Availability checking</strong> — Busy times are checked across all selected calendars (including personal) to prevent double-bookings. Only free/busy status is read — no event details are exposed.</li>
+          <li><strong>Availability checking</strong> — Busy times from the Therapist Lysander Calendar and Shared Personal Calendar are checked to prevent double-bookings. The Sessions calendar is excluded. Only free/busy status is read — no event details are exposed.</li>
           <li><strong>Timezone-aware</strong> — Events are created in the configured timezone (Europe/Amsterdam) with correct start and end times.</li>
           <li><strong>Calendar invitations</strong> — Clients receive email invitations with the appointment details in their local timezone.</li>
         </ul>
