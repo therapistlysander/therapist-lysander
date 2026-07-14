@@ -48,6 +48,9 @@
   .faq-body ul li { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.8; padding: var(--space-1) 0; }
   .faq-body ol { list-style: decimal; padding-left: var(--space-6); margin-bottom: var(--space-3); }
   .faq-body ol li { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.8; padding: var(--space-1) 0; }
+  /* Quill editor uses <ol> with data-list attribute for both ordered and bullet lists */
+  .faq-body ol li[data-list="bullet"] { list-style-type: disc; }
+  .faq-body ol li[data-list="ordered"] { list-style-type: decimal; }
 
   .faq-cta { background: var(--color-bg-dark); border-radius: var(--radius-md); padding: var(--space-6) var(--space-8); display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); margin-top: var(--space-10); max-width: 100%; overflow: hidden; }
   .faq-cta h3 { color: var(--color-white); margin-bottom: var(--space-2); }
