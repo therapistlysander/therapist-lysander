@@ -49,6 +49,7 @@
   .faq-body ol { list-style: decimal; padding-left: var(--space-6); margin-bottom: var(--space-3); }
   .faq-body ol li { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.8; padding: var(--space-1) 0; }
   /* Quill editor uses <ol> with data-list attribute for both ordered and bullet lists */
+  .faq-body ol:has(> li[data-list="bullet"]) { list-style-type: disc; }
   .faq-body ol li[data-list="bullet"] { list-style-type: disc; }
   .faq-body ol li[data-list="ordered"] { list-style-type: decimal; }
 
