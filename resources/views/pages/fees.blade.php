@@ -104,7 +104,7 @@
   </div>
 </section>
 
-<div class="cta-section">
+<div class="cta-section" style="border-top:1px solid rgba(255,255,255,0.08);padding-top:var(--space-16);">
   <div class="container--narrow">
     <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.common.ready_to_begin') }}</span>
     <h2>{{ $cta?->content['heading'] ?? 'Take the first step' }}</h2>
