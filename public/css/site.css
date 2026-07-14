@@ -506,7 +506,7 @@ strong { font-weight: 600; }
   margin-bottom: var(--space-6);
 }
 .section-header {
-  margin-bottom: var(--space-10);
+  margin-bottom: var(--space-8);
 }
 .divider {
   width: 40px;
@@ -850,9 +850,9 @@ strong { font-weight: 600; }
 }
 .endorsement-card__heading {
   font-family: var(--font-heading);
-  font-size: clamp(var(--size-lg), 2vw, var(--size-xl));
+  font-size: clamp(var(--size-md), 2vw, var(--size-lg));
   color: var(--color-accent-dark);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
   font-weight: 500;
 }
 .endorsement-card__quote {
@@ -871,7 +871,7 @@ strong { font-weight: 600; }
   color: var(--color-teal);
   letter-spacing: 0.05em;
   font-weight: 500;
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
 }
 
 /* --- Testimonial carousel --- */
@@ -1072,6 +1072,7 @@ strong { font-weight: 600; }
 .cta-section p {
   color: rgba(255,255,255,0.65);
   font-size: var(--size-md);
+  max-width: 830px;
   margin: 0 auto var(--space-6) auto;
 }
 .cta-section__actions {
