@@ -43,8 +43,11 @@
   .faq-body.open .faq-body__inner { padding: var(--space-2) 0 var(--space-5); }
   .faq-body p { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.8; max-width: none; margin-bottom: var(--space-3); }
   .faq-body p:last-child { margin-bottom: 0; }
+  /* Proper HTML lists from rich text editor */
   .faq-body ul { list-style: disc; padding-left: var(--space-6); margin-bottom: var(--space-3); }
   .faq-body ul li { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.8; padding: var(--space-1) 0; }
+  .faq-body ol { list-style: decimal; padding-left: var(--space-6); margin-bottom: var(--space-3); }
+  .faq-body ol li { font-size: var(--size-sm); color: var(--color-text-muted); line-height: 1.8; padding: var(--space-1) 0; }
 
   .faq-cta { background: var(--color-bg-dark); border-radius: var(--radius-md); padding: var(--space-6) var(--space-8); display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); margin-top: var(--space-10); max-width: 100%; overflow: hidden; }
   .faq-cta h3 { color: var(--color-white); margin-bottom: var(--space-2); }
@@ -199,5 +202,37 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { rootMargin: '-30% 0px -60% 0px' });
 faqCats.forEach(c => observer.observe(c));
+
+// Convert bullet-character paragraphs to proper <ul><li> lists
+document.querySelectorAll('.faq-body__inner').forEach(inner => {
+  const paragraphs = inner.querySelectorAll('p');
+  if (!paragraphs.length) return;
+  let bulletGroup = [];
+  const flushBullets = () => {
+    if (bulletGroup.length < 2) return;
+    const ul = document.createElement('ul');
+    bulletGroup.forEach(p => {
+      const li = document.createElement('li');
+      li.innerHTML = p.innerHTML.replace(/^[\u2022\u00B7\u2023\u25E6]\s*/, '');
+      ul.appendChild(li);
+      p.remove();
+    });
+    if (bulletGroup[0].previousElementSibling) {
+      bulletGroup[0].previousElementSibling.after(ul);
+    } else {
+      inner.prepend(ul);
+    }
+    bulletGroup = [];
+  };
+  paragraphs.forEach(p => {
+    const text = p.textContent.trim();
+    if (/^[\u2022\u00B7\u2023\u25E6\-]\s+/.test(text)) {
+      bulletGroup.push(p);
+    } else {
+      flushBullets();
+    }
+  });
+  flushBullets();
+});
 </script>
 @endsection

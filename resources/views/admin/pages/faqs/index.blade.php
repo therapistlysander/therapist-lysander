@@ -1,3 +1,11 @@
+@php
+  $categoryLabels = [
+    'therapy_emdr' => __('ui.faq.cat_therapy_emdr', 'Therapy & EMDR'),
+    'starting_therapy' => __('ui.faq.cat_starting_therapy', 'Introduction & Intake'),
+    'practical' => __('ui.faq.cat_practical', 'Practical Information'),
+    'sessions_progress' => __('ui.faq.cat_sessions_progress', 'Therapy Process'),
+  ];
+@endphp
 @extends('admin.layouts.admin')
 @section('title', 'FAQs')
 @section('page_title', 'FAQs')
@@ -23,7 +31,7 @@
         @foreach($faqs as $faq)
         <tr>
           <td style="max-width:400px;">{{ Str::limit($faq->question, 80) }}</td>
-          <td><span style="font-size:12px;background:#f3f4f6;padding:2px 8px;border-radius:999px;">{{ $faq->category }}</span></td>
+          <td><span style="font-size:12px;background:#f3f4f6;padding:2px 8px;border-radius:999px;">{{ $categoryLabels[$faq->category] ?? $faq->category }}</span></td>
           <td style="color:#9ca3af;font-size:13px;">{{ $faq->sort_order }}</td>
           <td>@if($faq->is_active)<span class="badge badge--confirmed">Active</span>@else<span class="badge badge--cancelled">Hidden</span>@endif</td>
           <td style="display:flex;gap:6px;">
