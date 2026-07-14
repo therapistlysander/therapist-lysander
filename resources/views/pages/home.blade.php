@@ -31,7 +31,7 @@
   .process-step::before { content:counter(steps); position:absolute; top:0; left:0; width:40px; height:40px; background:var(--color-teal); color:var(--color-white); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-size:var(--size-base); }
   .process-step h4 { font-size:var(--size-lg); margin-bottom:var(--space-3); color:var(--color-white); }
   .process-step p { font-size:var(--size-sm); color:rgba(255,255,255,0.65); }
-  .areas-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:0; margin-top:var(--space-6); }
+  .areas-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:0; margin-top:var(--space-6); margin-bottom:var(--space-6); }
   .areas-list__item { display:flex; align-items:center; gap:var(--space-3); font-size:var(--size-sm); color:var(--color-text-muted); padding:var(--space-2) 0; border-bottom:1px solid var(--color-border); }
   .areas-list__item::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--color-accent); flex-shrink:0; }
 </style>
@@ -54,10 +54,8 @@
         $heroSecUrl       = \App\Providers\AppServiceProvider::localizeUrl($hero?->content['cta_secondary_url'] ?? null);
       @endphp
       <a href="{{ $heroPrimaryUrl }}" class="btn btn--primary btn--lg">
-        <span style="display:inline-flex;align-items:center;gap:var(--space-2);">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          {{ $heroPrimaryLabel }}
-        </span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="18" height="18"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        {{ $heroPrimaryLabel }}
       </a>
     </div>
   </div>
@@ -158,7 +156,7 @@
         ['key'=>'cbt','title'=>'CBT','description'=>'CBT helps identify and change unhelpful thoughts, beliefs, and behavioural patterns that contribute to emotional distress. Together, we explore more balanced and helpful ways of thinking, leading to lasting improvements in mood, anxiety, and self-esteem.'],
         ['key'=>'act','title'=>'ACT','description'=>'ACT helps people develop greater psychological flexibility by changing their relationship with difficult thoughts and emotions rather than struggling against them. By connecting with what truly matters and taking meaningful action, people can build a rich and fulfilling life.'],
         ['key'=>'emdr','title'=>'EMDR','description'=>'EMDR is one of the most evidence-based treatments for trauma and PTSD. It helps the brain process distressing memories that continue to influence the present. EMDR can also be used to target anxiety-provoking future scenarios ("flashforwards"), reducing fear and helping people respond with greater confidence and flexibility.'],
-        ['key'=>'schema','title'=>'Schema Therapy','description'=>'Schema therapy focuses on deep-rooted emotional patterns that can contribute to recurring difficulties in relationships, self-esteem, and emotional wellbeing. It helps people better understand and care for the different parts of themselves, creating lasting change through greater self-awareness, self-compassion, and emotional flexibility.'],
+        ['key'=>'schema','title'=>'Schema Therapy','description'=>'Schema Therapy focuses on deep-rooted emotional patterns that can contribute to recurring difficulties in relationships, self-esteem, and emotional wellbeing. It helps people better understand and care for the different parts of themselves, creating lasting change through greater self-awareness, self-compassion, and emotional flexibility.'],
         ['key'=>'somatic','title'=>'Somatic Approaches','description'=>'Emotions, stress, and trauma are often experienced not only in our thoughts, but also in the body. Where relevant, I incorporate body awareness, nervous system regulation, and attention to physical sensations as part of the therapeutic process, helping clients develop a deeper understanding of their physical and emotional experiences.'],
       ];
     @endphp
