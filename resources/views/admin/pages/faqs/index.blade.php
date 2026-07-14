@@ -1,9 +1,9 @@
 @php
   $categoryLabels = [
-    'therapy_emdr' => __('ui.faq.cat_therapy_emdr', 'Therapy & EMDR'),
-    'starting_therapy' => __('ui.faq.cat_starting_therapy', 'Introduction & Intake'),
-    'practical' => __('ui.faq.cat_practical', 'Practical Information'),
-    'sessions_progress' => __('ui.faq.cat_sessions_progress', 'Therapy Process'),
+    'therapy_emdr' => __('ui.faq.cat_therapy_emdr') ?? 'Therapy & EMDR',
+    'starting_therapy' => __('ui.faq.cat_starting_therapy') ?? 'Introduction & Intake',
+    'practical' => __('ui.faq.cat_practical') ?? 'Practical Information',
+    'sessions_progress' => __('ui.faq.cat_sessions_progress') ?? 'Therapy Process',
   ];
 @endphp
 @extends('admin.layouts.admin')
