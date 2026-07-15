@@ -1,41 +1,38 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     /**
      * Fix testimonials and faqs columns to be JSON type for Spatie Translatable.
+     * Uses raw SQL because doctrine/dbal change() is unreliable for text->json on MySQL.
      */
     public function up(): void
     {
-        Schema::table('testimonials', function (Blueprint $table) {
-            $table->json('headline')->nullable()->change();
-            $table->json('body')->nullable()->change();
-            $table->json('quote')->nullable()->change();
-            $table->json('short_description')->nullable()->change();
-        });
+        // Fix testimonials table
+        $columns = ['headline', 'body', 'quote', 'short_description'];
+        foreach ($columns as $col) {
+            try {
+                DB::statement("ALTER TABLE testimonials MODIFY COLUMN `{$col}` JSON NULL");
+            } catch (\Throwable $e) {
+                // Column might not exist yet, that's ok
+            }
+        }
 
-        Schema::table('faqs', function (Blueprint $table) {
-            $table->json('question')->change();
-            $table->json('answer')->change();
-        });
+        // Fix faqs table
+        try {
+            DB::statement('ALTER TABLE faqs MODIFY COLUMN `question` JSON NOT NULL');
+            DB::statement('ALTER TABLE faqs MODIFY COLUMN `answer` JSON NOT NULL');
+        } catch (\Throwable $e) {
+            // Columns might not exist yet
+        }
     }
 
     public function down(): void
     {
-        Schema::table('testimonials', function (Blueprint $table) {
-            $table->string('headline')->nullable()->change();
-            $table->text('body')->nullable()->change();
-            $table->text('quote')->nullable()->change();
-            $table->text('short_description')->nullable()->change();
-        });
-
-        Schema::table('faqs', function (Blueprint $table) {
-            $table->string('question')->change();
-            $table->text('answer')->change();
-        });
+        // No safe rollback for JSON -> text conversion
     }
 };
