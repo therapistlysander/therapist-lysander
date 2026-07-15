@@ -85,7 +85,7 @@
           <td><input type="checkbox" class="row-check" value="{{ $t->id }}" onchange="updateTableBulkBar()"></td>
           <td><strong>{{ $t->client_name }}</strong>@if($t->tag)<br><span style="font-size:11px;color:#9ca3af;">{{ $t->tag }}</span>@endif</td>
           <td><span class="badge" style="background:{{ $t->type === 'endorsement' ? '#8b5cf6' : '#6b7280' }};color:#fff;font-size:11px;padding:2px 8px;border-radius:4px;">{{ ucfirst($t->type ?? 'client') }}</span></td>
-          <td style="color:#6b7280;font-size:13px;">{{ Str::limit(is_array($t->headline) ? ($t->headline['en'] ?? '') : ($t->headline ?? (is_array($t->body) ? ($t->body['en'] ?? '') : $t->body)), 60) }}</td>
+          <td style="color:#6b7280;font-size:13px;">{{ Str::limit($t->headline_str ?: $t->body_str, 60) }}</td>
           <td>@if($t->is_featured)<span class="badge badge--featured">Featured</span>@else<span style="color:#d1d5db;font-size:13px;">—</span>@endif</td>
           <td>@if($t->is_active)<span class="badge badge--confirmed">Active</span>@else<span class="badge badge--cancelled">Hidden</span>@endif</td>
           <td style="color:#9ca3af;font-size:13px;">{{ $t->sort_order }}</td>

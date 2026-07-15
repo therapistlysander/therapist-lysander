@@ -74,7 +74,7 @@
         @foreach($faqs as $faq)
         <tr>
           <td><input type="checkbox" class="row-check" value="{{ $faq->id }}" onchange="updateTableBulkBar()"></td>
-          <td style="max-width:400px;">{{ Str::limit(is_array($faq->question) ? ($faq->question['en'] ?? '') : $faq->question, 80) }}</td>
+          <td style="max-width:400px;">{{ Str::limit($faq->question_str, 80) }}</td>
           <td><span style="font-size:12px;background:#f3f4f6;padding:2px 8px;border-radius:999px;">{{ $categoryLabels[$faq->category] ?? $faq->category }}</span></td>
           <td style="color:#9ca3af;font-size:13px;">{{ $faq->sort_order }}</td>
           <td>@if($faq->is_active)<span class="badge badge--confirmed">Active</span>@else<span class="badge badge--cancelled">Hidden</span>@endif</td>

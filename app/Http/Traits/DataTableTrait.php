@@ -100,4 +100,27 @@ trait DataTableTrait
         }
         return 'asc';
     }
+
+    /**
+     * Safely extract string value from translatable field.
+     * Handles: string, array (from Spatie), JSON string, null.
+     */
+    protected function getTranslatableString($value, string $locale = 'en'): string
+    {
+        if ($value === null) {
+            return '';
+        }
+        if (is_string($value)) {
+            // Try to decode JSON
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                return $decoded[$locale] ?? $decoded['en'] ?? '';
+            }
+            return $value;
+        }
+        if (is_array($value)) {
+            return $value[$locale] ?? $value['en'] ?? '';
+        }
+        return (string) $value;
+    }
 }

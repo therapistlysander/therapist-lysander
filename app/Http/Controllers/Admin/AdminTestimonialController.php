@@ -24,6 +24,12 @@ class AdminTestimonialController extends Controller
 
             $testimonials = $this->paginateResults($query);
 
+            // Extract string values from translatable fields for views
+            foreach ($testimonials as $t) {
+                $t->headline_str = $this->getTranslatableString($t->getRawOriginal('headline'));
+                $t->body_str = $this->getTranslatableString($t->getRawOriginal('body'));
+            }
+
             return view('admin.pages.testimonials.index', compact('testimonials'));
         } catch (\Throwable $e) {
             \Log::error('Testimonials index error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
