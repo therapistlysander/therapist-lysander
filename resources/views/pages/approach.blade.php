@@ -84,7 +84,7 @@
         <span class="section-label">{{ __('ui.approach.treatment_label') }}</span>
         <h2 id="treatment-heading" class="section-title">{{ $treatments?->content['heading'] ?? 'Trauma-focused treatment' }}</h2>
       </div>
-      <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;max-width:640px;margin:0 auto;text-align:left;" class="fade-in">
+      <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;max-width:640px;margin:0;text-align:left;" class="fade-in">
         {!! $treatments?->content['body'] ?? '<p>Trauma treatment is not about simply reducing symptoms. It is about helping people process difficult experiences, make sense of what happened, and develop a greater sense of safety, flexibility, and self-trust in the present.</p><p>Treatment always takes place at a pace that feels manageable. Together, we develop an understanding of what is happening and why, and we work toward greater freedom, stability, and resilience.</p><p>Depending on the nature of the difficulties involved, I draw from a range of evidence-based trauma-focused approaches.</p>' !!}
       </div>
       @php $treatmentCards = $treatments?->content['cards'] ?? [['subtitle'=>'Primary Method','title'=>'EMDR','description'=>'Eye Movement Desensitization and Reprocessing (EMDR) is one of the most extensively researched treatments for trauma and PTSD. Using bilateral stimulation, EMDR helps the brain process and integrate distressing experiences that continue to influence the present.'],['subtitle'=>'Confronting Avoidance','title'=>'Exposure Therapy','description'=>'Exposure therapy involves gradually approaching memories, emotions, situations, or triggers that have become associated with fear and avoidance. Through repeated and structured exposure, the nervous system learns that these experiences can be tolerated, reducing fear and creating space for new learning.'],['subtitle'=>'Emotional Memory Change','title'=>'Imagery Rescripting','description'=>'Imagery Rescripting helps people revisit distressing memories and change their emotional meaning. By introducing new experiences, perspectives, or responses within the memory, it can reduce shame, helplessness, fear, and self-criticism.'],['subtitle'=>'Gentle Trauma Processing','title'=>'Flash Technique','description'=>'The Flash Technique offers a gentle way of reducing the emotional intensity of traumatic memories without requiring detailed discussion of the experience itself. It can be particularly helpful when memories feel overwhelming or when dissociation is present.'],['subtitle'=>'Core Emotional Patterns','title'=>'Schema Therapy','description'=>'Schema Therapy helps identify longstanding emotional patterns and beliefs that often develop through earlier life experiences. By understanding these patterns and responding to them differently, people can build greater self-compassion, flexibility, and emotional resilience.'],['subtitle'=>'Integrative','title'=>'Somatic Approaches','description'=>'Emotions, stress, and trauma are often experienced not only in our thoughts, but also in the body. Where relevant, I incorporate body awareness, nervous system regulation, and attention to physical sensations as part of the therapeutic process.']]; @endphp
@@ -102,7 +102,7 @@
 
   <section class="section section--dark" aria-labelledby="emdr-heading">
     <div class="container">
-      <div class="grid-2 fade-in">
+      <div class="fade-in" style="max-width:var(--max-w-text);">
         <div>
           <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.approach.about_emdr_label') }}</span>
           <h2 id="emdr-heading" style="color:var(--color-white);">{{ $emdr?->content['heading'] ?? 'EMDR is not only about the past' }}</h2>
@@ -119,9 +119,6 @@
             </div>
             @endforeach
           </div>
-        </div>
-        <div class="grid-2__media">
-          <img src="{{ $emdr?->content['image'] ?? '/images/ff96a9dc8ea72c2c-11062b_aa33e58c18774e7db74c68e74a6c231e-mv2.jpg' }}" alt="Misty mountain landscape" loading="lazy" width="600" height="740">
         </div>
       </div>
     </div>

@@ -108,7 +108,7 @@
   }
   .endorsement-block__quote {
     font-family: var(--font-heading);
-    font-size: clamp(var(--size-lg), 2vw, var(--size-xl));
+    font-size: clamp(var(--size-base), 1.6vw, var(--size-lg));
     color: var(--color-text);
     line-height: 1.65;
     font-style: italic;

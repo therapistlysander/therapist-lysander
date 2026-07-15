@@ -209,7 +209,7 @@ strong { font-weight: 600; }
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--color-text);
   line-height: 1.3;
@@ -222,7 +222,7 @@ strong { font-weight: 600; }
 }
 .nav__identity-title {
   display: block;
-  font-size: 0.65rem;
+  font-size: 0.70rem;
   font-weight: 400;
   color: var(--color-text-muted);
   letter-spacing: 0.06em;
@@ -872,6 +872,12 @@ strong { font-weight: 600; }
   letter-spacing: 0.05em;
   font-weight: 500;
   margin-top: var(--space-3);
+}
+/* Desktop only: nudge attribution slightly right to balance with the quote above */
+@media (min-width: 1101px) {
+  .endorsement-card__attribution {
+    transform: translateX(var(--space-6));
+  }
 }
 
 /* --- Testimonial carousel --- */
