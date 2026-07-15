@@ -3,15 +3,38 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AdminTableTrait;
 use App\Models\Faq;
 use Illuminate\Http\Request;
 
 class AdminFaqController extends Controller
 {
-    public function index()
+    use AdminTableTrait;
+
+    public function index(Request $request)
     {
-        $faqs = Faq::orderBy('category')->orderBy('sort_order')->get();
-        return view('admin.pages.faqs.index', compact('faqs'));
+        $query = Faq::query();
+
+        // Search across category and question (JSON translatable)
+        $search = $request->input('search');
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('category', 'like', "%$search%")
+                  ->orWhere('question', 'like', "%$search%");
+            });
+        }
+
+        // Filters
+        $this->applyFilters($query, ['category' => 'category', 'status' => 'is_active']);
+
+        // Sorting
+        $this->applySort($query, ['category', 'sort_order', 'is_active', 'created_at'], 'category', 'asc');
+
+        $faqs = $this->safePaginate($query->paginate($this->getPerPage($request)));
+
+        $categories = $this->getCategoriesFromCms();
+
+        return view('admin.pages.faqs.index', compact('faqs', 'categories'));
     }
 
     public function create()
@@ -106,6 +129,22 @@ class AdminFaqController extends Controller
     {
         $faq->delete();
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ deleted.');
+    }
+
+    public function bulkAction(Request $request)
+    {
+        $request->validate(['ids' => 'required|array', 'action' => 'required|in:delete,activate,deactivate']);
+        $ids = $request->ids;
+        if (empty($ids)) return back()->with('error', 'No items selected.');
+
+        $faqs = Faq::whereIn('id', $ids);
+        match ($request->action) {
+            'delete'     => $faqs->delete(),
+            'activate'   => $faqs->update(['is_active' => true]),
+            'deactivate' => $faqs->update(['is_active' => false]),
+        };
+
+        return redirect()->route('admin.faqs.index')->with('success', count($ids) . ' FAQ(s) updated.');
     }
 
     private function getCategoriesFromCms(): array
