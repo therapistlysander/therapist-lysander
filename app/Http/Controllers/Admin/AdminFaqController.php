@@ -15,7 +15,7 @@ class AdminFaqController extends Controller
     {
         $query = Faq::query();
 
-        $this->applySearch($query, $request->get('search'), ['question']);
+        $this->applySearch($query, $request->get('search'), ['category']);
         $this->applyFilter($query, 'category', $request->get('category'));
         $this->applyFilter($query, 'is_active', $request->get('is_active'));
         $this->applySort($query, 'sort_order', ['sort_order', 'category', 'is_active', 'created_at']);

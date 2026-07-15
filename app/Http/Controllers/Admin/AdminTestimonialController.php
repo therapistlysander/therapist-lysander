@@ -16,7 +16,7 @@ class AdminTestimonialController extends Controller
         try {
             $query = Testimonial::query();
 
-            $this->applySearch($query, $request->get('search'), ['client_name', 'headline', 'body', 'tag']);
+            $this->applySearch($query, $request->get('search'), ['client_name', 'tag']);
             $this->applyFilter($query, 'type', $request->get('type'));
             $this->applyFilter($query, 'is_active', $request->get('is_active'));
             $this->applyFilter($query, 'is_featured', $request->get('is_featured'));
