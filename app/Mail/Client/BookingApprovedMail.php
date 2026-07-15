@@ -31,9 +31,11 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
         $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
         $clientTimezone = $this->booking->client_timezone;
 
-        // Convert scheduled_at from server timezone to client's timezone
-        $scheduledAt = $this->booking->scheduled_at;
-        $displayScheduledAt = $scheduledAt;
+        // Prefer the confirmed time; fall back to the requested time so the
+        // details box is never empty when a booking is confirmed without an
+        // explicit scheduling step (e.g. via the status dropdown).
+        $scheduledAt = $this->booking->scheduled_at ?? $this->booking->preferred_date;
+        $displayScheduledAt = null;
         if ($scheduledAt && $clientTimezone) {
             $displayScheduledAt = \Carbon\Carbon::parse($scheduledAt, $serverTimezone)
                 ->setTimezone($clientTimezone)
@@ -43,10 +45,21 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
                 ->format('l, j F Y \a\t H:i');
         }
 
+        $formatLabels = [
+            'intake'   => 'Introductory Call',
+            'standard' => 'Standard Session',
+            'emdr'     => 'EMDR Session',
+            'initial'  => 'Initial Session',
+        ];
+        $sessionFormat = $this->booking->session_format;
+        $appointmentType = $formatLabels[$sessionFormat] ?? ($sessionFormat ? ucfirst($sessionFormat) : null);
+
         return new Content(
             view: 'emails.client.booking-approved',
             with: [
                 'firstName' => $this->booking->first_name,
+                'appointmentType' => $appointmentType,
+                'sessionType' => $this->booking->session_type,
                 'displayScheduledAt' => $displayScheduledAt,
                 'meetingLink' => $this->booking->meeting_link,
                 'meetingPlatform' => $this->booking->meeting_platform,
