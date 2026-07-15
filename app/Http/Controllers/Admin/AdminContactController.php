@@ -3,28 +3,29 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AdminTableTrait;
 use App\Models\ContactSubmission;
 use App\Models\ContactNote;
 use Illuminate\Http\Request;
 
 class AdminContactController extends Controller
 {
+    use AdminTableTrait;
+
     public function index(Request $request)
     {
-        $query = ContactSubmission::latest();
+        $query = ContactSubmission::query();
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%");
-            });
-        }
+        // Search
+        $this->applySearch($query, ['name', 'email'], $request->input('search'));
 
-        $contacts = $query->paginate(20)->withQueryString();
+        // Filters
+        $this->applyFilters($query, ['status' => 'status']);
+
+        // Sorting
+        $this->applySort($query, ['name', 'status', 'created_at'], 'created_at', 'desc');
+
+        $contacts = $this->safePaginate($query->paginate($this->getPerPage($request, 20)));
 
         return view('admin.pages.contacts.index', compact('contacts'));
     }

@@ -3,14 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AdminTableTrait;
 use App\Models\SeoSetting;
 use Illuminate\Http\Request;
 
 class AdminSeoController extends Controller
 {
-    public function index()
+    use AdminTableTrait;
+
+    public function index(Request $request)
     {
-        $seoSettings = SeoSetting::orderBy('page_key')->get();
+        $query = SeoSetting::query();
+
+        // Search
+        $this->applySearch($query, ['page_key'], $request->input('search'));
+
+        // Sorting
+        $this->applySort($query, ['page_key', 'updated_at'], 'page_key', 'asc');
+
+        $seoSettings = $this->safePaginate($query->paginate($this->getPerPage($request)));
+
         return view('admin.pages.seo.index', compact('seoSettings'));
     }
 

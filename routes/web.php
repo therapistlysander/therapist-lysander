@@ -192,15 +192,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
 
         // Testimonials
         Route::resource('testimonials', AdminTestimonialController::class);
+        Route::post('/testimonials/bulk-action', [AdminTestimonialController::class, 'bulkAction'])->name('testimonials.bulkAction');
 
         // FAQs
         Route::resource('faqs', AdminFaqController::class);
+        Route::post('/faqs/bulk-action', [AdminFaqController::class, 'bulkAction'])->name('faqs.bulkAction');
 
         // Page sections
         Route::get('/pages', [AdminPageSectionController::class, 'pages'])->name('pages.index');
         Route::get('/pages/{page}/sections', [AdminPageSectionController::class, 'index'])->name('sections.index');
         Route::get('/sections/{section}/edit', [AdminPageSectionController::class, 'edit'])->name('sections.edit');
         Route::patch('/sections/{section}', [AdminPageSectionController::class, 'update'])->name('sections.update');
+        Route::post('/sections/bulk-action', [AdminPageSectionController::class, 'bulkAction'])->name('sections.bulkAction');
 
         // SEO settings
         Route::get('/seo', [AdminSeoController::class, 'index'])->name('seo.index');

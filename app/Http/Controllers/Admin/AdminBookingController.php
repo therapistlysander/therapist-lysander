@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AdminTableTrait;
 use App\Jobs\SyncBookingToCalendarJob;
 use App\Models\Booking;
 use App\Services\NotificationService;
@@ -10,26 +11,25 @@ use Illuminate\Http\Request;
 
 class AdminBookingController extends Controller
 {
+    use AdminTableTrait;
+
     public function index(Request $request)
     {
-        $query = Booking::with('preIntakeResponse')->latest();
+        $query = Booking::with('preIntakeResponse');
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', "%$search%")
-                  ->orWhere('last_name', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%");
-            });
-        }
-        if ($request->filled('type')) {
-            $query->where('session_type', $request->type);
-        }
+        // Search
+        $this->applySearch($query, ['first_name', 'last_name', 'email'], $request->input('search'));
 
-        $bookings = $query->paginate(20)->withQueryString();
+        // Filters
+        $this->applyFilters($query, [
+            'status' => 'status',
+            'type'   => 'session_type',
+        ]);
+
+        // Sorting
+        $this->applySort($query, ['first_name', 'status', 'session_type', 'created_at', 'scheduled_at'], 'created_at', 'desc');
+
+        $bookings = $this->safePaginate($query->paginate($this->getPerPage($request)));
 
         $stats = [
             'total'     => Booking::count(),
@@ -200,6 +200,11 @@ class AdminBookingController extends Controller
 
     public function bulkDelete(Request $request)
     {
+        $action = $request->input('action', 'delete');
+        if ($action !== 'delete') {
+            return back()->with('error', 'Unsupported bulk action.');
+        }
+
         $ids = $request->input('ids', []);
         if (empty($ids)) {
             return back()->with('error', 'No bookings selected.');

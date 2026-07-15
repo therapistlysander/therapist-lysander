@@ -3,14 +3,33 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AdminTableTrait;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
 class AdminTestimonialController extends Controller
 {
-    public function index()
+    use AdminTableTrait;
+
+    public function index(Request $request)
     {
-        $testimonials = Testimonial::orderBy('sort_order')->orderBy('created_at', 'desc')->get();
+        $query = Testimonial::query();
+
+        // Search
+        $this->applySearch($query, ['client_name', 'tag'], $request->input('search'));
+
+        // Filters
+        $this->applyFilters($query, [
+            'type'   => 'type',
+            'status' => 'is_active',
+            'featured' => 'is_featured',
+        ]);
+
+        // Sorting
+        $this->applySort($query, ['client_name', 'sort_order', 'created_at', 'is_active'], 'sort_order', 'asc');
+
+        $testimonials = $this->safePaginate($query->paginate($this->getPerPage($request)));
+
         return view('admin.pages.testimonials.index', compact('testimonials'));
     }
 
@@ -99,5 +118,21 @@ class AdminTestimonialController extends Controller
     {
         $testimonial->delete();
         return redirect()->route('admin.testimonials.index')->with('success', 'Testimonial deleted.');
+    }
+
+    public function bulkAction(Request $request)
+    {
+        $request->validate(['ids' => 'required|array', 'action' => 'required|in:delete,activate,deactivate']);
+        $ids = $request->ids;
+        if (empty($ids)) return back()->with('error', 'No items selected.');
+
+        $items = Testimonial::whereIn('id', $ids);
+        match ($request->action) {
+            'delete'     => $items->delete(),
+            'activate'   => $items->update(['is_active' => true]),
+            'deactivate' => $items->update(['is_active' => false]),
+        };
+
+        return redirect()->route('admin.testimonials.index')->with('success', count($ids) . ' testimonial(s) updated.');
     }
 }
