@@ -13,17 +13,22 @@ class AdminTestimonialController extends Controller
 
     public function index(Request $request)
     {
-        $query = Testimonial::query();
+        try {
+            $query = Testimonial::query();
 
-        $this->applySearch($query, $request->get('search'), ['client_name', 'headline', 'body', 'tag']);
-        $this->applyFilter($query, 'type', $request->get('type'));
-        $this->applyFilter($query, 'is_active', $request->get('is_active'));
-        $this->applyFilter($query, 'is_featured', $request->get('is_featured'));
-        $this->applySort($query, 'sort_order', ['sort_order', 'client_name', 'created_at', 'is_active']);
+            $this->applySearch($query, $request->get('search'), ['client_name', 'headline', 'body', 'tag']);
+            $this->applyFilter($query, 'type', $request->get('type'));
+            $this->applyFilter($query, 'is_active', $request->get('is_active'));
+            $this->applyFilter($query, 'is_featured', $request->get('is_featured'));
+            $this->applySort($query, 'sort_order', ['sort_order', 'client_name', 'created_at', 'is_active']);
 
-        $testimonials = $this->paginateResults($query);
+            $testimonials = $this->paginateResults($query);
 
-        return view('admin.pages.testimonials.index', compact('testimonials'));
+            return view('admin.pages.testimonials.index', compact('testimonials'));
+        } catch (\Throwable $e) {
+            \Log::error('Testimonials index error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            abort(500, 'Testimonials error: ' . $e->getMessage());
+        }
     }
 
     public function create()
