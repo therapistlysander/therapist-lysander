@@ -3,38 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Traits\DataTableTrait;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
 class AdminTestimonialController extends Controller
 {
-    use DataTableTrait;
-
-    public function index(Request $request)
+    public function index()
     {
-        try {
-            $query = Testimonial::query();
-
-            $this->applySearch($query, $request->get('search'), ['client_name', 'tag']);
-            $this->applyFilter($query, 'type', $request->get('type'));
-            $this->applyFilter($query, 'is_active', $request->get('is_active'));
-            $this->applyFilter($query, 'is_featured', $request->get('is_featured'));
-            $this->applySort($query, 'sort_order', ['sort_order', 'client_name', 'created_at', 'is_active']);
-
-            $testimonials = $this->paginateResults($query);
-
-            // Extract string values from translatable fields for views
-            foreach ($testimonials as $t) {
-                $t->headline_str = $this->getTranslatableString($t->headline);
-                $t->body_str = $this->getTranslatableString($t->body);
-            }
-
-            return view('admin.pages.testimonials.index', compact('testimonials'));
-        } catch (\Throwable $e) {
-            \Log::error('Testimonials index error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            abort(500, 'Testimonials error: ' . $e->getMessage());
-        }
+        $testimonials = Testimonial::orderBy('sort_order')->orderBy('created_at', 'desc')->get();
+        return view('admin.pages.testimonials.index', compact('testimonials'));
     }
 
     public function create()
@@ -122,12 +99,5 @@ class AdminTestimonialController extends Controller
     {
         $testimonial->delete();
         return redirect()->route('admin.testimonials.index')->with('success', 'Testimonial deleted.');
-    }
-
-    public function bulkDestroy(Request $request)
-    {
-        $request->validate(['ids' => 'required|array', 'ids.*' => 'exists:testimonials,id']);
-        Testimonial::whereIn('id', $request->ids)->delete();
-        return redirect()->route('admin.testimonials.index')->with('success', count($request->ids) . ' testimonial(s) deleted.');
     }
 }

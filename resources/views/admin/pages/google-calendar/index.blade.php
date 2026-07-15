@@ -360,7 +360,7 @@
           <label style="font-weight: 600; margin-bottom: 4px;">Booking Calendar <span style="font-weight: 400; color: #9ca3af; font-size: 12px;">— appointments are created here</span></label>
           <div class="form-dropdown" id="calendar-dropdown">
             <button type="button" class="form-dropdown__trigger" onclick="toggleFormDropdown('calendar-dropdown')">
-              <span id="calendar-label">@php $selectedCal = collect($calendars ?? [])->firstWhere('id', $token->calendar_id ?? ''); @endphp{{ $selectedCal['summary'] ?? 'Select Calendar' }}</span>
+              <span id="calendar-label">{{ collect($calendars)->firstWhere('id', $token->calendar_id)['summary'] ?? 'Select Calendar' }}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <div class="form-dropdown__menu">
