@@ -3,28 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\DataTableTrait;
 use App\Models\ContactSubmission;
 use App\Models\ContactNote;
 use Illuminate\Http\Request;
 
 class AdminContactController extends Controller
 {
+    use DataTableTrait;
+
     public function index(Request $request)
     {
-        $query = ContactSubmission::latest();
+        $query = ContactSubmission::query();
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%");
-            });
-        }
+        $this->applySearch($query, $request->get('search'), ['name', 'email', 'message']);
+        $this->applyFilter($query, 'status', $request->get('status'));
+        $this->applySort($query, 'created_at', ['created_at', 'status', 'name']);
 
-        $contacts = $query->paginate(20)->withQueryString();
+        $contacts = $this->paginateResults($query, 10);
 
         return view('admin.pages.contacts.index', compact('contacts'));
     }
@@ -60,5 +56,31 @@ class AdminContactController extends Controller
         ]);
 
         return back()->with('success', 'Note added.');
+    }
+
+    public function bulkAction(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:contact_submissions,id',
+            'action' => 'required|in:delete,mark_read,mark_replied,mark_resolved',
+        ]);
+
+        $ids = $request->ids;
+        $action = $request->action;
+
+        if ($action === 'delete') {
+            ContactSubmission::whereIn('id', $ids)->delete();
+            return redirect()->route('admin.contacts.index')->with('success', count($ids) . ' message(s) deleted.');
+        }
+
+        $statusMap = [
+            'mark_read' => 'read',
+            'mark_replied' => 'replied',
+            'mark_resolved' => 'resolved',
+        ];
+
+        ContactSubmission::whereIn('id', $ids)->update(['status' => $statusMap[$action]]);
+        return redirect()->route('admin.contacts.index')->with('success', count($ids) . ' message(s) updated.');
     }
 }

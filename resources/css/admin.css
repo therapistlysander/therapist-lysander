@@ -1,2 +1,123 @@
 /* Admin panel additional styles — compiled by Vite */
+/* Base styles are inlined in the admin layout. This file is for shared table components. */
+
+/* ─── Table Toolbar (filter bar) ─── */
+.table-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; padding: 16px 20px;
+  background: white; border-bottom: 1px solid #e5e7eb;
+}
+.table-toolbar__filters {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1;
+}
+.table-toolbar__count {
+  font-size: 12px; color: #9ca3af; white-space: nowrap;
+}
+
+/* ─── Search Input ─── */
+.table-search-input {
+  display: flex; align-items: center; gap: 8px; padding: 7px 12px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 8px;
+  transition: border-color 0.15s; min-width: 200px;
+}
+.table-search-input:focus-within { border-color: #5a9e97; }
+.table-search-input svg { color: #9ca3af; flex-shrink: 0; }
+.table-search-input__field {
+  border: none; outline: none; font-size: 13px; width: 100%;
+  background: transparent; color: #374151;
+}
+.table-search-input__field::placeholder { color: #9ca3af; }
+.table-search-input__clear {
+  background: none; border: none; cursor: pointer; color: #9ca3af;
+  padding: 2px; display: flex; align-items: center; border-radius: 4px;
+  transition: color 0.15s;
+}
+.table-search-input__clear:hover { color: #ef4444; }
+
+/* ─── Table Dropdown Filter ─── */
+.table-dropdown { position: relative; display: inline-block; }
+.table-dropdown__trigger {
+  display: flex; align-items: center; gap: 8px; padding: 7px 12px;
+  background: white; border: 1px solid #e5e7eb; border-radius: 8px;
+  font-size: 13px; color: #374151; cursor: pointer; min-width: 130px;
+  transition: all 0.15s; white-space: nowrap;
+}
+.table-dropdown__trigger:hover { border-color: #5a9e97; }
+.table-dropdown__trigger svg { width: 14px; height: 14px; color: #9ca3af; flex-shrink: 0; }
+.table-dropdown__trigger svg:last-child { margin-left: auto; }
+.table-dropdown__menu {
+  display: none; position: absolute; top: calc(100% + 4px); left: 0;
+  min-width: 100%; background: white; border: 1px solid #e5e7eb;
+  border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  z-index: 100; overflow: hidden; padding: 4px;
+}
+.table-dropdown__menu.open { display: block; }
+.table-dropdown__item {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 8px 12px; font-size: 13px; color: #374151;
+  border: none; background: none; cursor: pointer; border-radius: 6px;
+  transition: background 0.1s; text-align: left;
+}
+.table-dropdown__item:hover { background: #f3f4f6; }
+.table-dropdown__item.active { background: #f0fdf9; color: #5a9e97; font-weight: 600; }
+
+/* ─── Per Page Select ─── */
+.table-per-page {
+  padding: 7px 10px; border: 1px solid #e5e7eb; border-radius: 8px;
+  font-size: 13px; color: #374151; background: white; cursor: pointer;
+  transition: border-color 0.15s;
+}
+.table-per-page:focus { border-color: #5a9e97; outline: none; }
+
+/* ─── Bulk Action Bar ── */
+.table-bulk-bar {
+  display: none; align-items: center; gap: 12px;
+  padding: 10px 20px; background: #fef3c7; border-bottom: 1px solid #fde68a;
+}
+.table-bulk-bar.visible { display: flex; }
+.table-bulk-bar__count { font-size: 13px; font-weight: 600; color: #92400e; }
+.table-bulk-bar__actions { display: flex; gap: 8px; margin-left: auto; }
+.table-check-all { width: 16px; height: 16px; accent-color: #5a9e97; cursor: pointer; }
+
+/* ─── Sortable Headers ─── */
+.table-sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+.table-sortable--active { color: #5a9e97; }
+.table-sortable__link:hover { color: #5a9e97; }
+
+/* ─── Pagination ─── */
+.table-pagination {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; padding: 16px 20px;
+  background: white; border-top: 1px solid #e5e7eb;
+}
+.table-pagination__info { font-size: 12px; color: #9ca3af; }
+
+/* ─── Row Selection ─── */
+.row-check { width: 16px; height: 16px; accent-color: #5a9e97; cursor: pointer; }
+tr.selected td { background: #f0fdf9 !important; }
+
+/* ─── Empty State ─── */
+.table-empty {
+  padding: 48px 20px; text-align: center; color: #9ca3af;
+}
+.table-empty svg { margin: 0 auto 12px; opacity: 0.5; }
+.table-empty p { font-size: 14px; margin: 0; }
+
+/* ─── Small Button Variant ─── */
+.btn-admin--sm { font-size: 12px; padding: 5px 12px; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .table-toolbar { flex-direction: column; align-items: stretch; }
+  .table-toolbar__filters { flex-direction: column; align-items: stretch; }
+  .table-search-input { min-width: auto; width: 100%; }
+  .table-dropdown { width: 100%; }
+  .table-dropdown__trigger { width: 100%; }
+  .table-dropdown__menu { width: 100%; }
+  .table-per-page { width: 100%; }
+  .table-bulk-bar { flex-wrap: wrap; }
+  .table-bulk-bar__actions { margin-left: 0; width: 100%; justify-content: flex-end; }
+  .table-pagination { flex-direction: column; align-items: flex-start; }
+}
+/* Admin panel additional styles — compiled by Vite */
 /* Base styles are inlined in the admin layout. This file is reserved for overrides. */

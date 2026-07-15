@@ -186,14 +186,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
 
         // Contacts
         Route::get('/contacts', [AdminContactController::class, 'index'])->name('contacts.index');
+        Route::post('/contacts/bulk-action', [AdminContactController::class, 'bulkAction'])->name('contacts.bulkAction');
         Route::get('/contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
         Route::patch('/contacts/{contact}/status', [AdminContactController::class, 'updateStatus'])->name('contacts.status');
         Route::post('/contacts/{contact}/notes', [AdminContactController::class, 'addNote'])->name('contacts.notes.store');
 
         // Testimonials
+        Route::post('/testimonials/bulk-delete', [AdminTestimonialController::class, 'bulkDestroy'])->name('testimonials.bulkDestroy');
         Route::resource('testimonials', AdminTestimonialController::class);
 
         // FAQs
+        Route::post('/faqs/bulk-delete', [AdminFaqController::class, 'bulkDestroy'])->name('faqs.bulkDestroy');
         Route::resource('faqs', AdminFaqController::class);
 
         // Page sections
