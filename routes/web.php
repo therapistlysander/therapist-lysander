@@ -133,6 +133,47 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
     // Dashboard (all admin roles)
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+    // Diagnostic route (temporary)
+    Route::get('/db-check', function () {
+        if (!auth()->user() || !auth()->user()->isSuperAdmin()) {
+            abort(403);
+        }
+        
+        $output = [];
+        
+        // Check testimonials table
+        try {
+            $columns = \DB::select("SHOW COLUMNS FROM testimonials");
+            $output['testimonials'] = collect($columns)->map(fn($c) => [
+                'field' => $c->Field,
+                'type' => $c->Type,
+                'null' => $c->Null,
+            ])->toArray();
+        } catch (\Throwable $e) {
+            $output['testimonials_error'] = $e->getMessage();
+        }
+        
+        // Check faqs table
+        try {
+            $columns = \DB::select("SHOW COLUMNS FROM faqs");
+            $output['faqs'] = collect($columns)->map(fn($c) => [
+                'field' => $c->Field,
+                'type' => $c->Type,
+                'null' => $c->Null,
+            ])->toArray();
+        } catch (\Throwable $e) {
+            $output['faqs_error'] = $e->getMessage();
+        }
+        
+        // Check migration status
+        $output['migrations'] = \DB::table('migrations')
+            ->where('migration', 'like', '%fix_testimonials_json%')
+            ->pluck('migration')
+            ->toArray();
+        
+        return response()->json($output, 200, [], JSON_PRETTY_PRINT);
+    });
+
     // Bookings (all admin roles)
     Route::get('/bookings', [AdminBookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('bookings.show');
