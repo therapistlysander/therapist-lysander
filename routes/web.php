@@ -171,6 +171,25 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
             ->pluck('migration')
             ->toArray();
         
+        // Check Spatie package
+        $output['spatie_installed'] = class_exists(\Spatie\Translatable\HasTranslations::class);
+        
+        // Check model translatable config
+        try {
+            $t = new \App\Models\Testimonial();
+            $output['testimonial_translatable'] = $t->getTranslatableAttributes();
+            
+            // Try to get a testimonial and check the headline type
+            $firstTestimonial = \App\Models\Testimonial::first();
+            if ($firstTestimonial) {
+                $headline = $firstTestimonial->headline;
+                $output['first_testimonial_headline_type'] = gettype($headline);
+                $output['first_testimonial_headline_value'] = $headline;
+            }
+        } catch (\Throwable $e) {
+            $output['model_error'] = $e->getMessage();
+        }
+        
         return response()->json($output, 200, [], JSON_PRETTY_PRINT);
     });
 
