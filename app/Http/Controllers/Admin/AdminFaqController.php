@@ -3,14 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\DataTableTrait;
 use App\Models\Faq;
 use Illuminate\Http\Request;
 
 class AdminFaqController extends Controller
 {
-    public function index()
+    use DataTableTrait;
+
+    public function index(Request $request)
     {
-        $faqs = Faq::orderBy('category')->orderBy('sort_order')->get();
+        $query = Faq::query();
+
+        $this->applySearch($query, $request->get('search'), ['question']);
+        $this->applyFilter($query, 'category', $request->get('category'));
+        $this->applyFilter($query, 'is_active', $request->get('is_active'));
+        $this->applySort($query, 'sort_order', ['sort_order', 'category', 'is_active', 'created_at']);
+
+        $faqs = $this->paginateResults($query);
+
         return view('admin.pages.faqs.index', compact('faqs'));
     }
 
@@ -106,6 +117,13 @@ class AdminFaqController extends Controller
     {
         $faq->delete();
         return redirect()->route('admin.faqs.index')->with('success', 'FAQ deleted.');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate(['ids' => 'required|array', 'ids.*' => 'exists:faqs,id']);
+        Faq::whereIn('id', $request->ids)->delete();
+        return redirect()->route('admin.faqs.index')->with('success', count($request->ids) . ' FAQ(s) deleted.');
     }
 
     private function getCategoriesFromCms(): array

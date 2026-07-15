@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\DataTableTrait;
 use App\Models\PageSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -10,6 +11,7 @@ use Illuminate\Support\Str;
 
 class AdminPageSectionController extends Controller
 {
+    use DataTableTrait;
     private array $pageLabels = [
         'home'         => 'Home',
         'about'        => 'About',
@@ -57,11 +59,17 @@ class AdminPageSectionController extends Controller
         return view('admin.pages.sections.pages', compact('pages'));
     }
 
-    public function index(string $page)
+    public function index(string $page, Request $request)
     {
-        $sections = PageSection::where('page', $page)->orderBy('sort_order')->get();
+        $query = PageSection::where('page', $page);
 
-        if ($sections->isEmpty()) {
+        $this->applySearch($query, $request->get('search'), ['label', 'section_key']);
+        $this->applyFilter($query, 'is_active', $request->get('is_active'));
+        $this->applySort($query, 'sort_order', ['sort_order', 'label', 'is_active']);
+
+        $sections = $this->paginateResults($query);
+
+        if ($sections->total() === 0 && !$request->has('search') && !$request->has('is_active')) {
             abort(404);
         }
 

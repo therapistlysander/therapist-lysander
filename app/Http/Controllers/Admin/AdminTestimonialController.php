@@ -3,14 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\DataTableTrait;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
 class AdminTestimonialController extends Controller
 {
-    public function index()
+    use DataTableTrait;
+
+    public function index(Request $request)
     {
-        $testimonials = Testimonial::orderBy('sort_order')->orderBy('created_at', 'desc')->get();
+        $query = Testimonial::query();
+
+        $this->applySearch($query, $request->get('search'), ['client_name', 'headline', 'body', 'tag']);
+        $this->applyFilter($query, 'type', $request->get('type'));
+        $this->applyFilter($query, 'is_active', $request->get('is_active'));
+        $this->applyFilter($query, 'is_featured', $request->get('is_featured'));
+        $this->applySort($query, 'sort_order', ['sort_order', 'client_name', 'created_at', 'is_active']);
+
+        $testimonials = $this->paginateResults($query);
+
         return view('admin.pages.testimonials.index', compact('testimonials'));
     }
 
@@ -99,5 +111,12 @@ class AdminTestimonialController extends Controller
     {
         $testimonial->delete();
         return redirect()->route('admin.testimonials.index')->with('success', 'Testimonial deleted.');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate(['ids' => 'required|array', 'ids.*' => 'exists:testimonials,id']);
+        Testimonial::whereIn('id', $request->ids)->delete();
+        return redirect()->route('admin.testimonials.index')->with('success', count($request->ids) . ' testimonial(s) deleted.');
     }
 }
