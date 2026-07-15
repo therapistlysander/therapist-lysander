@@ -33,6 +33,21 @@
     display: flex;
     flex-direction: column;
   }
+  .testimonial-card__heading {
+    font-family: var(--font-heading);
+    font-size: var(--size-lg);
+    color: var(--color-text);
+    font-weight: 700;
+    margin: 0 0 var(--space-1);
+  }
+  .testimonial-card__tag {
+    display: inline-block;
+    font-size: var(--size-xs);
+    color: var(--color-accent);
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    margin-bottom: var(--space-4);
+  }
   .testimonial-card__quote-mark {
     font-family: Georgia, serif;
     font-size: 3rem;
@@ -41,22 +56,39 @@
     margin-bottom: var(--space-3);
     user-select: none;
   }
+  .testimonial-card__opening {
+    font-size: var(--size-lg);
+    color: var(--color-text);
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: var(--space-5);
+  }
   .testimonial-card__text {
     font-size: var(--size-base);
     color: var(--color-text-muted);
     line-height: 1.75;
     flex: 1;
-    font-style: italic;
   }
-  .testimonial-card__text p + p {
-    margin-top: var(--space-4);
+  .testimonial-card__text p {
+    margin: 0 0 var(--space-4);
   }
-  .testimonial-card__name {
+  .testimonial-card__text p:last-child {
+    margin-bottom: 0;
+  }
+  .testimonial-card__signature {
     font-family: var(--font-heading);
-    font-size: var(--size-base);
-    color: var(--color-text);
+    font-size: var(--size-sm);
+    color: var(--color-accent);
     font-weight: 600;
     margin-top: var(--space-5);
+  }
+  .testimonial-card__fallback {
+    font-size: var(--size-base);
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    font-style: italic;
+    flex: 1;
   }
 
   /* Endorsement */
@@ -114,11 +146,32 @@
       <div class="testimonials-grid">
         @foreach($testimonials as $t)
         <div class="testimonial-card fade-in">
-          <div class="testimonial-card__quote-mark">&ldquo;</div>
-          <div class="testimonial-card__text">
-            {!! $t->body ? nl2br(e(strip_tags($t->body))) : ($t->headline ?? $t->short_description ?? '') !!}
-          </div>
-          <p class="testimonial-card__name">&mdash; {{ $t->client_name }}</p>
+          {{-- Client name as heading --}}
+          <h3 class="testimonial-card__heading">{{ $t->client_name }}</h3>
+          @if($t->tag)
+            <span class="testimonial-card__tag">{{ $t->tag }}</span>
+          @endif
+
+          <div class="testimonial-card__quote-mark" aria-hidden="true">&ldquo;</div>
+
+          {{-- Opening quote (headline) as highlighted paragraph --}}
+          @if($t->headline)
+            <p class="testimonial-card__opening">{{ $t->headline }}</p>
+          @endif
+
+          {{-- Body with preserved paragraph formatting --}}
+          @if($t->body)
+            <div class="testimonial-card__text">
+              {!! strip_tags($t->body, '<p><br><strong><em><b><i><a><u>') !!}
+            </div>
+          @elseif($t->short_description)
+            <div class="testimonial-card__fallback">
+              <p>{{ $t->short_description }}</p>
+            </div>
+          @endif
+
+          {{-- Signature --}}
+          <p class="testimonial-card__signature">&mdash; {{ $t->client_name }}</p>
         </div>
         @endforeach
       </div>
