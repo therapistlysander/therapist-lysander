@@ -11,7 +11,7 @@ return [
         'home'              => 'Home',
         'approach'          => 'Trauma & Aanpak',
         'training'          => 'Opleiding & Specialisatie',
-        'testimonials'      => 'Cliënt ervaringen',
+        'testimonials'      => 'Cliënt Ervaringen',
         'fees'              => 'Tarieven & Traject',
         'faq'               => 'Veelgestelde Vragen',
         'contact'           => 'Contact',
