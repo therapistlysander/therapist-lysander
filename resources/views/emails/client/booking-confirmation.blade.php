@@ -5,7 +5,7 @@
 @section('content')
 <h2>Thank you for your booking request, {{ $firstName }}.</h2>
 
-<p>We have received your request and will review it shortly. You can expect to hear back from us within 1-2 business days.</p>
+<p>I have received your request and will review it shortly. You can expect to hear back from me within 1-2 business days.</p>
 
 <div class="highlight-box">
     <table style="width:100%;border-collapse:collapse;">
@@ -35,7 +35,7 @@
     </table>
 </div>
 
-<p>We will confirm your appointment or suggest an alternative time that works for both of us.</p>
+<p>I will confirm your appointment or suggest an alternative time that works for both of us.</p>
 
 <p>Warm regards,<br>Lysander Verschuur, MSc.</p>
 @endsection
