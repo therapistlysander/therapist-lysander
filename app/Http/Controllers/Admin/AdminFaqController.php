@@ -24,7 +24,7 @@ class AdminFaqController extends Controller
 
         // Extract string values from translatable fields for views
         foreach ($faqs as $faq) {
-            $faq->question_str = $this->getTranslatableString($faq->getRawOriginal('question'));
+            $faq->question_str = $this->getTranslatableString($faq->question);
         }
 
         return view('admin.pages.faqs.index', compact('faqs'));

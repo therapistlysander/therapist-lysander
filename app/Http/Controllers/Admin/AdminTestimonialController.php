@@ -26,8 +26,8 @@ class AdminTestimonialController extends Controller
 
             // Extract string values from translatable fields for views
             foreach ($testimonials as $t) {
-                $t->headline_str = $this->getTranslatableString($t->getRawOriginal('headline'));
-                $t->body_str = $this->getTranslatableString($t->getRawOriginal('body'));
+                $t->headline_str = $this->getTranslatableString($t->headline);
+                $t->body_str = $this->getTranslatableString($t->body);
             }
 
             return view('admin.pages.testimonials.index', compact('testimonials'));
