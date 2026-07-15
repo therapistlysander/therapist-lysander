@@ -21,15 +21,16 @@
   .testimonials-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
-    max-width: 720px;
+    gap: var(--space-8);
+    max-width: 920px;
     margin: 0 auto;
   }
   .testimonial-card {
     background: var(--color-white);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: var(--space-8) var(--space-6);
+    border-radius: var(--radius-lg);
+    padding: var(--space-10) var(--space-8);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
   }
