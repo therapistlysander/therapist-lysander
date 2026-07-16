@@ -599,6 +599,8 @@ function submitBooking() {
     document.getElementById('progress-pct').textContent = '100%';
     document.getElementById('progress-label').textContent = __t.complete;
     updateStepIndicators(4);
+    // Bring the success/confirmation message into view immediately.
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   })
   .catch(err => {
     btn.disabled = false; btn.textContent = __t.sendRequest;
