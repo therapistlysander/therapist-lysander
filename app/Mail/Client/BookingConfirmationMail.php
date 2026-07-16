@@ -51,18 +51,22 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
         $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
         $clientTimezone = $this->booking->client_timezone;
 
-        // Convert preferred_date from server timezone to client's timezone
+        // Convert preferred_date from server timezone to client's timezone.
+        // Dutch keeps 24-hour "om HH:mm"; English uses 12-hour "at h:mm AM/PM".
         $preferredDate = $this->booking->preferred_date;
         $displayDate = $preferredDate;
+        $dateFormat = $isDutch
+            ? 'dddd, D MMMM YYYY [om] HH:mm'
+            : 'dddd, D MMMM YYYY [at] h:mm A';
         if ($preferredDate && $clientTimezone) {
             $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
                 ->setTimezone($clientTimezone)
                 ->locale($isDutch ? 'nl' : 'en')
-                ->isoFormat('dddd, D MMMM YYYY [om] HH:mm');
+                ->isoFormat($dateFormat);
         } elseif ($preferredDate) {
             $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
                 ->locale($isDutch ? 'nl' : 'en')
-                ->isoFormat('dddd, D MMMM YYYY [om] HH:mm');
+                ->isoFormat($dateFormat);
         }
 
         $view = $isDutch
