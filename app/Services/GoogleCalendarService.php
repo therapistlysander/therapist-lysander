@@ -369,7 +369,6 @@ class GoogleCalendarService
 
         // Merge busy periods from all calendars
         $calendars = $response->getCalendars();
-        $errors = $response->getCalendars() ? [] : null;
 
         foreach ($calendarIds as $calId) {
             if (isset($calendars[$calId])) {
@@ -388,10 +387,8 @@ class GoogleCalendarService
                     $busyStart = Carbon::parse($busy->getStart());
                     $busyEnd = Carbon::parse($busy->getEnd());
                     $busySlots[] = [
-                        'start' => $busyStart->format('H:i'),
-                        'end'   => $busyEnd->format('H:i'),
-                        'start_dt' => $busyStart,
-                        'end_dt'   => $busyEnd,
+                        'start'       => $busyStart->format('H:i'),
+                        'end'         => $busyEnd->format('H:i'),
                         'calendar_id' => $calId,
                     ];
                 }
@@ -409,7 +406,7 @@ class GoogleCalendarService
         ]);
 
         // Sort by start time for consistent ordering
-        usort($busySlots, fn($a, $b) => $a['start_dt'] <=> $b['start_dt']);
+        usort($busySlots, fn($a, $b) => $a['start'] <=> $b['start']);
 
         return $busySlots;
     }
@@ -422,8 +419,8 @@ class GoogleCalendarService
         $busySlots = $this->getBusySlots($slotStart->copy()->startOfDay(), $slotEnd->copy()->endOfDay(), $calendarId);
 
         foreach ($busySlots as $busy) {
-            $busyStart = $busy['start_dt'];
-            $busyEnd = $busy['end_dt'];
+            $busyStart = Carbon::parse($slotStart->toDateString() . ' ' . $busy['start']);
+            $busyEnd = Carbon::parse($slotEnd->toDateString() . ' ' . $busy['end']);
 
             // Overlap check: slot overlaps with busy period
             if ($slotStart < $busyEnd && $slotEnd > $busyStart) {

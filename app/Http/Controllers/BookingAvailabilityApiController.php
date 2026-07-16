@@ -201,8 +201,8 @@ class BookingAvailabilityApiController extends Controller
             $slotEnd = $slotStart->copy()->addMinutes($slotDuration);
 
             foreach ($busySlots as $busy) {
-                $busyStart = ($busy['start_dt'] ?? Carbon::parse($date->toDateString() . ' ' . $busy['start']))->copy()->tz($timezone);
-                $busyEnd = ($busy['end_dt'] ?? Carbon::parse($date->toDateString() . ' ' . $busy['end']))->copy()->tz($timezone);
+                $busyStart = Carbon::parse($date->toDateString() . ' ' . $busy['start'], $timezone);
+                $busyEnd = Carbon::parse($date->toDateString() . ' ' . $busy['end'], $timezone);
 
                 // Check overlap
                 if ($slotStart < $busyEnd && $slotEnd > $busyStart) {
