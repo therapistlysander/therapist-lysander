@@ -40,7 +40,7 @@
     font-weight: 600;
     font-style: italic;
     line-height: 1.6;
-    margin: 0 0 var(--space-6);
+    margin: 0 0 var(--space-8);
   }
   .testimonial-card__text {
     font-size: var(--size-base);

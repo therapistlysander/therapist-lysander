@@ -20,7 +20,8 @@
   .trauma-type-item { display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-sm); color: var(--color-text-muted); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border); line-height: 1.5; background: transparent; border: none; border-radius: 0; border-bottom: 1px solid var(--color-border); }
   .trauma-type-item:last-child { border-bottom: none; }
   .trauma-type-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0; margin-top: 5px; }
-  .emdr-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: var(--space-4); margin-top: var(--space-6); }
+  .emdr-features { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-top: var(--space-6); }
+  @media (max-width: 640px) { .emdr-features { grid-template-columns: 1fr; } }
   .emdr-feature { padding: var(--space-4); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); border-left: 3px solid var(--color-accent); }
   .emdr-feature h4 { font-size: var(--size-base); margin-bottom: var(--space-2); color: var(--color-text); }
   .emdr-feature p { font-size: var(--size-base); color: var(--color-text-muted); line-height: 1.65; }
@@ -68,13 +69,29 @@
         <span class="section-label">{{ __('ui.approach.types_label') }}</span>
         <h2 id="types-heading" class="section-title">{{ $types?->content['heading'] ?? 'Types of Trauma I Work With' }}</h2>
       </div>
-      <p style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;line-height:1.85;" class="fade-in">{!! $types?->content['body'] ?? 'Trauma can take many different forms, but its effects often touch the same areas of life: safety, relationships, emotional wellbeing, and self-trust. Therapy can help people process these experiences and move toward greater freedom, stability, and resilience.' !!}</p>
+      @php
+        $typesBody = $types?->content['body'] ?? 'Trauma can take many different forms, but its effects often touch the same areas of life: safety, relationships, emotional wellbeing, and self-trust. Therapy can help people process these experiences and move toward greater freedom, stability, and resilience.';
+        // Frontend-only reorder: keep the first paragraph as the intro; move any following
+        // paragraphs (e.g. the "Don't see your situation listed?" callout) below the trauma list.
+        $typesClosePos = stripos($typesBody, '</p>');
+        if ($typesClosePos !== false) {
+            $typesIntro   = substr($typesBody, 0, $typesClosePos + 4);
+            $typesCallout = trim(substr($typesBody, $typesClosePos + 4));
+        } else {
+            $typesIntro   = $typesBody;
+            $typesCallout = '';
+        }
+      @endphp
+      <div style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;line-height:1.85;" class="fade-in">{!! $typesIntro !!}</div>
       @php $traumaItems = $types?->content['items'] ?? [['title'=>'War zone experiences'],['title'=>'Accidents and injury-related trauma'],['title'=>'Sexual abuse and assault'],['title'=>'Medical trauma'],['title'=>'Childhood abuse and emotional neglect'],['title'=>'Bullying and social exclusion'],['title'=>'Grief and traumatic loss'],['title'=>'High-conflict relational or family situations'],['title'=>'Attachment and relational trauma'],['title'=>'Panic attacks and overwhelming psychological experiences'],['title'=>'Trauma-related self-worth and identity difficulties']]; @endphp
       <div class="trauma-types fade-in">
         @foreach($traumaItems as $item)
         <div class="trauma-type-item">{{ $item['title'] }}</div>
         @endforeach
       </div>
+      @if($typesCallout !== '')
+      <div style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;line-height:1.85;margin-top:var(--space-6);" class="fade-in">{!! $typesCallout !!}</div>
+      @endif
     </div>
   </section>
 

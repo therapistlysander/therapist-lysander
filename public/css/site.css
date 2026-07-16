@@ -361,6 +361,7 @@ strong { font-weight: 600; }
   height: 18px;
   flex-shrink: 0;
   vertical-align: middle;
+  margin-top: -1px;
 }
 .btn--primary {
   background: var(--color-teal);
@@ -873,10 +874,10 @@ strong { font-weight: 600; }
   font-weight: 500;
   margin-top: var(--space-3);
 }
-/* Desktop only: nudge attribution slightly right to balance with the quote above */
-@media (min-width: 1101px) {
+/* Desktop only: nudge attribution right so it aligns visually with the centered quote */
+@media (min-width: 1024px) {
   .endorsement-card__attribution {
-    transform: translateX(var(--space-6));
+    transform: translateX(14px);
   }
 }
 
