@@ -170,14 +170,14 @@ class BookingAvailabilityApiController extends Controller
         });
 
         // Convert busy time ranges to slot times (H:i format)
-        return $this->busySlotsToSlotTimes($busySlots, $date);
+        return $this->busySlotsToSlotTimes($busySlots, $date, $timezone);
     }
 
     /**
      * Convert Google Calendar busy time ranges to slot start times (H:i format).
      * A slot is considered busy if any part of it overlaps with a busy period.
      */
-    private function busySlotsToSlotTimes(array $busySlots, Carbon $date): array
+    private function busySlotsToSlotTimes(array $busySlots, Carbon $date, string $timezone): array
     {
         if (empty($busySlots)) {
             return [];
@@ -197,12 +197,12 @@ class BookingAvailabilityApiController extends Controller
         );
 
         foreach ($allSlots as $slot) {
-            $slotStart = Carbon::parse($date->toDateString() . ' ' . $slot);
+            $slotStart = Carbon::parse($date->toDateString() . ' ' . $slot, $timezone);
             $slotEnd = $slotStart->copy()->addMinutes($slotDuration);
 
             foreach ($busySlots as $busy) {
-                $busyStart = $busy['start_dt'] ?? Carbon::parse($date->toDateString() . ' ' . $busy['start']);
-                $busyEnd = $busy['end_dt'] ?? Carbon::parse($date->toDateString() . ' ' . $busy['end']);
+                $busyStart = ($busy['start_dt'] ?? Carbon::parse($date->toDateString() . ' ' . $busy['start']))->copy()->tz($timezone);
+                $busyEnd = ($busy['end_dt'] ?? Carbon::parse($date->toDateString() . ' ' . $busy['end']))->copy()->tz($timezone);
 
                 // Check overlap
                 if ($slotStart < $busyEnd && $slotEnd > $busyStart) {
