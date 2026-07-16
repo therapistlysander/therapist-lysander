@@ -204,7 +204,7 @@ class AdminGoogleCalendarController extends Controller
 
             return response()->json([
                 'date' => $dateStr,
-                'timezone' => $calendarService->getAppTimezone(),
+                'timezone' => config('app.timezone', 'Europe/Amsterdam'),
                 'connected_email' => $token->google_email,
                 'write_target_calendar_id' => $token->calendar_id,
                 'availability_calendar_ids' => $calendarIds,
