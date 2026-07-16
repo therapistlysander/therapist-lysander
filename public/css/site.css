@@ -520,7 +520,7 @@ strong { font-weight: 600; }
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-8);
+  gap: 3.5rem; /* ~56px: more breathing room between text and image on desktop */
   align-items: center;
 }
 .grid-2--reverse .grid-2__media { order: -1; }

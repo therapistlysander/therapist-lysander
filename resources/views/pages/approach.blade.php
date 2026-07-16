@@ -143,8 +143,8 @@
 
   <section class="section section--white" aria-labelledby="why-heading">
     <div class="container">
-      <div class="grid-2 fade-in" style="gap:var(--space-4);">
-        <div class="grid-2__media" style="order:-1;margin-top:var(--space-2);">
+      <div class="grid-2 fade-in">
+        <div class="grid-2__media" style="order:-1;">
           <img src="{{ $why?->content['image'] ?? '/images/8d05ae73f3a7dbe5-11062b_a417184e892349f89eb10b97fd3d5a91-mv2.jpg' }}" alt="Warm therapeutic space" loading="lazy" width="600" height="750">
         </div>
         <div>
