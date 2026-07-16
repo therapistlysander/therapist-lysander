@@ -99,8 +99,10 @@ class AdminBookingController extends Controller
 
         $booking->update(['status' => $newStatus]);
 
-        // Confirming a booking applies the site-wide default meeting room.
+        // Confirming a booking locks in the requested date/time and applies the
+        // site-wide default meeting room, so it is fully scheduled in one step.
         if ($newStatus === 'confirmed') {
+            $this->ensureScheduledTime($booking);
             $this->applyDefaultMeetingLink($booking);
         }
 
@@ -162,17 +164,20 @@ class AdminBookingController extends Controller
             'confirmed_at' => now(),
         ]);
 
-        // Online sessions always use the site-wide default meeting room.
+        // Single-step confirm: lock in the client's requested date/time and the
+        // site-wide default meeting room, then send one confirmation email
+        // containing all the session details (date, platform, meeting link).
+        $this->ensureScheduledTime($booking);
         $this->applyDefaultMeetingLink($booking);
 
         app(NotificationService::class)->sendBookingApproved($booking->fresh());
 
-        // Sync to Google Calendar if booking has a scheduled time
-        if ($booking->scheduled_at) {
+        // Sync to Google Calendar now that a scheduled time is set.
+        if ($booking->fresh()->scheduled_at) {
             SyncBookingToCalendarJob::dispatch($booking->fresh(), 'create');
         }
 
-        return back()->with('success', 'Booking approved.');
+        return back()->with('success', 'Booking confirmed — session scheduled with your default meeting link and confirmation email sent.');
     }
 
     public function reject(Request $request, Booking $booking)
@@ -246,6 +251,18 @@ class AdminBookingController extends Controller
                 SyncBookingToCalendarJob::dispatch($booking, 'delete'),
             default => null,
         };
+    }
+
+    /**
+     * Lock in the client's requested date/time as the scheduled time when the
+     * booking has not been explicitly scheduled yet. This lets a single
+     * "Confirm" action fully schedule the session without a separate step.
+     */
+    private function ensureScheduledTime(Booking $booking): void
+    {
+        if (! $booking->scheduled_at && $booking->preferred_date) {
+            $booking->update(['scheduled_at' => $booking->preferred_date]);
+        }
     }
 
     /**
