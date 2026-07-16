@@ -34,36 +34,13 @@
     display: flex;
     flex-direction: column;
   }
-  .testimonial-card__heading {
-    font-family: var(--font-heading);
-    font-size: var(--size-lg);
-    color: var(--color-text);
-    font-weight: 700;
-    margin: 0 0 var(--space-1);
-  }
-  .testimonial-card__tag {
-    display: inline-block;
-    font-size: var(--size-xs);
-    color: var(--color-accent);
-    font-weight: 500;
-    letter-spacing: 0.03em;
-    margin-bottom: var(--space-4);
-  }
-  .testimonial-card__quote-mark {
-    font-family: Georgia, serif;
-    font-size: 3rem;
-    line-height: 1;
-    color: #c4956a;
-    margin-bottom: var(--space-3);
-    user-select: none;
-  }
   .testimonial-card__opening {
     font-size: var(--size-lg);
-    color: var(--color-text);
+    color: var(--color-accent);
     font-weight: 600;
     font-style: italic;
     line-height: 1.6;
-    margin-bottom: var(--space-5);
+    margin: 0 0 var(--space-6);
   }
   .testimonial-card__text {
     font-size: var(--size-base);
@@ -147,17 +124,9 @@
       <div class="testimonials-grid">
         @foreach($testimonials as $t)
         <div class="testimonial-card fade-in">
-          {{-- Client name as heading --}}
-          <h3 class="testimonial-card__heading">{{ $t->client_name }}</h3>
-          @if($t->tag)
-            <span class="testimonial-card__tag">{{ $t->tag }}</span>
-          @endif
-
-          <div class="testimonial-card__quote-mark" aria-hidden="true">&ldquo;</div>
-
-          {{-- Opening quote (headline) as highlighted paragraph --}}
+          {{-- Opening quote (headline) as highlighted title --}}
           @if($t->headline)
-            <p class="testimonial-card__opening">{{ $t->headline }}</p>
+            <p class="testimonial-card__opening">&ldquo;{{ $t->headline }}&rdquo;</p>
           @endif
 
           {{-- Body with preserved paragraph formatting --}}
