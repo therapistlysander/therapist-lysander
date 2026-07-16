@@ -155,30 +155,20 @@
       @endif
       <form method="POST" action="{{ route('admin.bookings.schedule', $booking) }}">
         @csrf @method('PATCH')
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-          <div>
-            <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Date &amp; Time *</label>
-            <input type="datetime-local" name="scheduled_at" class="admin-input"
-              value="{{ $booking->scheduled_at ? $booking->scheduled_at->format('Y-m-d\TH:i') : '' }}"
-              required style="width:100%;">
-          </div>
-          <div>
-            <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Platform</label>
-            <select name="meeting_platform" class="admin-select" style="width:100%;">
-              <option value="">Select platform…</option>
-              @foreach(['zoom'=>'Zoom','google_meet'=>'Google Meet','teams'=>'Microsoft Teams','whereby'=>'Whereby','other'=>'Other'] as $val => $lbl)
-                <option value="{{ $val }}" {{ $booking->meeting_platform === $val ? 'selected' : '' }}>{{ $lbl }}</option>
-              @endforeach
-            </select>
-          </div>
-        </div>
         <div style="margin-bottom:10px;">
-          <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Meeting / Video Call Link</label>
-          <input type="url" name="meeting_link" class="admin-input"
-            value="{{ $booking->meeting_link }}"
-            placeholder="https://zoom.us/j/… or https://meet.google.com/…"
-            style="width:100%;">
-          <div style="font-size:11px;color:#9ca3af;margin-top:3px;">This link will be shared with the client.</div>
+          <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Date &amp; Time *</label>
+          <input type="datetime-local" name="scheduled_at" class="admin-input"
+            value="{{ $booking->scheduled_at ? $booking->scheduled_at->format('Y-m-d\TH:i') : '' }}"
+            required style="width:100%;">
+        </div>
+        <div style="margin-bottom:10px;background:#f8fffe;border:1px solid #d1fae5;border-radius:8px;padding:10px 12px;font-size:12px;color:#4b5563;">
+          @if($defaultMeetingLink)
+            <div style="font-weight:600;color:#166534;margin-bottom:2px;">Online meeting room ({{ ucfirst(str_replace('_',' ', $defaultMeetingPlatform ?: 'other')) }})</div>
+            <a href="{{ $defaultMeetingLink }}" target="_blank" rel="noopener" style="color:#5a7a76;font-weight:600;word-break:break-all;">{{ $defaultMeetingLink }}</a>
+            <div style="color:#9ca3af;margin-top:4px;">Applied automatically to every online session. Manage it in <a href="{{ route('admin.settings.index') }}" style="color:#5a7a76;text-decoration:underline;">Site Settings &rarr; Booking &amp; Sessions</a>.</div>
+          @else
+            No default meeting link set yet. Add one in <a href="{{ route('admin.settings.index') }}" style="color:#5a7a76;text-decoration:underline;">Site Settings &rarr; Booking &amp; Sessions</a> and it will be applied to every online session automatically.
+          @endif
         </div>
         <button type="submit" class="btn-admin btn-admin--primary" style="width:100%;">
           {{ $booking->scheduled_at ? 'Update Schedule' : 'Confirm & Schedule' }}
@@ -186,33 +176,22 @@
       </form>
     </div>
 
-    {{-- Meeting Link Quick-Update --}}
+    {{-- Meeting Link (read-only; managed centrally in Site Settings) --}}
     @if($booking->scheduled_at)
     <div class="admin-detail">
       <h3 style="font-size:13px;font-weight:700;color:#1a2332;margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em;">Meeting Link</h3>
       @if($booking->meeting_link)
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;background:#f8fffe;border:1px solid #d1fae5;border-radius:8px;padding:10px 12px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;background:#f8fffe;border:1px solid #d1fae5;border-radius:8px;padding:10px 12px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>
         <a href="{{ $booking->meeting_link }}" target="_blank" rel="noopener"
            style="font-size:12px;color:#5a7a76;font-weight:600;word-break:break-all;">
           {{ $booking->meeting_link }}
         </a>
       </div>
+      @else
+      <p style="font-size:12px;color:#9ca3af;margin:0 0 10px;">No meeting link on this booking yet. It is applied automatically from the default when the booking is confirmed.</p>
       @endif
-      <form method="POST" action="{{ route('admin.bookings.meeting-link', $booking) }}" style="display:flex;flex-direction:column;gap:8px;">
-        @csrf @method('PATCH')
-        <input type="url" name="meeting_link" class="admin-input"
-          value="{{ $booking->meeting_link }}"
-          placeholder="Paste a new meeting link…"
-          style="width:100%;" required>
-        <select name="meeting_platform" class="admin-select">
-          <option value="">Platform…</option>
-          @foreach(['zoom'=>'Zoom','google_meet'=>'Google Meet','teams'=>'Microsoft Teams','whereby'=>'Whereby','other'=>'Other'] as $val => $lbl)
-            <option value="{{ $val }}" {{ $booking->meeting_platform === $val ? 'selected' : '' }}>{{ $lbl }}</option>
-          @endforeach
-        </select>
-        <button type="submit" class="btn-admin btn-admin--primary">Update Link</button>
-      </form>
+      <p style="font-size:11px;color:#9ca3af;margin:0;">The online meeting room is managed centrally in <a href="{{ route('admin.settings.index') }}" style="color:#5a7a76;text-decoration:underline;">Site Settings &rarr; Booking &amp; Sessions</a> and used for every online session.</p>
     </div>
     @endif
 

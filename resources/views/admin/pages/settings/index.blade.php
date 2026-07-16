@@ -21,11 +21,12 @@
     $groupLabels = [
       'general'    => 'General',
       'contact'    => 'Contact & Location',
+      'booking'    => 'Booking & Sessions',
       'social'     => 'Social Media & Profiles',
       'analytics'  => 'Analytics & Tracking',
       'endorsement' => 'Professional Endorsement',
     ];
-    $groupOrder = ['general', 'contact', 'social', 'analytics', 'endorsement'];
+    $groupOrder = ['general', 'contact', 'booking', 'social', 'analytics', 'endorsement'];
     // Groups managed on other pages (e.g. /email-settings)
     $skipGroups = ['email', 'notifications'];
     // Hide Professional Endorsement from non-superadmin users
@@ -117,6 +118,16 @@
             <textarea name="settings[{{ $setting->key }}][nl]" class="admin-input" rows="6">{{ old("settings.{$setting->key}.nl", $ftVal['nl'] ?? '') }}</textarea>
           </div>
 
+        @elseif($setting->key === 'default_meeting_platform')
+          <select name="settings[{{ $setting->key }}]"
+            id="setting-{{ $setting->key }}"
+            class="admin-select"
+            style="width:100%;">
+            @foreach(['zoom'=>'Zoom','google_meet'=>'Google Meet','teams'=>'Microsoft Teams','whereby'=>'Whereby','other'=>'Other'] as $val => $lbl)
+              <option value="{{ $val }}" {{ $setting->getRawOriginal('value') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
+            @endforeach
+          </select>
+
         @elseif($setting->type === 'text')
           <textarea name="settings[{{ $setting->key }}]"
             id="setting-{{ $setting->key }}"
@@ -150,6 +161,8 @@
           <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Format: GTM-XXXXXXX</p>
         @elseif($setting->key === 'calendly_url')
           <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Full Calendly URL, e.g. https://calendly.com/yourname</p>
+        @elseif($setting->key === 'default_meeting_link')
+          <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Your online meeting room link (e.g. https://zoom.us/j/… or https://meet.google.com/…). This link is used automatically for every online session and included in approval emails and calendar invites.</p>
         @endif
       </div>
       @endforeach

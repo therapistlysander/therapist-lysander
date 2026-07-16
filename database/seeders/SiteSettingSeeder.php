@@ -22,6 +22,9 @@ class SiteSettingSeeder extends Seeder
             ['group' => 'contact', 'key' => 'location_city',    'value' => 'Amsterdam',                              'type' => 'string', 'label' => 'Location / City'],
             ['group' => 'contact', 'key' => 'location_country', 'value' => 'Netherlands',                            'type' => 'string', 'label' => 'Country'],
             ['group' => 'contact', 'key' => 'calendly_url',     'value' => '',                                       'type' => 'string', 'label' => 'Calendly Booking URL'],
+            // Booking & Sessions
+            ['group' => 'booking', 'key' => 'default_meeting_link',     'value' => '',      'type' => 'string', 'label' => 'Default Online Meeting Link'],
+            ['group' => 'booking', 'key' => 'default_meeting_platform', 'value' => 'zoom',  'type' => 'string', 'label' => 'Default Meeting Platform'],
             // Social
             ['group' => 'social',  'key' => 'linkedin_url',     'value' => '',                                       'type' => 'string', 'label' => 'LinkedIn URL'],
             ['group' => 'social',  'key' => 'instagram_url',    'value' => '',                                       'type' => 'string', 'label' => 'Instagram URL'],
