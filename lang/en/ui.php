@@ -301,6 +301,7 @@ return [
         'choose_time_desc'      => 'Select a date to view available appointment times.',
         'select_date'           => 'Select a date',
         'available_times'       => 'Available times',
+        'timezone_notice'       => 'Times shown in your local timezone: :tz',
         'review_booking'        => 'Review your booking',
         'name_summary'          => 'Name',
         'datetime_summary'      => 'Date &amp; time',

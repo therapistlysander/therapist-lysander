@@ -277,6 +277,7 @@ window.__translations = {
     backToHome: '{{ __('ui.booking.back_to_home') }}',
     successToast: '{{ __('ui.booking.success_toast') }}',
     noSlots: '{{ __('ui.booking.no_slots') }}',
+    timezoneNotice: '{{ __('ui.booking.timezone_notice', ['tz' => ':tz']) }}',
     loadError: '{{ __('ui.booking.load_error') }}',
     loading: '{{ __('ui.booking.loading') }}',
     toastNameEmail: '{{ __('ui.booking.toast_name_email') }}',
@@ -491,8 +492,12 @@ function fetchAndRenderSlots(dateStr) {
 
       // Update timezone label - show only visitor's timezone
       const tzLabel = document.getElementById('timezone-label');
-      const friendlyTz = visitorTimezone.replace(/_/g, ' ');
-      tzLabel.textContent = 'Times shown in your local timezone: ' + friendlyTz;
+      let friendlyTz = visitorTimezone.replace(/_/g, ' ');
+      // Dutch page localizes the "Europe/" prefix to "Europa/".
+      if (currentLocale === 'nl') {
+        friendlyTz = friendlyTz.replace(/^Europe\//, 'Europa/');
+      }
+      tzLabel.textContent = __t.timezoneNotice.replace(':tz', friendlyTz);
 
       if (!data.available || !data.slots.length) {
         grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">' + __t.noSlots + '</div>';

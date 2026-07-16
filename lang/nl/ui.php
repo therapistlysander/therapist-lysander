@@ -301,6 +301,7 @@ return [
         'choose_time_desc'      => 'Selecteer een datum om de beschikbare tijden te bekijken.',
         'select_date'           => 'Selecteer een datum',
         'available_times'       => 'Beschikbare tijden',
+        'timezone_notice'       => 'Tijden worden weergegeven in jouw lokale tijdzone: :tz.',
         'review_booking'        => 'Controleer je boeking',
         'name_summary'          => 'Naam',
         'datetime_summary'      => 'Datum &amp; tijd',
