@@ -6,12 +6,50 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{{ isset($seo) && $seo?->title ? $seo->title : '' }}@yield('title', __('ui.layout.default_title'))</title>
   <meta name="description" content="{{ isset($seo) && $seo?->meta_description ? $seo->meta_description : '' }}@yield('meta_description', __('ui.layout.default_description'))">
-  @if(isset($seo) && $seo?->og_title)
-  <meta property="og:title" content="{{ $seo->og_title }}">
+  @php
+    $seoModel = isset($seo) ? $seo : null;
+    $localeCode = app()->getLocale();
+    $ogLocale = $localeCode === 'nl' ? 'nl_NL' : 'en_US';
+    $ogLocaleAlt = $localeCode === 'nl' ? 'en_US' : 'nl_NL';
+
+    $ogTitle = ($seoModel?->og_title)
+      ?: ($seoModel?->meta_title)
+      ?: (trim($__env->yieldContent('title')) ?: __('ui.layout.default_title'));
+    $ogDescription = ($seoModel?->og_description)
+      ?: ($seoModel?->meta_description)
+      ?: (trim($__env->yieldContent('meta_description')) ?: __('ui.layout.default_description'));
+
+    $ogCanonical = $seoModel?->canonical_url ?: trim($__env->yieldContent('canonical'));
+    $ogUrl = $ogCanonical !== '' ? $ogCanonical : url()->current();
+
+    $ogImageRaw = $seoModel?->og_image ?: '/images/og-image.jpg';
+    $ogImage = \Illuminate\Support\Str::startsWith($ogImageRaw, ['http://', 'https://'])
+      ? $ogImageRaw
+      : url($ogImageRaw);
+    $ogUsesDefaultImage = !($seoModel?->og_image);
+  @endphp
+  {{-- Open Graph (Facebook, WhatsApp, LinkedIn, etc.) --}}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Lysander Verschuur">
+  <meta property="og:locale" content="{{ $ogLocale }}">
+  <meta property="og:locale:alternate" content="{{ $ogLocaleAlt }}">
+  <meta property="og:title" content="{{ $ogTitle }}">
+  <meta property="og:description" content="{{ $ogDescription }}">
+  <meta property="og:url" content="{{ $ogUrl }}">
+  <meta property="og:image" content="{{ $ogImage }}">
+  <meta property="og:image:secure_url" content="{{ $ogImage }}">
+  <meta property="og:image:type" content="image/jpeg">
+  @if($ogUsesDefaultImage)
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   @endif
-  @if(isset($seo) && $seo?->og_description)
-  <meta property="og:description" content="{{ $seo->og_description }}">
-  @endif
+  <meta property="og:image:alt" content="{{ $ogTitle }}">
+  {{-- Twitter / X Card --}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ $ogTitle }}">
+  <meta name="twitter:description" content="{{ $ogDescription }}">
+  <meta name="twitter:image" content="{{ $ogImage }}">
+  <meta name="twitter:image:alt" content="{{ $ogTitle }}">
   @if(isset($seo) && $seo?->canonical_url)
   <link rel="canonical" href="{{ $seo->canonical_url }}">
   @else
