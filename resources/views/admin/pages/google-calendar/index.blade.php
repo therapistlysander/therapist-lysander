@@ -378,7 +378,7 @@
         <div class="field-group" style="margin-bottom: 24px;">
           <label style="font-weight: 600; margin-bottom: 4px;">Availability Calendars <span style="font-weight: 400; color: #9ca3af; font-size: 12px;">— check busy times across these (read-only)</span></label>
           <p style="font-size: 12px; color: #6b7280; margin-bottom: 12px;">
-            Select the calendars whose busy times should block booking slots. Typically: <strong>Therapist Lysander Calendar</strong> and <strong>Shared Personal Calendar</strong>. Do <strong>not</strong> select the Sessions calendar — it contains only placeholder planning blocks and must not affect availability. No event details are read — only free/busy status.
+            Select <strong>every</strong> calendar whose busy times should block booking slots — this must include <strong>all calendars that hold real appointments</strong> (e.g. <strong>Therapist Lysander</strong>, <strong>Afspraken</strong>, and <strong>Sessions</strong>). Leaving one unticked lets clients book over existing appointments on it. No event details are read — only free/busy status.
           </p>
           @php
             $selectedIds = $token->availability_calendar_ids ?? [$token->calendar_id];
