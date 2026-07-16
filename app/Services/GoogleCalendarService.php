@@ -172,10 +172,9 @@ class GoogleCalendarService
         $event->setDescription(implode("\n", array_filter([
             'Client: ' . $booking->full_name,
             'Email: ' . $booking->email,
-            'Phone: ' . ($booking->phone ?? 'Not provided'),
+            $booking->phone ? 'Phone: ' . $booking->phone : null,
             'Format: ' . ($formatLabels[$booking->session_format] ?? ucfirst($booking->session_format ?? '')),
             'Type: ' . ucfirst($booking->session_type ?? 'N/A'),
-            'Language: ' . ($booking->preferred_language ?? 'N/A'),
             $booking->reason ? 'Reason: ' . $booking->reason : null,
             $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
         ])));
@@ -258,10 +257,9 @@ class GoogleCalendarService
         $existingEvent->setDescription(implode("\n", array_filter([
             'Client: ' . $booking->full_name,
             'Email: ' . $booking->email,
-            'Phone: ' . ($booking->phone ?? 'Not provided'),
+            $booking->phone ? 'Phone: ' . $booking->phone : null,
             'Format: ' . ($formatLabels[$booking->session_format] ?? ucfirst($booking->session_format ?? '')),
             'Type: ' . ucfirst($booking->session_type ?? 'N/A'),
-            'Language: ' . ($booking->preferred_language ?? 'N/A'),
             $booking->reason ? 'Reason: ' . $booking->reason : null,
             $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
         ])));
