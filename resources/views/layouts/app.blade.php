@@ -22,11 +22,29 @@
     $ogCanonical = $seoModel?->canonical_url ?: trim($__env->yieldContent('canonical'));
     $ogUrl = $ogCanonical !== '' ? $ogCanonical : url()->current();
 
-    $ogImageRaw = $seoModel?->og_image ?: '/images/og-image.jpg';
+    $defaultOgImage = '/images/og-image.jpg';
+    $ogImageRaw = $seoModel?->og_image ?: (\App\Models\SiteSetting::where('key', 'default_og_image')->first()?->getRawOriginal('value') ?: $defaultOgImage);
     $ogImage = \Illuminate\Support\Str::startsWith($ogImageRaw, ['http://', 'https://'])
       ? $ogImageRaw
       : url($ogImageRaw);
-    $ogUsesDefaultImage = !($seoModel?->og_image);
+    $ogImagePath = \Illuminate\Support\Str::startsWith($ogImageRaw, ['http://', 'https://'])
+      ? null
+      : public_path(ltrim($ogImageRaw, '/'));
+    $ogUsesDefaultImage = $ogImageRaw === $defaultOgImage;
+
+    // Cache-bust the default image so WhatsApp/Facebook re-fetch after replacement.
+    if ($ogUsesDefaultImage && $ogImagePath && file_exists($ogImagePath)) {
+        $ogImage .= '?v=' . filemtime($ogImagePath);
+    }
+
+    // Determine image dimensions for og:image:width/height
+    $ogImageDimensions = null;
+    if ($ogImagePath && file_exists($ogImagePath)) {
+        $ogImageDimensions = @getimagesize($ogImagePath);
+    }
+    if (!$ogImageDimensions && $ogUsesDefaultImage) {
+        $ogImageDimensions = [1200, 630];
+    }
   @endphp
   {{-- Open Graph (Facebook, WhatsApp, LinkedIn, etc.) --}}
   <meta property="og:type" content="website">
@@ -39,11 +57,13 @@
   <meta property="og:image" content="{{ $ogImage }}">
   <meta property="og:image:secure_url" content="{{ $ogImage }}">
   <meta property="og:image:type" content="image/jpeg">
-  @if($ogUsesDefaultImage)
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  @if($ogImageDimensions)
+  <meta property="og:image:width" content="{{ $ogImageDimensions[0] }}">
+  <meta property="og:image:height" content="{{ $ogImageDimensions[1] }}">
   @endif
   <meta property="og:image:alt" content="{{ $ogTitle }}">
+  {{-- WhatsApp / schema.org image hint --}}
+  <meta itemprop="image" content="{{ $ogImage }}">
   {{-- Twitter / X Card --}}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ $ogTitle }}">

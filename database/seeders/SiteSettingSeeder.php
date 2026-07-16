@@ -26,6 +26,7 @@ class SiteSettingSeeder extends Seeder
             ['group' => 'social',  'key' => 'linkedin_url',     'value' => '',                                       'type' => 'string', 'label' => 'LinkedIn URL'],
             ['group' => 'social',  'key' => 'instagram_url',    'value' => '',                                       'type' => 'string', 'label' => 'Instagram URL'],
             ['group' => 'social',  'key' => 'psychology_today_url', 'value' => '',                                   'type' => 'string', 'label' => 'Psychology Today Profile'],
+            ['group' => 'social',  'key' => 'default_og_image', 'value' => '/images/og-image.jpg',                   'type' => 'image',  'label' => 'Default Social Share Image (Open Graph)'],
             // Analytics
             ['group' => 'analytics', 'key' => 'google_analytics_id', 'value' => '',                                  'type' => 'string', 'label' => 'Google Analytics ID'],
             ['group' => 'analytics', 'key' => 'gtm_id',              'value' => '',                                  'type' => 'string', 'label' => 'Google Tag Manager ID'],
