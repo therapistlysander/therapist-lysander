@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminSiteSettingController extends Controller
 {
@@ -17,10 +18,21 @@ class AdminSiteSettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->input('settings', []);
+        $files = $request->file('settings', []);
 
         foreach ($data as $key => $value) {
             $setting = SiteSetting::where('key', $key)->first();
             if (!$setting) continue;
+
+            // Handle image uploads
+            if ($setting->type === 'image' && isset($files[$key]) && $files[$key]->isValid()) {
+                $file = $files[$key];
+                $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                      . '-' . time()
+                      . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('media', $name, 'public');
+                $value = '/storage/media/' . $name;
+            }
 
             // Normalise booleans
             if ($setting->type === 'boolean') {
