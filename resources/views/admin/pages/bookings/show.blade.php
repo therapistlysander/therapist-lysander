@@ -26,8 +26,8 @@
     @if(!in_array($booking->status, ['confirmed','completed','cancelled']))
     <form method="POST" action="{{ route('admin.bookings.approve', $booking) }}" style="display:inline;" id="approve-form">
       @csrf
-      <button type="button" class="btn-admin btn-admin--primary" style="background:#10b981;border-color:#10b981;" onclick="showConfirmModal('Approve Booking?', 'This will confirm the booking and notify the client.', function() { document.getElementById('approve-form').submit(); }, 'warning')">
-        ✓ Approve
+      <button type="button" class="btn-admin btn-admin--primary" style="background:#10b981;border-color:#10b981;" onclick="showConfirmModal('Confirm Booking?', 'This will confirm the booking at the requested date and time, apply your default meeting link, and email the client all the session details in one step.', function() { document.getElementById('approve-form').submit(); }, 'warning')">
+        ✓ Confirm
       </button>
     </form>
     @endif
@@ -143,6 +143,7 @@
     {{-- Schedule Session --}}
     <div class="admin-detail">
       <h3 style="font-size:13px;font-weight:700;color:#1a2332;margin:0 0 4px;text-transform:uppercase;letter-spacing:.08em;">Schedule Session</h3>
+      <p style="font-size:11px;color:#9ca3af;margin:0 0 12px;">Optional. Confirming a booking already schedules it at the requested time with your default meeting link and emails the client. Use this only to change the date, platform, or link manually.</p>
       @if($booking->scheduled_at)
       <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;margin-bottom:16px;font-size:13px;">
         <div style="font-weight:600;color:#166534;">
