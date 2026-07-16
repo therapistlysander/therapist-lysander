@@ -50,6 +50,12 @@
       </div>
 
       @foreach($settings[$group] as $setting)
+      {{-- Default Social Share Image (Open Graph) upload disabled.
+           The OG image is now set directly from the static file public/images/og-image.jpg.
+           To re-enable admin uploads, remove this @continue block. --}}
+      @if($setting->type === 'image')
+        @continue
+      @endif
       <div class="admin-field">
         <label class="admin-label" for="setting-{{ $setting->key }}">
           {{ $setting->label ?? $setting->key }}
