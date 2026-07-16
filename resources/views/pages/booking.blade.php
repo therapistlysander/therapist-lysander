@@ -229,7 +229,7 @@
 
       <div class="step-section" id="slots-wrap" style="display:none;">
         <label class="step-section__label">{{ __('ui.booking.available_times') }}</label>
-        <p id="timezone-label" style="font-size:var(--size-xs);color:var(--color-text-light);margin-bottom:var(--space-3);"></p>
+        <p id="timezone-label" style="font-size:var(--size-sm);color:var(--color-text-light);margin-bottom:var(--space-3);"></p>
         <div class="time-slots" id="time-slots"></div>
       </div>
 
