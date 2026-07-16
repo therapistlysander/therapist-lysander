@@ -358,14 +358,33 @@ class GoogleCalendarService
         $request->setTimeZone($this->getAppTimezone());
         $request->setItems($items);
 
+        Log::debug('GoogleCalendar: FreeBusy request', [
+            'time_min' => $start->toIso8601String(),
+            'time_max' => $end->toIso8601String(),
+            'calendar_ids' => $calendarIds,
+        ]);
+
         $response = $service->freebusy->query($request);
         $busySlots = [];
 
         // Merge busy periods from all calendars
         $calendars = $response->getCalendars();
+        $errors = $response->getCalendars() ? [] : null;
+
         foreach ($calendarIds as $calId) {
             if (isset($calendars[$calId])) {
-                foreach ($calendars[$calId]->getBusy() as $busy) {
+                $calendarResult = $calendars[$calId];
+
+                // Google can return per-calendar errors (e.g. shared calendar not readable)
+                if (method_exists($calendarResult, 'getErrors') && $calendarResult->getErrors()) {
+                    Log::warning('GoogleCalendar: FreeBusy error for calendar', [
+                        'calendar_id' => $calId,
+                        'errors' => $calendarResult->getErrors(),
+                    ]);
+                    continue;
+                }
+
+                foreach ($calendarResult->getBusy() as $busy) {
                     $busyStart = Carbon::parse($busy->getStart());
                     $busyEnd = Carbon::parse($busy->getEnd());
                     $busySlots[] = [
@@ -373,10 +392,21 @@ class GoogleCalendarService
                         'end'   => $busyEnd->format('H:i'),
                         'start_dt' => $busyStart,
                         'end_dt'   => $busyEnd,
+                        'calendar_id' => $calId,
                     ];
                 }
+            } else {
+                Log::warning('GoogleCalendar: FreeBusy response missing expected calendar', [
+                    'calendar_id' => $calId,
+                    'returned_calendars' => array_keys((array) $calendars),
+                ]);
             }
         }
+
+        Log::info('GoogleCalendar: FreeBusy response summary', [
+            'calendar_ids' => $calendarIds,
+            'busy_slots_found' => count($busySlots),
+        ]);
 
         // Sort by start time for consistent ordering
         usort($busySlots, fn($a, $b) => $a['start_dt'] <=> $b['start_dt']);

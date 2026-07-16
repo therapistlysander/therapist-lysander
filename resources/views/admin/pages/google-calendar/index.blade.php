@@ -223,6 +223,10 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
           Open Google Calendar
         </a>
+        <a href="{{ route('admin.google-calendar.diagnose', ['date' => '2026-07-22']) }}" target="_blank" class="btn-admin btn-admin--secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Diagnose 22 July
+        </a>
         <form method="POST" action="{{ route('admin.google-calendar.disconnect') }}" id="disconnect-form" style="display:none;">
           @csrf
         </form>
@@ -378,7 +382,7 @@
         <div class="field-group" style="margin-bottom: 24px;">
           <label style="font-weight: 600; margin-bottom: 4px;">Availability Calendars <span style="font-weight: 400; color: #9ca3af; font-size: 12px;">— check busy times across these (read-only)</span></label>
           <p style="font-size: 12px; color: #6b7280; margin-bottom: 12px;">
-            Select <strong>every</strong> calendar whose busy times should block booking slots — this must include <strong>all calendars that hold real appointments</strong> (e.g. <strong>Therapist Lysander</strong>, <strong>Afspraken</strong>, and <strong>Sessions</strong>). Leaving one unticked lets clients book over existing appointments on it. No event details are read — only free/busy status.
+            Select the calendars whose busy times should block booking slots. Select <strong>Therapist Lysander</strong> and <strong>Afspraken</strong>. Do <strong>not</strong> select <strong>Sessions</strong> — it is only a duplicate/reference calendar for your personal overview and must not affect availability. No event details are read — only free/busy status.
           </p>
           @php
             $selectedIds = $token->availability_calendar_ids ?? [$token->calendar_id];
