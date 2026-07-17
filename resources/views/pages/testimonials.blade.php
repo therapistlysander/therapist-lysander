@@ -56,10 +56,10 @@
   }
   .testimonial-card__signature {
     font-family: var(--font-heading);
-    font-size: var(--size-sm);
+    font-size: var(--size-base);
     color: var(--color-accent);
     font-weight: 600;
-    margin-top: var(--space-5);
+    margin-top: var(--space-6);
   }
   .testimonial-card__fallback {
     font-size: var(--size-base);
