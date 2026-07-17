@@ -31,7 +31,9 @@
                 @yield('content')
             </div>
             <div class="email-footer">
-                <p>{!! @yield('footer', 'This is an automated message from Therapist Lysander.<br>Please do not reply directly to this email.') !!}</p>
+                @section('footer_line1')This is an automated message from Therapist Lysander.@show
+                <br>
+                @section('footer_line2')Please do not reply directly to this email.@show
             </div>
         </div>
     </div>

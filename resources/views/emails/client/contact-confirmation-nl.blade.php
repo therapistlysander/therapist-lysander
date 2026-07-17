@@ -12,6 +12,5 @@
 <p>Met vriendelijke groet,<br>Lysander Verschuur, MSc.</p>
 @endsection
 
-@section('footer')
-Dit is een automatisch gegenereerd bericht van Therapist Lysander.<br>Reageer alstublieft niet rechtstreeks op deze e-mail.
-@endsection
+@section('footer_line1')Dit is een automatisch gegenereerd bericht van Therapist Lysander.@endsection
+@section('footer_line2')Reageer alstublieft niet rechtstreeks op deze e-mail.@endsection
