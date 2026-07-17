@@ -84,6 +84,10 @@ Route::prefix('{locale}')
         Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
         Route::get('/booking', [FrontendController::class, 'booking'])->name('booking');
 
+        // Legal pages
+        Route::get('/privacy', [FrontendController::class, 'privacy'])->name('privacy');
+        Route::get('/terms', [FrontendController::class, 'terms'])->name('terms');
+
         // Contact form POST (web)
         Route::post('/contact', [ContactWebController::class, 'submit'])->name('contact.submit');
 
