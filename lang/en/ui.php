@@ -298,7 +298,7 @@ return [
         'goals_placeholder'     => "I'd like to feel more... / I struggle with...",
         'optional_helper'       => 'This is optional. You can also discuss this during the call itself.',
         'choose_time'           => 'Choose a date & time',
-        'choose_time_desc'      => 'Select a date to view available appointment times.',
+        'choose_time_desc'      => 'Select a day to view the available time slots. If you don\'t see a suitable time, feel free to contact me.',
         'select_date'           => 'Select a date',
         'available_times'       => 'Available times',
         'timezone_notice'       => 'Times shown in your local timezone: :tz',
