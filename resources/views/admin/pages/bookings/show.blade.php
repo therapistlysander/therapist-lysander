@@ -157,9 +157,9 @@
         @csrf @method('PATCH')
         <div style="margin-bottom:10px;">
           <label style="font-size:12px;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Date &amp; Time *</label>
-          <input type="datetime-local" name="scheduled_at" class="admin-input"
-            value="{{ $booking->scheduled_at ? $booking->scheduled_at->format('Y-m-d\TH:i') : '' }}"
-            required style="width:100%;">
+          <input type="text" name="scheduled_at" id="scheduled_at" class="admin-input"
+            value="{{ $booking->scheduled_at ? $booking->scheduled_at->format('Y-m-d H:i') : '' }}"
+            required autocomplete="off" style="width:100%;">
         </div>
         <div style="margin-bottom:10px;background:#f8fffe;border:1px solid #d1fae5;border-radius:8px;padding:10px 12px;font-size:12px;color:#4b5563;">
           @if($defaultMeetingLink)
@@ -269,4 +269,27 @@
 
   </div>{{-- end right column --}}
 </div>
+@endsection
+
+@section('page_styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@endsection
+
+@section('page_scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.flatpickr) {
+      flatpickr('#scheduled_at', {
+        enableTime: true,
+        time_24hr: true,
+        dateFormat: 'Y-m-d H:i',   // value submitted to the server
+        altInput: true,
+        altFormat: 'd/m/Y H:i',    // European format shown to the user
+        minuteIncrement: 15,
+        allowInput: true,
+      });
+    }
+  });
+</script>
 @endsection

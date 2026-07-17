@@ -435,7 +435,7 @@
             </div>
           </div>
           <div class="synced-item__time">
-            {{ $booking->scheduled_at ? \Carbon\Carbon::parse($booking->scheduled_at)->format('M j, H:i') : '—' }}
+            {{ $booking->scheduled_at ? \Carbon\Carbon::parse($booking->scheduled_at)->format('j M, H:i') : '—' }}
           </div>
           <span class="synced-item__status {{ $booking->scheduled_at && $booking->scheduled_at->isFuture() ? 'synced-item__status--upcoming' : 'synced-item__status--past' }}">
             {{ $booking->scheduled_at && $booking->scheduled_at->isFuture() ? 'Upcoming' : 'Past' }}

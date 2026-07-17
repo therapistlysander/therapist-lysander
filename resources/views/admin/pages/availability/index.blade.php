@@ -4,6 +4,7 @@
 @section('page_title', 'Booking Availability')
 
 @section('page_styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   .avail-layout { display: flex; flex-direction: column; gap: 24px; }
   .avail-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -311,7 +312,7 @@
             <div class="add-block__row">
               <div class="add-block__field">
                 <label>Date to block</label>
-                <input type="date" name="blocked_date" required min="{{ date('Y-m-d') }}">
+                <input type="text" name="blocked_date" id="blocked_date" required autocomplete="off">
               </div>
               <div class="add-block__field">
                 <label>Block type</label>
@@ -356,6 +357,20 @@
 @endsection
 
 @section('page_scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.flatpickr) {
+      flatpickr('#blocked_date', {
+        dateFormat: 'Y-m-d',       // value submitted to the server
+        altInput: true,
+        altFormat: 'd/m/Y',        // European format shown to the user
+        minDate: 'today',
+        allowInput: true,
+      });
+    }
+  });
+</script>
 <script>
 function toggleBreak(checkbox) {
   const startField = document.getElementById('break-start-field');
