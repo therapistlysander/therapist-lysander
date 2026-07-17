@@ -9,13 +9,13 @@
 
 @section('page_styles')
 <style>
-  .legal { padding: var(--space-10) 0 var(--space-16); max-width: 44rem; }
+  .legal { padding: var(--space-10) var(--space-6) var(--space-16); max-width: 44rem; }
   .legal__notice {
     background: var(--color-teal-light);
     border: 1px solid var(--color-teal);
     border-left-width: 4px;
     border-radius: var(--radius-md);
-    padding: var(--space-4) var(--space-5);
+    padding: var(--space-5) var(--space-6);
     margin-bottom: var(--space-8);
     font-size: var(--size-sm);
     color: var(--color-text);
