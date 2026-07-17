@@ -140,13 +140,15 @@ class FrontendController extends Controller
 
     public function privacy(string $locale)
     {
-        $seo = $this->seo('privacy');
-        return view('pages.privacy', compact('seo'));
+        $sections = $this->sections('privacy');
+        $seo      = $this->seo('privacy');
+        return view('pages.privacy', compact('sections', 'seo'));
     }
 
     public function terms(string $locale)
     {
-        $seo = $this->seo('terms');
-        return view('pages.terms', compact('seo'));
+        $sections = $this->sections('terms');
+        $seo      = $this->seo('terms');
+        return view('pages.terms', compact('sections', 'seo'));
     }
 }
