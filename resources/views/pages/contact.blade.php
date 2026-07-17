@@ -56,6 +56,8 @@
     .booking-cta-card { padding: var(--space-6) var(--space-4); }
     .inquiry-form { padding: var(--space-6) var(--space-4); }
     .contact-grid { gap: var(--space-6); }
+    .faq-link { padding: var(--space-3) var(--space-4); font-size: var(--size-xs); letter-spacing: 0.05em; white-space: normal; text-align: center; line-height: 1.3; }
+    .faq-link svg { width: 14px; height: 14px; }
   }
 </style>
 @endsection
@@ -113,7 +115,7 @@
           <!-- FAQ link -->
           <div style="margin-top:var(--space-6);padding-top:var(--space-6);border-top:1px solid var(--color-border);">
             <p style="font-size:var(--size-sm);color:var(--color-text-muted);margin-bottom:var(--space-3);">{{ __('ui.contact.more_questions') }}</p>
-            <a href="{{ route('faq') }}" class="btn btn--outline">
+            <a href="{{ route('faq') }}" class="btn btn--outline faq-link">
               {{ __('ui.contact.view_faqs') }}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
             </a>
