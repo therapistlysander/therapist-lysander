@@ -56,8 +56,8 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
         $preferredDate = $this->booking->preferred_date;
         $displayDate = $preferredDate;
         $dateFormat = $isDutch
-            ? 'dddd, D MMMM YYYY [om] HH:mm'
-            : 'dddd, D MMMM YYYY [at] h:mm A';
+            ? 'D MMMM YYYY [om] HH:mm'
+            : 'D MMMM YYYY [at] h:mm A';
         if ($preferredDate && $clientTimezone) {
             $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
                 ->setTimezone($clientTimezone)
