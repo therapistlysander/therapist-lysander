@@ -22,22 +22,30 @@ class BookingStatusChangedMail extends Mailable implements ShouldQueue
 
     public function envelope(): Envelope
     {
+        $isDutch = $this->booking->preferred_language === 'nl';
+
         $subjects = [
-            'confirmed' => 'Your booking has been confirmed',
-            'cancelled' => 'Your booking has been cancelled',
-            'completed' => 'Your session has been completed',
-            'no_show'   => 'Regarding your missed appointment',
+            'confirmed' => $isDutch ? 'Je afspraak is bevestigd' : 'Your booking has been confirmed',
+            'cancelled' => $isDutch ? 'Je afspraak is geannuleerd' : 'Your booking has been cancelled',
+            'completed' => $isDutch ? 'Je sessie is voltooid' : 'Your session has been completed',
+            'no_show'   => $isDutch ? 'Betreft je gemiste afspraak' : 'Regarding your missed appointment',
         ];
 
         return new Envelope(
-            subject: $subjects[$this->newStatus] ?? 'Your booking status has been updated',
+            subject: $subjects[$this->newStatus] ?? ($isDutch ? 'Je afspraakstatus is bijgewerkt' : 'Your booking status has been updated'),
         );
     }
 
     public function content(): Content
     {
+        $isDutch = $this->booking->preferred_language === 'nl';
+
+        $view = $isDutch
+            ? 'emails.client.booking-status-changed-nl'
+            : 'emails.client.booking-status-changed';
+
         return new Content(
-            view: 'emails.client.booking-status-changed',
+            view: $view,
             with: [
                 'firstName'   => $this->booking->first_name,
                 'newStatus'   => $this->newStatus,

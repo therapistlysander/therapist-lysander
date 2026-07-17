@@ -20,15 +20,25 @@ class BookingRejectedMail extends Mailable implements ShouldQueue
 
     public function envelope(): Envelope
     {
+        $isDutch = $this->booking->preferred_language === 'nl';
+
         return new Envelope(
-            subject: 'Regarding your booking request',
+            subject: $isDutch
+                ? 'Betreft je afspraakaanvraag'
+                : 'Regarding your booking request',
         );
     }
 
     public function content(): Content
     {
+        $isDutch = $this->booking->preferred_language === 'nl';
+
+        $view = $isDutch
+            ? 'emails.client.booking-rejected-nl'
+            : 'emails.client.booking-rejected';
+
         return new Content(
-            view: 'emails.client.booking-rejected',
+            view: $view,
             with: [
                 'firstName' => $this->booking->first_name,
                 'rejectionReason' => $this->booking->rejection_reason,

@@ -413,7 +413,8 @@ function formatBookingDateTime(dateStr, timeStr) {
   if (!datePart) return '';
   if (!timePart) return datePart;
   const connector = currentLocale === 'nl' ? 'om' : 'at';
-  return datePart + ' ' + connector + ' ' + timePart;
+  // Use non-breaking space to keep date+time together on one line
+  return datePart + '\u00A0' + connector + '\u00A0' + timePart;
 }
 
 // Format is always 'intake' (free intro call only)

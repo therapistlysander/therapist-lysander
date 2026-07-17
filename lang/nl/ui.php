@@ -315,7 +315,7 @@ return [
         'sending'               => 'Versturen...',
         'booking_disclaimer'   => 'Je boekingsverzoek wordt naar Lysander gestuurd. Je ontvangt binnen 24 uur een bevestiging via e-mail of WhatsApp.',
         'success_title'         => 'Boekingsverzoek verstuurd!',
-        'success_desc'          => 'Bedankt, :name. Lysander bevestigt je sessie voor :datetime via e-mail of WhatsApp binnen 24 uur.',
+        'success_desc'          => 'Bedankt, :name. Lysander bevestigt je afspraak via e-mail of WhatsApp binnen 1–2 werkdagen.',
         'also_whatsapp'         => 'Ook versturen via WhatsApp',
         'back_to_home'          => 'Terug naar home',
         'success_toast'         => 'Boekingsverzoek ingediend!',

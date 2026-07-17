@@ -315,7 +315,7 @@ return [
         'sending'               => 'Sending...',
         'booking_disclaimer'   => "Your booking request will be sent to Lysander. You'll receive a confirmation via email or WhatsApp within 24 hours.",
         'success_title'         => 'Booking request sent!',
-        'success_desc'          => 'Thank you, :name. Lysander will confirm your session for :datetime via email or WhatsApp within 24 hours.',
+        'success_desc'          => 'Thank you, :name. Lysander will confirm your booking via email or WhatsApp within 1–2 business days.',
         'also_whatsapp'         => 'Also send via WhatsApp',
         'back_to_home'          => 'Back to home',
         'success_toast'         => 'Booking request submitted!',
