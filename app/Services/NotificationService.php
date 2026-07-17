@@ -23,7 +23,11 @@ class NotificationService
             return;
         }
 
-        Mail::to($contact->email)->queue(new ContactConfirmationMail($contact));
+        // Capture the current website locale now (during the web request) so the
+        // queued mail is rendered in the language of the site the visitor used.
+        $locale = app()->getLocale();
+
+        Mail::to($contact->email)->queue(new ContactConfirmationMail($contact, $locale));
     }
 
     public function sendBookingConfirmation(Booking $booking): void
