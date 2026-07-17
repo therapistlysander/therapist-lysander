@@ -49,22 +49,18 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
         ];
 
         $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
-        $clientTimezone = $this->booking->client_timezone;
 
-        // Convert preferred_date from server timezone to client's timezone.
+        // preferred_date holds the Amsterdam wall-clock time the client booked.
+        // Display that exact time with no timezone shift, so the email matches
+        // the booking storage, the admin panel, and the Google Calendar event.
         // Dutch keeps 24-hour "om HH:mm"; English uses 12-hour "at h:mm AM/PM".
         $preferredDate = $this->booking->preferred_date;
         $displayDate = $preferredDate;
         $dateFormat = $isDutch
             ? 'D MMMM YYYY [om] HH:mm'
             : 'D MMMM YYYY [at] h:mm A';
-        if ($preferredDate && $clientTimezone) {
-            $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
-                ->setTimezone($clientTimezone)
-                ->locale($isDutch ? 'nl' : 'en')
-                ->isoFormat($dateFormat);
-        } elseif ($preferredDate) {
-            $displayDate = \Carbon\Carbon::parse($preferredDate, $serverTimezone)
+        if ($preferredDate) {
+            $displayDate = \Carbon\Carbon::parse($preferredDate->format('Y-m-d H:i:s'), $serverTimezone)
                 ->locale($isDutch ? 'nl' : 'en')
                 ->isoFormat($dateFormat);
         }
@@ -81,7 +77,7 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
                 'appointmentType' => $typeLabels[$this->booking->session_format] ?? ucfirst($this->booking->session_format),
                 'sessionFormat'   => $formatLabels[$this->booking->session_format] ?? ucfirst($this->booking->session_format),
                 'displayDate'     => $displayDate,
-                'clientTimezone'  => $clientTimezone,
+                'appointmentTimezone' => $serverTimezone,
             ],
         );
     }
