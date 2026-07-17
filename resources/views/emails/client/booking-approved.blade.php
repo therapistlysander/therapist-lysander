@@ -26,8 +26,8 @@
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Date & time:</td>
             <td style="padding:4px 0;color:#1a2332;">
                 {{ $displayScheduledAt }}
-                @if(!empty($clientTimezone))
-                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $clientTimezone) }})</span>
+                @if(!empty($appointmentTimezone))
+                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $appointmentTimezone) }})</span>
                 @endif
             </td>
         </tr>

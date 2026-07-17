@@ -35,11 +35,13 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
         $isDutch = $this->booking->preferred_language === 'nl';
 
         $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
-        $clientTimezone = $this->booking->client_timezone;
 
         // Prefer the confirmed time; fall back to the requested time so the
         // details box is never empty when a booking is confirmed without an
         // explicit scheduling step (e.g. via the status dropdown).
+        // scheduled_at / preferred_date hold the Amsterdam wall-clock appointment
+        // time. Display it exactly as booked with no timezone shift, so it matches
+        // the booking storage, the admin panel, and the Google Calendar event.
         // Dutch uses 24-hour "om HH:mm"; English uses 12-hour "at h:mm AM/PM".
         $scheduledAt = $this->booking->scheduled_at ?? $this->booking->preferred_date;
         $dateFormat = $isDutch
@@ -47,11 +49,9 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
             : 'D MMMM YYYY [at] h:mm A';
         $displayScheduledAt = null;
         if ($scheduledAt) {
-            $carbon = \Carbon\Carbon::parse($scheduledAt, $serverTimezone);
-            if ($clientTimezone) {
-                $carbon->setTimezone($clientTimezone);
-            }
-            $displayScheduledAt = $carbon->locale($isDutch ? 'nl' : 'en')->isoFormat($dateFormat);
+            $displayScheduledAt = \Carbon\Carbon::parse($scheduledAt->format('Y-m-d H:i:s'), $serverTimezone)
+                ->locale($isDutch ? 'nl' : 'en')
+                ->isoFormat($dateFormat);
         }
 
         $formatLabels = [
@@ -74,7 +74,7 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
                 'displayScheduledAt' => $displayScheduledAt,
                 'meetingLink' => $this->booking->meeting_link,
                 'meetingPlatform' => $this->booking->meeting_platform,
-                'clientTimezone' => $clientTimezone,
+                'appointmentTimezone' => $serverTimezone,
             ],
         );
     }
