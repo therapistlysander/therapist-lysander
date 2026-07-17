@@ -15,7 +15,7 @@
 <style>
   .training-section { margin-bottom: var(--space-10); }
   .training-section:last-child { margin-bottom: 0; }
-  .training-header { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
+  .training-header { display: flex; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--color-border); }
   .training-header__icon { width: 44px; height: 44px; background: var(--color-teal-light); border-radius: var(--radius); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--color-teal); }
   .training-header__icon svg { width: 22px; height: 22px; }
   .training-header__title { font-family: var(--font-heading); font-size: var(--size-xl); color: var(--color-text); }
