@@ -146,6 +146,67 @@ class GoogleCalendarService
     // ─── Calendar Operations ─────────────────────────────────────────────────
 
     /**
+     * Build the localized summary and description for a booking's calendar event.
+     *
+     * The client is added as an attendee and receives Google's native calendar
+     * invitation, so the wording follows the booking's preferred language
+     * (Dutch or English) to keep the invite consistent with the confirmation email.
+     *
+     * @return array{summary: string, description: string}
+     */
+    private function buildEventContent(Booking $booking): array
+    {
+        $isDutch = $booking->preferred_language === 'nl';
+
+        $formatLabels = $isDutch
+            ? [
+                'intake'   => 'Kennismakingsgesprek',
+                'standard' => 'Standaard sessie',
+                'emdr'     => 'EMDR-sessie',
+                'initial'  => 'Eerste sessie',
+            ]
+            : [
+                'intake'   => 'Introduction Call',
+                'standard' => 'Standard Session',
+                'emdr'     => 'EMDR Session',
+                'initial'  => 'Initial Session',
+            ];
+
+        $formatValue = $formatLabels[$booking->session_format]
+            ?? ucfirst($booking->session_format ?? '');
+
+        $sessionTypeValue = ($isDutch && $booking->session_type === 'in-person')
+            ? 'Op locatie'
+            : ucfirst($booking->session_type ?? ($isDutch ? 'Onbekend' : 'N/A'));
+
+        if ($isDutch) {
+            $summary = 'Sessie: ' . $booking->full_name;
+            $description = implode("\n", array_filter([
+                'Cliënt: ' . $booking->full_name,
+                'E-mail: ' . $booking->email,
+                $booking->phone ? 'Telefoon: ' . $booking->phone : null,
+                'Soort afspraak: ' . $formatValue,
+                'Type sessie: ' . $sessionTypeValue,
+                $booking->reason ? 'Reden: ' . $booking->reason : null,
+                $booking->meeting_link ? 'Deelnamelink: ' . $booking->meeting_link : null,
+            ]));
+        } else {
+            $summary = 'Session: ' . $booking->full_name;
+            $description = implode("\n", array_filter([
+                'Client: ' . $booking->full_name,
+                'Email: ' . $booking->email,
+                $booking->phone ? 'Phone: ' . $booking->phone : null,
+                'Format: ' . $formatValue,
+                'Type: ' . $sessionTypeValue,
+                $booking->reason ? 'Reason: ' . $booking->reason : null,
+                $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
+            ]));
+        }
+
+        return ['summary' => $summary, 'description' => $description];
+    }
+
+    /**
      * Create a Google Calendar event for a confirmed booking.
      *
      * @return string The Google event ID.
@@ -160,24 +221,11 @@ class GoogleCalendarService
         $slotDuration = BookingConfig::settings()->slot_duration;
         $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
 
-        $formatLabels = [
-            'intake'   => 'Introduction Call',
-            'standard' => 'Standard Session',
-            'emdr'     => 'EMDR Session',
-            'initial'  => 'Initial Session',
-        ];
+        $content = $this->buildEventContent($booking);
 
         $event = new Event($service);
-        $event->setSummary('Session: ' . $booking->full_name);
-        $event->setDescription(implode("\n", array_filter([
-            'Client: ' . $booking->full_name,
-            'Email: ' . $booking->email,
-            $booking->phone ? 'Phone: ' . $booking->phone : null,
-            'Format: ' . ($formatLabels[$booking->session_format] ?? ucfirst($booking->session_format ?? '')),
-            'Type: ' . ucfirst($booking->session_type ?? 'N/A'),
-            $booking->reason ? 'Reason: ' . $booking->reason : null,
-            $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
-        ])));
+        $event->setSummary($content['summary']);
+        $event->setDescription($content['description']);
 
         if ($booking->meeting_link) {
             $event->setLocation($booking->meeting_link);
@@ -246,23 +294,10 @@ class GoogleCalendarService
         $slotDuration = BookingConfig::settings()->slot_duration;
         $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
 
-        $formatLabels = [
-            'intake'   => 'Introduction Call',
-            'standard' => 'Standard Session',
-            'emdr'     => 'EMDR Session',
-            'initial'  => 'Initial Session',
-        ];
+        $content = $this->buildEventContent($booking);
 
-        $existingEvent->setSummary('Session: ' . $booking->full_name);
-        $existingEvent->setDescription(implode("\n", array_filter([
-            'Client: ' . $booking->full_name,
-            'Email: ' . $booking->email,
-            $booking->phone ? 'Phone: ' . $booking->phone : null,
-            'Format: ' . ($formatLabels[$booking->session_format] ?? ucfirst($booking->session_format ?? '')),
-            'Type: ' . ucfirst($booking->session_type ?? 'N/A'),
-            $booking->reason ? 'Reason: ' . $booking->reason : null,
-            $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
-        ])));
+        $existingEvent->setSummary($content['summary']);
+        $existingEvent->setDescription($content['description']);
 
         if ($booking->meeting_link) {
             $existingEvent->setLocation($booking->meeting_link);
