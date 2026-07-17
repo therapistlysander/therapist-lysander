@@ -56,8 +56,8 @@
     .booking-cta-card { padding: var(--space-6) var(--space-4); }
     .inquiry-form { padding: var(--space-6) var(--space-4); }
     .contact-grid { gap: var(--space-6); }
-    .faq-link { width: fit-content; max-width: 100%; padding: var(--space-3) var(--space-5); font-size: var(--size-xs); letter-spacing: 0.04em; white-space: normal; text-align: left; line-height: 1.35; justify-content: flex-start; }
-    .faq-link svg { width: 14px; height: 14px; }
+    .faq-link { width: fit-content; max-width: 100%; padding: var(--space-4) var(--space-6); font-size: var(--size-sm); letter-spacing: 0.08em; white-space: normal; text-align: left; line-height: 1.3; justify-content: center; }
+    .faq-link svg { width: 16px; height: 16px; }
   }
 </style>
 @endsection
