@@ -248,7 +248,7 @@ return [
         'languages'             => 'Talen',
         'languages_value'       => 'Nederlands & Engels',
         'more_questions'        => 'Nog meer vragen voor het boeken?',
-        'view_faqs'             => 'Bekijk alle veelgestelde vragen',
+        'view_faqs'             => 'Veelgestelde vragen',
         'booking_desc'          => 'Een gratis online kennismakingsgesprek om jouw situatie te bespreken, vragen te stellen en te verkennen of we goed bij elkaar passen. Online sessies wereldwijd beschikbaar.',
         'booking_card_heading'  => 'Boek een Gratis Kennismakingsgesprek',
         'start_booking'         => 'Start met boeken',
