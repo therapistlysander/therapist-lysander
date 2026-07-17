@@ -38,6 +38,7 @@ return [
         'psychotherapy'     => 'Psychotherapy & Trauma Therapy',
         'privacy'           => 'Privacy Policy',
         'terms'             => 'Terms & Conditions',
+        'registration'      => 'Chamber of Commerce (KvK): 80970729 | VAT: NL003511998B26',
     ],
 
     /*

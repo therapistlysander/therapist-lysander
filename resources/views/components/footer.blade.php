@@ -29,15 +29,13 @@
       </div>
     </div>
     <div class="footer__bottom">
-      <div class="footer__bottom-left">
-        <p>&copy; {{ date('Y') }} Lysander Verschuur, MSc. {{ __('ui.footer.all_rights') }}</p>
-        <nav class="footer__legal" aria-label="{{ __('ui.footer.privacy') }} / {{ __('ui.footer.terms') }}">
-          <a href="{{ route('privacy') }}">{{ __('ui.footer.privacy') }}</a>
-          <span aria-hidden="true">&middot;</span>
-          <a href="{{ route('terms') }}">{{ __('ui.footer.terms') }}</a>
-        </nav>
-      </div>
-      <p>{!! __('ui.footer.psychotherapy') !!}</p>
+      <p class="footer__copyright">&copy; {{ date('Y') }} Therapist Lysander. {{ __('ui.footer.all_rights') }}</p>
+      <nav class="footer__legal" aria-label="{{ __('ui.footer.privacy') }} / {{ __('ui.footer.terms') }}">
+        <a href="{{ route('privacy') }}">{{ __('ui.footer.privacy') }}</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="{{ route('terms') }}">{{ __('ui.footer.terms') }}</a>
+      </nav>
+      <p class="footer__registration">{{ __('ui.footer.registration') }}</p>
     </div>
   </div>
 </footer>
