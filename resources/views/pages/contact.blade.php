@@ -51,12 +51,12 @@
   .inquiry-form h3 { font-size: var(--size-xl); margin-bottom: var(--space-2); }
   .inquiry-form > p { font-size: var(--size-sm); color: var(--color-text-muted); margin-bottom: var(--space-4); }
 
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .whatsapp-cta { padding: var(--space-6) var(--space-4); }
     .booking-cta-card { padding: var(--space-6) var(--space-4); }
     .inquiry-form { padding: var(--space-6) var(--space-4); }
     .contact-grid { gap: var(--space-6); }
-    .faq-link { padding: var(--space-3) var(--space-4); font-size: var(--size-xs); letter-spacing: 0.05em; white-space: normal; text-align: center; line-height: 1.3; }
+    .faq-link { width: fit-content; max-width: 100%; padding: var(--space-3) var(--space-5); font-size: var(--size-xs); letter-spacing: 0.04em; white-space: normal; text-align: left; line-height: 1.35; justify-content: flex-start; }
     .faq-link svg { width: 14px; height: 14px; }
   }
 </style>
