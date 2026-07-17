@@ -9,10 +9,11 @@
 
 @section('page_styles')
 <style>
-  .legal { padding: var(--space-10) 0 var(--space-16); }
+  .legal { padding: var(--space-10) 0 var(--space-16); max-width: 44rem; }
   .legal__notice {
     background: var(--color-teal-light);
     border: 1px solid var(--color-teal);
+    border-left-width: 4px;
     border-radius: var(--radius-md);
     padding: var(--space-4) var(--space-5);
     margin-bottom: var(--space-8);
@@ -29,8 +30,8 @@
     margin: var(--space-8) 0 var(--space-3);
   }
   .legal h2:first-of-type { margin-top: 0; }
-  .legal p { font-size: var(--size-base); color: var(--color-text-muted); line-height: 1.8; margin-bottom: var(--space-4); max-width: 70ch; }
-  .legal ul { list-style: disc; padding-left: var(--space-6); margin-bottom: var(--space-4); max-width: 70ch; }
+  .legal p { font-size: var(--size-base); color: var(--color-text-muted); line-height: 1.8; margin-bottom: var(--space-4); }
+  .legal ul { list-style: disc; padding-left: var(--space-6); margin-bottom: var(--space-4); }
   .legal li { font-size: var(--size-base); color: var(--color-text-muted); line-height: 1.8; padding: var(--space-1) 0; }
   .legal a { color: var(--color-teal); text-decoration: underline; }
 </style>
