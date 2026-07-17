@@ -36,6 +36,8 @@ return [
         'online_worldwide'  => 'Online sessions worldwide',
         'all_rights'        => 'All rights reserved.',
         'psychotherapy'     => 'Psychotherapy & Trauma Therapy',
+        'privacy'           => 'Privacy Policy',
+        'terms'             => 'Terms & Conditions',
     ],
 
     /*
