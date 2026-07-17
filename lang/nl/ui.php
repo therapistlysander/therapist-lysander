@@ -36,7 +36,7 @@ return [
         'online_worldwide'  => 'Online sessies wereldwijd',
         'all_rights'        => 'Alle rechten voorbehouden.',
         'psychotherapy'     => 'Psychotherapie & Traumatherapie',
-        'privacy'           => 'Privacyverklaring',
+        'privacy'           => 'Privacybeleid',
         'terms'             => 'Algemene voorwaarden',
         'registration'      => 'KvK: 80970729 | BTW: NL003511998B26',
     ],

@@ -22,6 +22,8 @@ class AdminPageSectionController extends Controller
         'faq'          => 'FAQ',
         'contact'      => 'Contact',
         'booking'      => 'Booking',
+        'privacy'      => 'Privacy Policy',
+        'terms'        => 'Terms & Conditions',
     ];
 
     private array $pageRoutes = [
@@ -34,6 +36,8 @@ class AdminPageSectionController extends Controller
         'faq'          => '/faq',
         'contact'      => '/contact',
         'booking'      => '/booking',
+        'privacy'      => '/privacy',
+        'terms'        => '/terms',
     ];
 
     public function pages()
