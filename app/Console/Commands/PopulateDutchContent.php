@@ -489,7 +489,7 @@ class PopulateDutchContent extends Command
                 'body' => 'Ben je benieuwd wat therapie voor jou zou kunnen betekenen? Of wil je eerst onderzoeken of ik de juiste persoon ben om je daarbij te begeleiden? Dan nodig ik je graag uit voor een vrijblijvend online kennismakingsgesprek van 30 minuten.',
             ],
             'contact_info' => [
-                'heading' => 'Contactgegevens',
+                'heading' => 'Neem contact op',
                 'whatsapp_number' => '66935309052',
                 'whatsapp_text' => 'Liever een snel bericht?',
                 'email' => 'therapistlysander@gmail.com',
