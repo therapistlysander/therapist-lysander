@@ -17,7 +17,7 @@ class SiteSettingSeeder extends Seeder
             ['group' => 'general', 'key' => 'language',         'value' => 'nl,en',                                  'type' => 'string', 'label' => 'Supported Languages'],
             ['group' => 'general', 'key' => 'timezone',         'value' => 'Europe/Amsterdam',                       'type' => 'string', 'label' => 'Timezone'],
             // Contact
-            ['group' => 'contact', 'key' => 'contact_email',    'value' => 'info@therapistlysander.nl',              'type' => 'string', 'label' => 'Contact Email'],
+            ['group' => 'contact', 'key' => 'contact_email',    'value' => 'contact@therapistlysander.com',          'type' => 'string', 'label' => 'Contact Email'],
             ['group' => 'contact', 'key' => 'contact_phone',    'value' => '',                                       'type' => 'string', 'label' => 'Phone Number'],
             ['group' => 'contact', 'key' => 'location_city',    'value' => 'Amsterdam',                              'type' => 'string', 'label' => 'Location / City'],
             ['group' => 'contact', 'key' => 'location_country', 'value' => 'Netherlands',                            'type' => 'string', 'label' => 'Country'],
@@ -41,7 +41,7 @@ class SiteSettingSeeder extends Seeder
             ['group' => 'email', 'key' => 'smtp_username',      'value' => '',                                       'type' => 'string', 'label' => 'SMTP Username'],
             ['group' => 'email', 'key' => 'smtp_password',      'value' => '',                                       'type' => 'string', 'label' => 'SMTP Password'],
             ['group' => 'email', 'key' => 'smtp_encryption',    'value' => 'tls',                                    'type' => 'string', 'label' => 'Encryption'],
-            ['group' => 'email', 'key' => 'mail_from_address',  'value' => 'noreply@therapistlysander.nl',           'type' => 'string', 'label' => 'From Email Address'],
+            ['group' => 'email', 'key' => 'mail_from_address',  'value' => 'noreply@therapistlysander.com',          'type' => 'string', 'label' => 'From Email Address'],
             ['group' => 'email', 'key' => 'mail_from_name',     'value' => 'Therapist Lysander',                     'type' => 'string', 'label' => 'From Name'],
             // Notifications
             ['group' => 'notifications', 'key' => 'notify_contact_confirmation', 'value' => '1', 'type' => 'boolean', 'label' => 'Send contact form confirmation to client'],
@@ -50,7 +50,7 @@ class SiteSettingSeeder extends Seeder
             ['group' => 'notifications', 'key' => 'notify_booking_rejected',     'value' => '1', 'type' => 'boolean', 'label' => 'Send rejection email to client'],
             ['group' => 'notifications', 'key' => 'notify_admin_new_contact',    'value' => '1', 'type' => 'boolean', 'label' => 'Alert admin on new contact submission'],
             ['group' => 'notifications', 'key' => 'notify_admin_new_booking',    'value' => '1', 'type' => 'boolean', 'label' => 'Alert admin on new booking request'],
-            ['group' => 'notifications', 'key' => 'admin_notification_email',    'value' => 'admin@therapistlysander.nl', 'type' => 'string', 'label' => 'Admin notification email'],
+            ['group' => 'notifications', 'key' => 'admin_notification_email',    'value' => 'admin@therapistlysander.com', 'type' => 'string', 'label' => 'Admin notification email'],
         ];
 
         foreach ($settings as $data) {
