@@ -33,6 +33,7 @@ class AdminAvailabilityController extends Controller
     {
         $request->validate([
             'slot_duration'      => 'required|integer|in:15,20,30,45,50,60,90,120',
+            'buffer_minutes'     => 'required|integer|in:0,5,10,15,20,30,45,60',
             'default_start_time' => 'required|date_format:H:i',
             'default_end_time'   => 'required|date_format:H:i|after:default_start_time',
             'break_start'        => 'nullable|date_format:H:i',
@@ -45,7 +46,7 @@ class AdminAvailabilityController extends Controller
         }
 
         $config->fill($request->only([
-            'slot_duration', 'default_start_time', 'default_end_time', 'break_start', 'break_end'
+            'slot_duration', 'buffer_minutes', 'default_start_time', 'default_end_time', 'break_start', 'break_end'
         ]));
 
         // Allow clearing break

@@ -39,10 +39,26 @@ class BookingSubmitController extends Controller
         // Build preferred_date from date + time
         $preferredDate = $request->input('date') . ' ' . $request->input('time') . ':00';
 
-        // Double-booking prevention: check if slot is already taken
-        $existingBooking = Booking::where('preferred_date', $preferredDate)
+        // Session length + configurable buffer between appointments.
+        $config = BookingConfig::settings();
+        $slotDuration = (int) $config->slot_duration;
+        $buffer = (int) ($config->buffer_minutes ?? 0);
+
+        $slotStart = Carbon::parse($preferredDate);
+        $slotEnd = $slotStart->copy()->addMinutes($slotDuration);
+
+        // Double-booking prevention: reject if the requested session (plus the
+        // buffer on either side) overlaps an existing booking on the same day.
+        $existingBooking = Booking::whereDate('preferred_date', $slotStart->toDateString())
             ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
-            ->first();
+            ->get()
+            ->first(function ($booking) use ($slotStart, $slotEnd, $slotDuration, $buffer) {
+                $busyStart = Carbon::parse($booking->preferred_date);
+                $busyEnd = $busyStart->copy()->addMinutes($slotDuration);
+
+                return $slotStart < $busyEnd->copy()->addMinutes($buffer)
+                    && $slotEnd > $busyStart->copy()->subMinutes($buffer);
+            });
 
         if ($existingBooking) {
             return response()->json([
@@ -127,6 +143,7 @@ class BookingSubmitController extends Controller
         try {
             $calendar = app(GoogleCalendarService::class);
             $config = BookingConfig::settings();
+            $buffer = (int) ($config->buffer_minutes ?? 0);
 
             $slotStart = Carbon::parse($preferredDate);
             $slotEnd = $slotStart->copy()->addMinutes($config->slot_duration);
@@ -143,7 +160,10 @@ class BookingSubmitController extends Controller
                 $busyStart = $busy['start_dt'];
                 $busyEnd = $busy['end_dt'];
 
-                if ($slotStart < $busyEnd && $slotEnd > $busyStart) {
+                // Expand each busy range by the buffer on both sides so at least
+                // $buffer minutes remain free between consecutive sessions.
+                if ($slotStart < $busyEnd->copy()->addMinutes($buffer)
+                    && $slotEnd > $busyStart->copy()->subMinutes($buffer)) {
                     return true;
                 }
             }
