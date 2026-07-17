@@ -40,11 +40,11 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
         // Prefer the confirmed time; fall back to the requested time so the
         // details box is never empty when a booking is confirmed without an
         // explicit scheduling step (e.g. via the status dropdown).
-        // Dutch uses "om HH:mm"; English keeps "at HH:mm".
+        // Dutch uses 24-hour "om HH:mm"; English uses 12-hour "at h:mm AM/PM".
         $scheduledAt = $this->booking->scheduled_at ?? $this->booking->preferred_date;
         $dateFormat = $isDutch
-            ? 'dddd, D MMMM YYYY [om] HH:mm'
-            : 'dddd, D MMMM YYYY [at] HH:mm';
+            ? 'D MMMM YYYY [om] HH:mm'
+            : 'D MMMM YYYY [at] h:mm A';
         $displayScheduledAt = null;
         if ($scheduledAt) {
             $carbon = \Carbon\Carbon::parse($scheduledAt, $serverTimezone);
