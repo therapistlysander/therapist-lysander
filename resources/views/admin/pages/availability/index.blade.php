@@ -161,6 +161,23 @@
             </div>
           </div>
           <div class="config-field">
+            <label>Buffer Between Sessions</label>
+            <div class="form-dropdown" id="buffer-dropdown">
+              <button type="button" class="form-dropdown__trigger" onclick="toggleFormDropdown('buffer-dropdown')">
+                <span id="buffer-label">{{ collect([0 => 'No buffer', 5 => '5 minutes', 10 => '10 minutes', 15 => '15 minutes', 20 => '20 minutes', 30 => '30 minutes', 45 => '45 minutes', 60 => '1 hour'])->first(fn($v, $k) => $k == (int) ($config->buffer_minutes ?? 0)) ?? 'No buffer' }}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div class="form-dropdown__menu">
+                @foreach([0 => 'No buffer', 5 => '5 minutes', 10 => '10 minutes', 15 => '15 minutes', 20 => '20 minutes', 30 => '30 minutes', 45 => '45 minutes', 60 => '1 hour'] as $val => $label)
+                <button type="button" class="form-dropdown__item {{ (int) ($config->buffer_minutes ?? 0) == $val ? 'active' : '' }}" onclick="selectFormDropdown('buffer-dropdown', '{{ $val }}', '{{ $label }}')">
+                  {{ $label }}
+                </button>
+                @endforeach
+              </div>
+              <input type="hidden" name="buffer_minutes" value="{{ (int) ($config->buffer_minutes ?? 0) }}">
+            </div>
+          </div>
+          <div class="config-field">
             <label>Start Time</label>
             <input type="time" name="default_start_time" value="{{ $config->default_start_time }}">
           </div>
