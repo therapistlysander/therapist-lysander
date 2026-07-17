@@ -24,7 +24,7 @@ class ContactConfirmationMail extends Mailable implements ShouldQueue
 
         return new Envelope(
             subject: $isDutch
-                ? 'We hebben je bericht ontvangen'
+                ? 'Ik heb je bericht ontvangen'
                 : 'We received your message',
         );
     }

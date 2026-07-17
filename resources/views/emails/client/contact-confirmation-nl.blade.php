@@ -1,6 +1,6 @@
 @extends('emails.layout')
 
-@section('title', 'We hebben je bericht ontvangen')
+@section('title', 'Ik heb je bericht ontvangen')
 
 @section('content')
 <h2>Bedankt voor je bericht, {{ $name }}.</h2>
