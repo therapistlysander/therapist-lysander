@@ -38,6 +38,7 @@ return [
         'psychotherapy'     => 'Psychotherapie & Traumatherapie',
         'privacy'           => 'Privacyverklaring',
         'terms'             => 'Algemene voorwaarden',
+        'registration'      => 'KvK: 80970729 | BTW: NL003511998B26',
     ],
 
     /*
