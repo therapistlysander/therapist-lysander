@@ -313,7 +313,7 @@ return [
         'notes_placeholder'     => 'Briefly share what brings you here — this helps me prepare for our first conversation.',
         'send_request'          => 'Send booking request',
         'sending'               => 'Sending...',
-        'booking_disclaimer'   => "Your booking request will be sent to Lysander. You'll receive a confirmation via email or WhatsApp within 24 hours.",
+        'booking_disclaimer'   => "Your booking request will be sent to Lysander. You'll receive a confirmation via email or WhatsApp within 1–2 business days.",
         'success_title'         => 'Booking request sent!',
         'success_desc'          => 'Thank you, :name. Lysander will confirm your booking via email or WhatsApp within 1–2 business days.',
         'also_whatsapp'         => 'Also send via WhatsApp',
