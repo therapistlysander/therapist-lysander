@@ -56,14 +56,6 @@
 <section class="section section--white">
   <div class="container--narrow legal">
 
-    <div class="legal__notice">
-      @if($isNl)
-        <strong>Let op:</strong> Dit is een concepttekst als startpunt. Laat deze verklaring vóór de definitieve publicatie controleren door een juridisch professional, zodat deze volledig aansluit op jouw praktijk en voldoet aan de AVG.
-      @else
-        <strong>Please note:</strong> This is a starter draft intended as a starting point. Have it reviewed by a legal professional before you go live, so it accurately reflects your practice and fully complies with the GDPR.
-      @endif
-    </div>
-
     <p class="legal__updated">{{ $isNl ? 'Laatst bijgewerkt' : 'Last updated' }}: {{ (optional($main)->updated_at ?? now())->translatedFormat($isNl ? 'j F Y' : 'F j, Y') }}</p>
 
     {!! $content['body'] ?? '' !!}

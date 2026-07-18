@@ -56,14 +56,6 @@
 <section class="section section--white">
   <div class="container--narrow legal">
 
-    <div class="legal__notice">
-      @if($isNl)
-        <strong>Let op:</strong> Dit is een concepttekst als startpunt. Laat deze voorwaarden vóór de definitieve publicatie controleren door een juridisch professional, zodat ze aansluiten op jouw praktijk en de geldende regelgeving.
-      @else
-        <strong>Please note:</strong> This is a starter draft intended as a starting point. Have these terms reviewed by a legal professional before you go live, so they fit your practice and applicable regulations.
-      @endif
-    </div>
-
     <p class="legal__updated">{{ $isNl ? 'Laatst bijgewerkt' : 'Last updated' }}: {{ (optional($main)->updated_at ?? now())->translatedFormat($isNl ? 'j F Y' : 'F j, Y') }}</p>
 
     {!! $content['body'] ?? '' !!}
