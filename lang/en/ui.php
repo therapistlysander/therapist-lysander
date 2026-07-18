@@ -328,6 +328,15 @@ return [
         'toast_error'           => 'Something went wrong. Please try again.',
         'wa_type_online'        => 'Online',
         'wa_type_inperson'      => 'In-person',
+        'wa_greeting'           => 'Hello Lysander,',
+        'wa_intro'              => "I'd like to book a session.",
+        'wa_label_name'         => 'Name',
+        'wa_label_type'         => 'Type',
+        'wa_label_appointment'  => 'Appointment',
+        'wa_label_date'         => 'Date',
+        'wa_label_reason'       => 'Reason',
+        'wa_closing'            => 'Thank you!',
+        'wa_appointment_intake' => 'Introductory Call',
     ],
 
     /*
