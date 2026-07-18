@@ -273,7 +273,7 @@ window.__translations = {
     sending: '{{ __('ui.booking.sending') }}',
     sendRequest: '{{ __('ui.booking.send_request') }}',
     successTitle: '{{ __('ui.booking.success_title') }}',
-    successDesc: '{{ __('ui.booking.success_desc') }}',
+    successDesc: @json(__('ui.booking.success_desc')),
     alsoWhatsapp: '{{ __('ui.booking.also_whatsapp') }}',
     backToHome: '{{ __('ui.booking.back_to_home') }}',
     successToast: '{{ __('ui.booking.success_toast') }}',
