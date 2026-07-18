@@ -328,6 +328,15 @@ return [
         'toast_error'           => 'Er is iets misgegaan. Probeer het opnieuw.',
         'wa_type_online'        => 'Online',
         'wa_type_inperson'      => 'In persoon',
+        'wa_greeting'           => 'Hallo Lysander,',
+        'wa_intro'              => 'Ik wil graag een afspraak maken.',
+        'wa_label_name'         => 'Naam',
+        'wa_label_type'         => 'Type',
+        'wa_label_appointment'  => 'Afspraak',
+        'wa_label_date'         => 'Datum',
+        'wa_label_reason'       => 'Reden',
+        'wa_closing'            => 'Bedankt!',
+        'wa_appointment_intake' => 'Kennismakingsgesprek',
     ],
 
     /*

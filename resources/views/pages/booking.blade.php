@@ -287,6 +287,15 @@ window.__translations = {
     toastError: '{{ __('ui.booking.toast_error') }}',
     waTypeOnline: '{{ __('ui.booking.wa_type_online') }}',
     waTypeInperson: '{{ __('ui.booking.wa_type_inperson') }}',
+    waGreeting: '{{ __('ui.booking.wa_greeting') }}',
+    waIntro: '{{ __('ui.booking.wa_intro') }}',
+    waLabelName: '{{ __('ui.booking.wa_label_name') }}',
+    waLabelType: '{{ __('ui.booking.wa_label_type') }}',
+    waLabelAppointment: '{{ __('ui.booking.wa_label_appointment') }}',
+    waLabelDate: '{{ __('ui.booking.wa_label_date') }}',
+    waLabelReason: '{{ __('ui.booking.wa_label_reason') }}',
+    waClosing: '{{ __('ui.booking.wa_closing') }}',
+    waAppointmentIntake: '{{ __('ui.booking.wa_appointment_intake') }}',
   }
 };
 const __t = window.__translations.booking;
@@ -600,13 +609,14 @@ function submitBooking() {
   })
   .then(data => {
     const msg = encodeURIComponent(
-      'Hi Lysander,\n\nI\'d like to book a session:\n\n' +
-      'Name: ' + state.name + '\n' +
-      'Type: ' + (state.type === 'online' ? __t.waTypeOnline : __t.waTypeInperson) + '\n' +
-      'Format: ' + state.format + '\n' +
-      'Date: ' + formatBookingDateTime(state.date, state.time) + '\n' +
-      (state.piGoals ? '\nReason: ' + state.piGoals : '') +
-      '\n\nThank you!'
+      __t.waGreeting + '\n\n' +
+      __t.waIntro + '\n\n' +
+      __t.waLabelName + ': ' + state.name + '\n' +
+      __t.waLabelType + ': ' + (state.type === 'online' ? __t.waTypeOnline : __t.waTypeInperson) + '\n' +
+      __t.waLabelAppointment + ': ' + __t.waAppointmentIntake + '\n' +
+      __t.waLabelDate + ': ' + formatBookingDateTime(state.date, state.time) +
+      (state.piGoals ? '\n' + __t.waLabelReason + ': ' + state.piGoals : '') +
+      '\n\n' + __t.waClosing
     );
 
     document.getElementById('step-3').innerHTML = `
