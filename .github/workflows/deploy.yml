@@ -40,12 +40,14 @@ jobs:
             php artisan migrate --force
 
             echo "=== Rebuild caches ==="
+            php artisan optimize:clear
             php artisan view:clear
             php artisan config:clear
             php artisan cache:clear
             php artisan config:cache
             php artisan route:cache
             php artisan event:cache
+            php -r "if(function_exists('opcache_reset')){opcache_reset();echo 'OPcache cleared';} else {echo 'OPcache not available';}"
 
             echo "=== Restart queue workers ==="
             php artisan queue:restart
