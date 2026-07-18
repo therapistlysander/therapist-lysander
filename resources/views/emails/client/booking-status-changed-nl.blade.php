@@ -24,7 +24,7 @@
     <table style="width:100%;border-collapse:collapse;">
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Gepland:</td>
-            <td style="padding:4px 0;color:#1a2332;">{{ \Carbon\Carbon::parse($scheduledAt)->locale('nl')->isoFormat('j MMMM YYYY [om] HH:mm') }}</td>
+            <td style="padding:4px 0;color:#1a2332;">{{ \Carbon\Carbon::parse($scheduledAt)->locale('nl')->isoFormat('D MMMM YYYY [om] HH:mm') }}</td>
         </tr>
     </table>
 </div>
@@ -33,7 +33,7 @@
     <table style="width:100%;border-collapse:collapse;">
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Voorkeursdatum:</td>
-            <td style="padding:4px 0;color:#1a2332;">{{ \Carbon\Carbon::parse($preferredDate)->locale('nl')->isoFormat('j MMMM YYYY') }}</td>
+            <td style="padding:4px 0;color:#1a2332;">{{ \Carbon\Carbon::parse($preferredDate)->locale('nl')->isoFormat('D MMMM YYYY') }}</td>
         </tr>
     </table>
 </div>
