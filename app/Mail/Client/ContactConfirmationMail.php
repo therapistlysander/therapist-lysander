@@ -14,13 +14,13 @@ class ContactConfirmationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public ContactSubmission $contact, public string $locale = 'en')
+    public function __construct(public ContactSubmission $contact, public string $contactLocale = 'en')
     {
     }
 
     public function envelope(): Envelope
     {
-        $isDutch = $this->locale === 'nl';
+        $isDutch = $this->contactLocale === 'nl';
 
         return new Envelope(
             subject: $isDutch
@@ -31,7 +31,7 @@ class ContactConfirmationMail extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
-        $isDutch = $this->locale === 'nl';
+        $isDutch = $this->contactLocale === 'nl';
 
         return new Content(
             view: $isDutch
