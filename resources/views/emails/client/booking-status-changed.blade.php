@@ -20,7 +20,7 @@
 
 @if($scheduledAt)
 <div class="highlight-box">
-    <table style="width:100%;border-collapse:collapse;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Scheduled:</td>
             <td style="padding:4px 0;color:#1a2332;">{{ \Carbon\Carbon::parse($scheduledAt)->format('l, j F Y \a\t H:i') }}</td>
@@ -29,7 +29,7 @@
 </div>
 @elseif($preferredDate)
 <div class="highlight-box">
-    <table style="width:100%;border-collapse:collapse;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Preferred date:</td>
             <td style="padding:4px 0;color:#1a2332;">{{ \Carbon\Carbon::parse($preferredDate)->format('l, j F Y') }}</td>

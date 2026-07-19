@@ -7,7 +7,7 @@
 
 <p>A new contact form submission has been received:</p>
 
-<table style="width:100%;border-collapse:collapse;">
+<table style="width:100%;border-collapse:collapse;table-layout:fixed;">
     <tr style="border-bottom:1px solid #f3f4f6;">
         <td style="padding:10px 0;font-weight:600;color:#6b7280;font-size:13px;width:120px;vertical-align:top;">Name:</td>
         <td style="padding:10px 0;color:#1a2332;">{{ $contact->name }}</td>
@@ -34,5 +34,5 @@
     </tr>
 </table>
 
-<p style="margin-top:20px;font-size:12px;color:#9ca3af;">Source: {{ $contact->source }} | IP: {{ $contact->ip_address }} | Received: {{ $contact->created_at->format('j M Y H:i') }}</p>
+<p style="margin-top:20px;font-size:12px;color:#9ca3af;word-break:break-word;overflow-wrap:break-word;">Source: {{ $contact->source }} | IP: {{ $contact->ip_address }} | Received: {{ $contact->created_at->format('j M Y H:i') }}</p>
 @endsection

@@ -8,7 +8,7 @@
 <p>Je afspraak is ingepland. Hieronder vind je de details:</p>
 
 <div class="highlight-box">
-    <table style="width:100%;border-collapse:collapse;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         @if($appointmentType)
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Soort afspraak:</td>

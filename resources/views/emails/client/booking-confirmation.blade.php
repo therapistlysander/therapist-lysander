@@ -8,7 +8,7 @@
 <p>I have received your request and will review it shortly. You can expect to hear back from me within 1-2 business days.</p>
 
 <div class="highlight-box">
-    <table style="width:100%;border-collapse:collapse;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         @if($appointmentType)
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:150px;">Appointment type:</td>
