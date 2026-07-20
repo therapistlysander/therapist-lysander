@@ -52,3 +52,20 @@ cookies.txt
 !/docs/prompts/.gitkeep
 
 .vercel
+
+# IDE & tools
+.qoder/
+*.code-workspace
+
+# Project docs & reference files
+*.docx
+*.pdf
+
+# Old deployment scripts
+deploy.ps1
+deploy.sh
+_deploy.py
+
+# Miscellaneous tracked junk
+login_page.html
+WhatsApp Image*
