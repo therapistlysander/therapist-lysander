@@ -155,11 +155,13 @@ return new class extends Migration
             'faq' => [
                 'en' => [
                     'meta_title'       => 'FAQ — Lysander Verschuur',
+                    'og_title'         => 'FAQ — Lysander Verschuur',
                     'meta_description' => 'Answers to the most common questions about starting therapy.',
                     'og_description'   => 'Answers to the most common questions about starting therapy.',
                 ],
                 'nl' => [
                     'meta_title'       => 'Veelgestelde Vragen — Lysander Verschuur',
+                    'og_title'         => 'Veelgestelde Vragen — Lysander Verschuur',
                     'meta_description' => 'Antwoorden op veelgestelde vragen over therapie en het starten van een traject.',
                     'og_description'   => 'Antwoorden op veelgestelde vragen over therapie en het starten van een traject.',
                 ],
@@ -183,11 +185,13 @@ return new class extends Migration
             'booking' => [
                 'en' => [
                     'meta_title'       => 'Book a Session — Lysander Verschuur',
+                    'og_title'         => 'Book a Session — Lysander Verschuur',
                     'meta_description' => 'Book a free 30-minute introductory call to explore whether therapy is the right fit for you.',
                     'og_description'   => 'Book a free 30-minute introductory call to explore whether therapy is the right fit for you.',
                 ],
                 'nl' => [
                     'meta_title'       => 'Afspraak Maken — Lysander Verschuur',
+                    'og_title'         => 'Afspraak Maken — Lysander Verschuur',
                     'meta_description' => 'Boek een gratis kennismakingsgesprek van 30 minuten om te ontdekken of therapie bij jou past.',
                     'og_description'   => 'Boek een gratis kennismakingsgesprek van 30 minuten om te ontdekken of therapie bij jou past.',
                 ],
