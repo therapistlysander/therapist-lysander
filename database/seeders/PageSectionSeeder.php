@@ -687,9 +687,9 @@ class PageSectionSeeder extends Seeder
                     'heading' => "Let's talk",
                     'whatsapp_number' => '66935309052',
                     'whatsapp_text' => 'Prefer a quick message?',
-                    'email' => 'therapistlysander@gmail.com',
+                    'email' => 'contact@therapistlysander.com',
                     'items' => [
-                        ['label' => 'Email', 'value' => 'therapistlysander@gmail.com'],
+                        ['label' => 'Email', 'value' => 'contact@therapistlysander.com'],
                         ['label' => 'Online sessions', 'value' => 'Available worldwide via secure video call'],
                         ['label' => 'In-person sessions', 'value' => 'Amsterdam — limited availability, on request'],
                         ['label' => 'Session duration', 'value' => '60 minutes · Free introduction call (30 min)'],

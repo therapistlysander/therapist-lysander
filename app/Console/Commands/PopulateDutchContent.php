@@ -492,9 +492,9 @@ class PopulateDutchContent extends Command
                 'heading' => 'Neem contact op',
                 'whatsapp_number' => '66935309052',
                 'whatsapp_text' => 'Liever een snel bericht?',
-                'email' => 'therapistlysander@gmail.com',
+                'email' => 'contact@therapistlysander.com',
                 'items' => [
-                    ['label' => 'E-mail', 'value' => 'therapistlysander@gmail.com'],
+                    ['label' => 'E-mail', 'value' => 'contact@therapistlysander.com'],
                     ['label' => 'WhatsApp Business', 'value' => '+66 93 530 90 52'],
                     ['label' => 'Locatie', 'value' => 'Online / Internationaal'],
                     ['label' => 'Sessieduur', 'value' => '60 minuten · Gratis kennismakingsgesprek (30 min)'],

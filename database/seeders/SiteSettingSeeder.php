@@ -50,7 +50,7 @@ class SiteSettingSeeder extends Seeder
             ['group' => 'notifications', 'key' => 'notify_booking_rejected',     'value' => '1', 'type' => 'boolean', 'label' => 'Send rejection email to client'],
             ['group' => 'notifications', 'key' => 'notify_admin_new_contact',    'value' => '1', 'type' => 'boolean', 'label' => 'Alert admin on new contact submission'],
             ['group' => 'notifications', 'key' => 'notify_admin_new_booking',    'value' => '1', 'type' => 'boolean', 'label' => 'Alert admin on new booking request'],
-            ['group' => 'notifications', 'key' => 'admin_notification_email',    'value' => 'admin@therapistlysander.com', 'type' => 'string', 'label' => 'Admin notification email'],
+            ['group' => 'notifications', 'key' => 'admin_notification_email',    'value' => 'contact@therapistlysander.com', 'type' => 'string', 'label' => 'Admin notification email'],
         ];
 
         foreach ($settings as $data) {
