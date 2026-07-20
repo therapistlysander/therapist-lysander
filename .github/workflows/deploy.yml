@@ -2,6 +2,64 @@ name: Deploy to Production
 
 on:
   push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to Contabo Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+
+            # Pull latest code
+            git pull origin main
+
+            # Install Composer dependencies
+            composer install --no-dev --optimize-autoloader --no-interaction
+
+            # Install Node dependencies and build assets
+            npm install --no-fund --no-audit
+            npm run build
+
+            # Run migrations
+            php artisan migrate --force
+
+            # Optimize Laravel
+            php artisan optimize
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+
+            # Fix permissions
+            chown -R www-data:www-data storage bootstrap/cache
+            chmod -R 775 storage bootstrap/cache
+
+            # Restart queue workers
+            php artisan queue:restart
+
+            # Restart Supervisor workers (if available)
+            supervisorctl reread || true
+            supervisorctl update || true
+            supervisorctl restart all || true
+
+            echo "Deployment completed successfully!"
+name: Deploy to Production
+
+on:
+  push:
     branches: [dev]
 
 jobs:
