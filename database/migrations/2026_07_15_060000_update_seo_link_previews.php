@@ -79,11 +79,13 @@ return new class extends Migration
         return [
             'home' => [
                 'en' => [
+                    'meta_title'       => 'Lysander Verschuur — Psychologist & Trauma Therapist',
                     'og_title'         => 'Lysander Verschuur — Psychologist & Trauma Therapist',
                     'meta_description' => 'Client-centered, evidence-based therapy for emotional wellbeing, resilience, and meaningful psychological change.',
                     'og_description'   => 'Client-centered, evidence-based therapy for emotional wellbeing, resilience, and meaningful psychological change.',
                 ],
                 'nl' => [
+                    'meta_title'       => 'Lysander Verschuur — Psycholoog & Traumatherapeut',
                     'og_title'         => 'Lysander Verschuur — Psycholoog & Traumatherapeut',
                     'meta_description' => 'Persoonlijke, evidence-based therapie voor psychische klachten, persoonlijke groei en blijvende verandering.',
                     'og_description'   => 'Persoonlijke, evidence-based therapie voor psychische klachten, persoonlijke groei en blijvende verandering.',
@@ -137,11 +139,13 @@ return new class extends Migration
 
             'fees' => [
                 'en' => [
+                    'meta_title'       => 'Fees & Process — Lysander Verschuur',
                     'og_title'         => 'Fees & Process — Lysander Verschuur',
                     'meta_description' => 'Everything you need to know before starting therapy.',
                     'og_description'   => 'Everything you need to know before starting therapy.',
                 ],
                 'nl' => [
+                    'meta_title'       => 'Tarieven & Traject — Lysander Verschuur',
                     'og_title'         => 'Tarieven & Traject — Lysander Verschuur',
                     'meta_description' => 'Alles wat je moet weten over tarieven, het therapietraject en praktische informatie.',
                     'og_description'   => 'Alles wat je moet weten over tarieven, het therapietraject en praktische informatie.',
@@ -150,10 +154,12 @@ return new class extends Migration
 
             'faq' => [
                 'en' => [
+                    'meta_title'       => 'FAQ — Lysander Verschuur',
                     'meta_description' => 'Answers to the most common questions about starting therapy.',
                     'og_description'   => 'Answers to the most common questions about starting therapy.',
                 ],
                 'nl' => [
+                    'meta_title'       => 'Veelgestelde Vragen — Lysander Verschuur',
                     'meta_description' => 'Antwoorden op veelgestelde vragen over therapie en het starten van een traject.',
                     'og_description'   => 'Antwoorden op veelgestelde vragen over therapie en het starten van een traject.',
                 ],
@@ -176,8 +182,14 @@ return new class extends Migration
 
             'booking' => [
                 'en' => [
+                    'meta_title'       => 'Book a Session — Lysander Verschuur',
                     'meta_description' => 'Book a free 30-minute introductory call to explore whether therapy is the right fit for you.',
                     'og_description'   => 'Book a free 30-minute introductory call to explore whether therapy is the right fit for you.',
+                ],
+                'nl' => [
+                    'meta_title'       => 'Afspraak Maken — Lysander Verschuur',
+                    'meta_description' => 'Boek een gratis kennismakingsgesprek van 30 minuten om te ontdekken of therapie bij jou past.',
+                    'og_description'   => 'Boek een gratis kennismakingsgesprek van 30 minuten om te ontdekken of therapie bij jou past.',
                 ],
             ],
         ];
