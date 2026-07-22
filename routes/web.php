@@ -31,8 +31,8 @@ use App\Http\Controllers\SitemapController;
 */
 
 Route::get('/', function () {
-    $locale = app()->getLocale();
-    return redirect("/{$locale}");
+    // Default landing page is English for international visitors
+    return redirect('/en');
 })->name('root');
 
 /*

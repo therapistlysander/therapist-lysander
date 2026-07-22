@@ -51,12 +51,6 @@
       </div>
 
       @foreach($settings[$group] as $setting)
-      {{-- Default Social Share Image (Open Graph) upload disabled.
-           The OG image is now set directly from the static file public/images/og-image.jpg.
-           To re-enable admin uploads, remove this @continue block. --}}
-      @if($setting->type === 'image')
-        @continue
-      @endif
       <div class="admin-field">
         <label class="admin-label" for="setting-{{ $setting->key }}">
           {{ $setting->label ?? $setting->key }}
@@ -85,10 +79,17 @@
             @php
               $currentOgImage = $setting->getRawOriginal('value') ?: '/images/og-image.jpg';
               $currentOgImageUrl = \Illuminate\Support\Str::startsWith($currentOgImage, ['http://', 'https://']) ? $currentOgImage : url($currentOgImage);
+              $hasCustomOgImage = $currentOgImage !== '/images/og-image.jpg';
             @endphp
             <div style="margin-top:10px;">
               <img id="preview-{{ $setting->key }}" src="{{ $currentOgImageUrl }}" alt="Current OG image preview" style="max-width:320px;max-height:168px;border-radius:6px;border:1px solid #e5e7eb;object-fit:cover;">
             </div>
+            @if($hasCustomOgImage)
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;margin-top:10px;color:#dc2626;">
+              <input type="checkbox" name="remove_settings[{{ $setting->key }}]" value="1">
+              <span>Remove uploaded image and use default</span>
+            </label>
+            @endif
             <p style="font-size:11px;color:#9ca3af;margin-top:6px;">Recommended size: 1200 × 630 px. Leave empty and save to keep the current image. Upload a new image to replace it.</p>
           </div>
 

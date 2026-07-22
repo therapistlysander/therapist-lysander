@@ -19,6 +19,23 @@ class AdminSiteSettingController extends Controller
     {
         $data = $request->input('settings', []);
         $files = $request->file('settings', []);
+        $removeKeys = $request->input('remove_settings', []);
+
+        // Handle image removals first
+        foreach ($removeKeys as $key => $shouldRemove) {
+            if (!$shouldRemove) continue;
+            $setting = SiteSetting::where('key', $key)->first();
+            if ($setting && $setting->type === 'image') {
+                $setting->update(['value' => '/images/og-image.jpg']);
+            }
+        }
+
+        // Ensure image settings are processed even when no text value is submitted
+        foreach ($files as $key => $file) {
+            if (!isset($data[$key])) {
+                $data[$key] = null;
+            }
+        }
 
         foreach ($data as $key => $value) {
             $setting = SiteSetting::where('key', $key)->first();

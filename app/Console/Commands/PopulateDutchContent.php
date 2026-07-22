@@ -272,7 +272,7 @@ class PopulateDutchContent extends Command
                 'cta_primary_label' => 'Plan een gratis kennismakingsgesprek',
                 'cta_primary_url' => '/booking',
                 'cta_secondary_label' => 'WhatsApp mij',
-                'cta_secondary_url' => 'https://wa.me/66935309052?text=Hoi%20Lysander%2C%20ik%20wil%20graag%20meer%20weten%20over%20therapie.',
+                'cta_secondary_url' => 'https://wa.me/31641087913?text=Hoi%20Lysander%2C%20ik%20wil%20graag%20meer%20weten%20over%20therapie.',
             ],
 
             // ── APPROACH ──────────────────────────────────────────────────
@@ -342,7 +342,7 @@ class PopulateDutchContent extends Command
                 'cta_primary_label' => 'Plan een gratis kennismakingsgesprek',
                 'cta_primary_url' => '/booking',
                 'cta_secondary_label' => 'WhatsApp mij',
-                'cta_secondary_url' => 'https://wa.me/66935309052?text=Hoi%20Lysander%2C%20ik%20wil%20graag%20meer%20weten%20over%20therapie.',
+                'cta_secondary_url' => 'https://wa.me/31641087913?text=Hoi%20Lysander%2C%20ik%20wil%20graag%20meer%20weten%20over%20therapie.',
             ],
 
             // ── TRAINING ──────────────────────────────────────────────────
@@ -433,7 +433,7 @@ class PopulateDutchContent extends Command
                 'cta_primary_label' => 'Plan een gratis kennismakingsgesprek',
                 'cta_primary_url' => '/booking',
                 'cta_secondary_label' => 'WhatsApp mij',
-                'cta_secondary_url' => 'https://wa.me/66935309052?text=Hoi%20Lysander%2C%20ik%20wil%20graag%20meer%20weten%20over%20therapie.',
+                'cta_secondary_url' => 'https://wa.me/31641087913?text=Hoi%20Lysander%2C%20ik%20wil%20graag%20meer%20weten%20over%20therapie.',
             ],
 
             // ── FEES ──────────────────────────────────────────────────────
@@ -490,7 +490,7 @@ class PopulateDutchContent extends Command
             ],
             'contact_info' => [
                 'heading' => 'Neem contact op',
-                'whatsapp_number' => '66935309052',
+                'whatsapp_number' => '31641087913',
                 'whatsapp_text' => 'Liever een snel bericht?',
                 'email' => 'contact@therapistlysander.com',
                 'items' => [

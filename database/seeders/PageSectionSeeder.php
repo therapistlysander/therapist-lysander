@@ -176,7 +176,7 @@ class PageSectionSeeder extends Seeder
                     'cta_primary_label' => 'Book a Free 30-Minute Intro Call',
                     'cta_primary_url' => '/booking',
                     'cta_secondary_label' => 'WhatsApp me',
-                    'cta_secondary_url' => 'https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.',
+                    'cta_secondary_url' => 'https://wa.me/31641087913?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.',
                 ],
             ],
         ];
@@ -208,7 +208,7 @@ class PageSectionSeeder extends Seeder
                     'cta_primary_label' => 'Book a session',
                     'cta_primary_url' => '/booking',
                     'cta_secondary_label' => 'WhatsApp',
-                    'cta_secondary_url' => 'https://wa.me/66935309052',
+                    'cta_secondary_url' => 'https://wa.me/31641087913',
                 ],
             ],
             [
@@ -386,7 +386,7 @@ class PageSectionSeeder extends Seeder
                     'cta_primary_label' => 'Book a Free 30-Minute Intro Call',
                     'cta_primary_url' => '/booking',
                     'cta_secondary_label' => 'WhatsApp me',
-                    'cta_secondary_url' => 'https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.',
+                    'cta_secondary_url' => 'https://wa.me/31641087913?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.',
                 ],
             ],
         ];
@@ -536,7 +536,7 @@ class PageSectionSeeder extends Seeder
                     'cta_primary_label' => 'Book a Free 30-Minute Intro Call',
                     'cta_primary_url' => '/booking',
                     'cta_secondary_label' => 'WhatsApp me',
-                    'cta_secondary_url' => 'https://wa.me/66935309052?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.',
+                    'cta_secondary_url' => 'https://wa.me/31641087913?text=Hi%20Lysander%2C%20I%27d%20like%20to%20learn%20more%20about%20therapy.',
                 ],
             ],
         ];
@@ -685,7 +685,7 @@ class PageSectionSeeder extends Seeder
                 'sort_order' => 2,
                 'content' => [
                     'heading' => "Let's talk",
-                    'whatsapp_number' => '66935309052',
+                    'whatsapp_number' => '31641087913',
                     'whatsapp_text' => 'Prefer a quick message?',
                     'email' => 'contact@therapistlysander.com',
                     'items' => [

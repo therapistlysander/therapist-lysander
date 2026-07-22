@@ -37,11 +37,13 @@ class AdminSeoController extends Controller
     {
         $request->validate([
             'canonical_url' => 'nullable|url|max:500',
+            'og_image'      => 'nullable|url|max:500',
             'translations'  => 'nullable|array',
         ]);
 
         $seo = SeoSetting::where('page_key', $pageKey)->firstOrNew(['page_key' => $pageKey]);
         $seo->canonical_url = $request->input('canonical_url');
+        $seo->og_image = $request->input('og_image');
 
         $translations = $request->input('translations', []);
         foreach ($translations as $locale => $data) {
