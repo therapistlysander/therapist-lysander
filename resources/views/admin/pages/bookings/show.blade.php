@@ -84,10 +84,22 @@
         <span class="admin-detail__value">{{ $booking->preferred_date->format('d M Y H:i') }}</span>
       </div>
       @endif
+      @if($booking->client_timezone)
+      <div class="admin-detail__row">
+        <span class="admin-detail__label">Timezone</span>
+        <span class="admin-detail__value">{{ $booking->client_timezone }}</span>
+      </div>
+      @endif
       @if($booking->reason)
       <div class="admin-detail__row" style="align-items:flex-start;">
         <span class="admin-detail__label">Reason</span>
         <span class="admin-detail__value" style="white-space:pre-line;">{{ $booking->reason }}</span>
+      </div>
+      @endif
+      @if($booking->google_event_id)
+      <div class="admin-detail__row" style="align-items:flex-start;">
+        <span class="admin-detail__label">Google Calendar</span>
+        <span class="admin-detail__value" style="word-break:break-all;">✓ Synced <span style="color:#9ca3af;font-size:11px;">({{ $booking->google_event_id }})</span></span>
       </div>
       @endif
     </div>

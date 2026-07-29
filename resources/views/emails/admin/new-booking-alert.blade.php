@@ -40,10 +40,16 @@
         <td style="padding:10px 0;color:#1a2332;">{{ \Carbon\Carbon::parse($booking->preferred_date)->format('l, j F Y H:i') }}</td>
     </tr>
     @endif
+    @if($booking->client_timezone)
+    <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:10px 0;font-weight:600;color:#6b7280;font-size:13px;vertical-align:top;">Timezone:</td>
+        <td style="padding:10px 0;color:#1a2332;">{{ $booking->client_timezone }}</td>
+    </tr>
+    @endif
     @if($booking->reason)
     <tr>
-        <td style="padding:10px 0;font-weight:600;color:#6b7280;font-size:13px;vertical-align:top;">Reason:</td>
-        <td style="padding:10px 0;color:#1a2332;">{{ $booking->reason }}</td>
+        <td style="padding:10px 0;font-weight:600;color:#6b7280;font-size:13px;vertical-align:top;">Reason for seeking therapy:</td>
+        <td style="padding:10px 0;color:#1a2332;white-space:pre-line;">{{ $booking->reason }}</td>
     </tr>
     @endif
 </table>

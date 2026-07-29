@@ -32,6 +32,12 @@
             </td>
         </tr>
         @endif
+        @if(!empty($reason))
+        <tr>
+            <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;vertical-align:top;">Reason for seeking therapy:</td>
+            <td style="padding:4px 0;color:#1a2332;white-space:pre-line;">{{ $reason }}</td>
+        </tr>
+        @endif
     </table>
 </div>
 

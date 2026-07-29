@@ -78,6 +78,7 @@ class BookingConfirmationMail extends Mailable implements ShouldQueue
                 'sessionFormat'   => $formatLabels[$this->booking->session_format] ?? ucfirst($this->booking->session_format),
                 'displayDate'     => $displayDate,
                 'appointmentTimezone' => $serverTimezone,
+                'reason'          => $this->booking->reason,
             ],
         );
     }
