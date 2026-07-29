@@ -78,6 +78,18 @@
   </div>
 </section>
 
+{{-- Practice room image --}}
+@php $practiceRoomImg = $process?->content['image'] ?? null; @endphp
+@if($practiceRoomImg)
+<section class="section section--white" aria-label="Practice room">
+  <div class="container">
+    <div class="fade-in" style="margin:0 auto;max-width:var(--max-w);">
+      <img src="{{ $practiceRoomImg }}" alt="{{ app()->getLocale() === 'nl' ? 'De praktijkruimte in Amsterdam' : 'The practice room in Amsterdam' }}" style="width:100%;height:auto;border-radius:var(--radius-md);object-fit:cover;" loading="lazy">
+    </div>
+  </div>
+</section>
+@endif
+
 <section class="section section--dark" aria-labelledby="practical-heading">
   <div class="container">
     <div class="section-header fade-in">

@@ -43,8 +43,8 @@
 <section class="hero" aria-label="Hero section">
   <div class="hero__content">
     <span class="hero__name-mobile">Lysander Verschuur</span>
-    <span class="hero__eyebrow">{!! $hero?->content['subheading'] ?? 'Psychologist &amp; Trauma Therapist' !!}</span>
-    <h1 class="hero__title">{{ $hero?->content['heading'] ?? 'Online therapy for adults ready to move forward.' }}</h1>
+    <span class="hero__eyebrow">{!! $hero?->content['subheading'] ?? 'Online Worldwide &bull; In Person in Amsterdam' !!}</span>
+    <h1 class="hero__title">{{ $hero?->content['heading'] ?? 'Therapy That Helps You Move Forward' }}</h1>
     <div class="hero__text">{!! $hero?->content['body'] ?? '<p>Online therapy for adults struggling with the effects of trauma and PTSD, anxiety, self-worth difficulties, emotional overwhelm, and longstanding psychological patterns. Integrative, evidence-based, and tailored to the individual.</p>' !!}</div>
     <div class="hero__actions">
       @php

@@ -23,6 +23,7 @@
       </div>
       <div class="footer__col">
         {{-- <h4>{{ __('ui.footer.contact') }}</h4> --}}
+        <span class="footer__locations" style="display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--size-sm);color:var(--color-accent-light);font-weight:500;letter-spacing:0.03em;margin-bottom:var(--space-2);">{{ __('ui.footer.service_locations') }}</span>
         <a href="mailto:contact@therapistlysander.com">contact@therapistlysander.com</a>
         <a href="https://wa.me/31641087913" target="_blank" rel="noopener noreferrer">WhatsApp: +31 6 41087913</a>
         <a href="{{ route('booking') }}">{{ __('ui.footer.book_intro_call') }}</a>
