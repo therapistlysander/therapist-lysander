@@ -81,13 +81,22 @@
 {{-- Practice room image --}}
 @php $practiceRoomImg = $process?->content['image'] ?? null; @endphp
 @if($practiceRoomImg)
-<section class="section section--white" aria-label="Practice room">
+<section class="section section--white practice-room-section" aria-label="Practice room">
   <div class="container">
-    <div class="fade-in" style="margin:0 auto;max-width:var(--max-w);">
-      <img src="{{ $practiceRoomImg }}" alt="{{ app()->getLocale() === 'nl' ? 'De praktijkruimte in Amsterdam' : 'The practice room in Amsterdam' }}" style="width:100%;height:auto;border-radius:var(--radius-md);object-fit:cover;" loading="lazy">
+    <div class="fade-in practice-room-wrap" style="margin:0 auto;">
+      <img src="{{ $practiceRoomImg }}" alt="{{ app()->getLocale() === 'nl' ? 'De praktijkruimte in Amsterdam' : 'The practice room in Amsterdam' }}" style="width:100%;height:auto;border-radius:var(--radius-md);object-fit:cover;display:block;" loading="lazy">
     </div>
   </div>
 </section>
+<style>
+  /* Mobile: full content width (unchanged) */
+  .practice-room-wrap { max-width: 100%; }
+  /* Desktop: reduce width ~18% for better visual balance, keep centred, add breathing room below */
+  @media (min-width: 1024px) {
+    .practice-room-wrap { max-width: 82%; }
+    .practice-room-section { padding-bottom: var(--space-20, 5rem); }
+  }
+</style>
 @endif
 
 <section class="section section--dark" aria-labelledby="practical-heading">
