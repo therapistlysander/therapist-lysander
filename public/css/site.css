@@ -1002,7 +1002,8 @@ strong { font-weight: 600; }
   gap: var(--space-8);
   flex-wrap: wrap;
 }
-.stats__item { flex: 1 1 0; min-width: 0; text-align: left; }
+/* Columns never shrink below their longest word, so labels wrap at spaces only */
+.stats__item { flex: 1 1 0; text-align: left; }
 .stats__num {
   font-family: var(--font-heading);
   font-size: var(--size-2xl);
@@ -1014,6 +1015,8 @@ strong { font-weight: 600; }
   font-size: var(--size-sm);
   color: var(--color-text-muted);
   letter-spacing: 0.06em;
+  word-wrap: normal;
+  overflow-wrap: normal;
 }
 
 /* --- NIP registration badge --- */
