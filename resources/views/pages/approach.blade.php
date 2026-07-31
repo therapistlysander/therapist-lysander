@@ -20,7 +20,8 @@
   .trauma-type-item { display: flex; align-items: center; gap: var(--space-3); font-size: var(--size-sm); color: var(--color-text-muted); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border); line-height: 1.5; background: transparent; border: none; border-radius: 0; border-bottom: 1px solid var(--color-border); }
   .trauma-type-item:last-child { border-bottom: none; }
   .trauma-type-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0; margin-top: 5px; }
-  .emdr-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: var(--space-4); margin-top: var(--space-6); }
+  .emdr-features { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-top: var(--space-6); }
+  @media (max-width: 640px) { .emdr-features { grid-template-columns: 1fr; } }
   .emdr-feature { padding: var(--space-4); background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-md); border-left: 3px solid var(--color-accent); }
   .emdr-feature h4 { font-size: var(--size-base); margin-bottom: var(--space-2); color: var(--color-text); }
   .emdr-feature p { font-size: var(--size-base); color: var(--color-text-muted); line-height: 1.65; }
@@ -68,13 +69,29 @@
         <span class="section-label">{{ __('ui.approach.types_label') }}</span>
         <h2 id="types-heading" class="section-title">{{ $types?->content['heading'] ?? 'Types of Trauma I Work With' }}</h2>
       </div>
-      <p style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;line-height:1.85;" class="fade-in">{!! $types?->content['body'] ?? 'Trauma can take many different forms, but its effects often touch the same areas of life: safety, relationships, emotional wellbeing, and self-trust. Therapy can help people process these experiences and move toward greater freedom, stability, and resilience.' !!}</p>
+      @php
+        $typesBody = $types?->content['body'] ?? 'Trauma can take many different forms, but its effects often touch the same areas of life: safety, relationships, emotional wellbeing, and self-trust. Therapy can help people process these experiences and move toward greater freedom, stability, and resilience.';
+        // Frontend-only reorder: keep the first paragraph as the intro; move any following
+        // paragraphs (e.g. the "Don't see your situation listed?" callout) below the trauma list.
+        $typesClosePos = stripos($typesBody, '</p>');
+        if ($typesClosePos !== false) {
+            $typesIntro   = substr($typesBody, 0, $typesClosePos + 4);
+            $typesCallout = trim(substr($typesBody, $typesClosePos + 4));
+        } else {
+            $typesIntro   = $typesBody;
+            $typesCallout = '';
+        }
+      @endphp
+      <div style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;line-height:1.85;" class="fade-in">{!! $typesIntro !!}</div>
       @php $traumaItems = $types?->content['items'] ?? [['title'=>'War zone experiences'],['title'=>'Accidents and injury-related trauma'],['title'=>'Sexual abuse and assault'],['title'=>'Medical trauma'],['title'=>'Childhood abuse and emotional neglect'],['title'=>'Bullying and social exclusion'],['title'=>'Grief and traumatic loss'],['title'=>'High-conflict relational or family situations'],['title'=>'Attachment and relational trauma'],['title'=>'Panic attacks and overwhelming psychological experiences'],['title'=>'Trauma-related self-worth and identity difficulties']]; @endphp
       <div class="trauma-types fade-in">
         @foreach($traumaItems as $item)
         <div class="trauma-type-item">{{ $item['title'] }}</div>
         @endforeach
       </div>
+      @if($typesCallout !== '')
+      <div style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;line-height:1.85;margin-top:var(--space-6);" class="fade-in">{!! $typesCallout !!}</div>
+      @endif
     </div>
   </section>
 
@@ -84,7 +101,7 @@
         <span class="section-label">{{ __('ui.approach.treatment_label') }}</span>
         <h2 id="treatment-heading" class="section-title">{{ $treatments?->content['heading'] ?? 'Trauma-focused treatment' }}</h2>
       </div>
-      <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;max-width:640px;margin:0 auto;text-align:left;" class="fade-in">
+      <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;max-width:640px;margin:0;text-align:left;" class="fade-in">
         {!! $treatments?->content['body'] ?? '<p>Trauma treatment is not about simply reducing symptoms. It is about helping people process difficult experiences, make sense of what happened, and develop a greater sense of safety, flexibility, and self-trust in the present.</p><p>Treatment always takes place at a pace that feels manageable. Together, we develop an understanding of what is happening and why, and we work toward greater freedom, stability, and resilience.</p><p>Depending on the nature of the difficulties involved, I draw from a range of evidence-based trauma-focused approaches.</p>' !!}
       </div>
       @php $treatmentCards = $treatments?->content['cards'] ?? [['subtitle'=>'Primary Method','title'=>'EMDR','description'=>'Eye Movement Desensitization and Reprocessing (EMDR) is one of the most extensively researched treatments for trauma and PTSD. Using bilateral stimulation, EMDR helps the brain process and integrate distressing experiences that continue to influence the present.'],['subtitle'=>'Confronting Avoidance','title'=>'Exposure Therapy','description'=>'Exposure therapy involves gradually approaching memories, emotions, situations, or triggers that have become associated with fear and avoidance. Through repeated and structured exposure, the nervous system learns that these experiences can be tolerated, reducing fear and creating space for new learning.'],['subtitle'=>'Emotional Memory Change','title'=>'Imagery Rescripting','description'=>'Imagery Rescripting helps people revisit distressing memories and change their emotional meaning. By introducing new experiences, perspectives, or responses within the memory, it can reduce shame, helplessness, fear, and self-criticism.'],['subtitle'=>'Gentle Trauma Processing','title'=>'Flash Technique','description'=>'The Flash Technique offers a gentle way of reducing the emotional intensity of traumatic memories without requiring detailed discussion of the experience itself. It can be particularly helpful when memories feel overwhelming or when dissociation is present.'],['subtitle'=>'Core Emotional Patterns','title'=>'Schema Therapy','description'=>'Schema Therapy helps identify longstanding emotional patterns and beliefs that often develop through earlier life experiences. By understanding these patterns and responding to them differently, people can build greater self-compassion, flexibility, and emotional resilience.'],['subtitle'=>'Integrative','title'=>'Somatic Approaches','description'=>'Emotions, stress, and trauma are often experienced not only in our thoughts, but also in the body. Where relevant, I incorporate body awareness, nervous system regulation, and attention to physical sensations as part of the therapeutic process.']]; @endphp
@@ -102,7 +119,7 @@
 
   <section class="section section--dark" aria-labelledby="emdr-heading">
     <div class="container">
-      <div class="grid-2 fade-in">
+      <div class="fade-in" style="max-width:var(--max-w-text);">
         <div>
           <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.approach.about_emdr_label') }}</span>
           <h2 id="emdr-heading" style="color:var(--color-white);">{{ $emdr?->content['heading'] ?? 'EMDR is not only about the past' }}</h2>
@@ -120,18 +137,15 @@
             @endforeach
           </div>
         </div>
-        <div class="grid-2__media">
-          <img src="{{ $emdr?->content['image'] ?? '/images/4e854682cd76d19d-30f861_eb190602eba243f586aac2f6026db98b-mv2.jpg' }}" alt="Calm landscape" loading="lazy" width="600" height="740">
-        </div>
       </div>
     </div>
   </section>
 
   <section class="section section--white" aria-labelledby="why-heading">
     <div class="container">
-      <div class="grid-2 fade-in" style="gap:var(--space-4);">
-        <div class="grid-2__media" style="order:-1;margin-top:var(--space-2);">
-          <img src="{{ $why?->content['image'] ?? '/images/24946176bc4178fd-d0220c_d40feae8ad4e4961b519d527fe1eb369-mv2_d_1440_1920_s_2.jpg' }}" alt="Lysander Verschuur, Psychologist" loading="lazy" width="600" height="750">
+      <div class="grid-2 fade-in">
+        <div class="grid-2__media" style="order:-1;">
+          <img src="{{ $why?->content['image'] ?? '/images/8d05ae73f3a7dbe5-11062b_a417184e892349f89eb10b97fd3d5a91-mv2.jpg' }}" alt="Warm therapeutic space" loading="lazy" width="600" height="750">
         </div>
         <div>
           <span class="section-label">{{ __('ui.approach.my_perspective') }}</span>

@@ -21,36 +21,60 @@ class BookingApprovedMail extends Mailable implements ShouldQueue
 
     public function envelope(): Envelope
     {
+        $isDutch = $this->booking->preferred_language === 'nl';
+
         return new Envelope(
-            subject: 'Your session is confirmed',
+            subject: $isDutch
+                ? 'Je sessie is bevestigd'
+                : 'Your session is confirmed',
         );
     }
 
     public function content(): Content
     {
-        $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
-        $clientTimezone = $this->booking->client_timezone;
+        $isDutch = $this->booking->preferred_language === 'nl';
 
-        // Convert scheduled_at from server timezone to client's timezone
-        $scheduledAt = $this->booking->scheduled_at;
-        $displayScheduledAt = $scheduledAt;
-        if ($scheduledAt && $clientTimezone) {
-            $displayScheduledAt = \Carbon\Carbon::parse($scheduledAt, $serverTimezone)
-                ->setTimezone($clientTimezone)
-                ->format('l, j F Y \a\t H:i');
-        } elseif ($scheduledAt) {
-            $displayScheduledAt = \Carbon\Carbon::parse($scheduledAt, $serverTimezone)
-                ->format('l, j F Y \a\t H:i');
+        $serverTimezone = SiteSetting::where('key', 'timezone')->first()?->value ?: 'Europe/Amsterdam';
+
+        // Prefer the confirmed time; fall back to the requested time so the
+        // details box is never empty when a booking is confirmed without an
+        // explicit scheduling step (e.g. via the status dropdown).
+        // scheduled_at / preferred_date hold the Amsterdam wall-clock appointment
+        // time. Display it exactly as booked with no timezone shift, so it matches
+        // the booking storage, the admin panel, and the Google Calendar event.
+        // Dutch uses 24-hour "om HH:mm"; English uses 12-hour "at h:mm AM/PM".
+        $scheduledAt = $this->booking->scheduled_at ?? $this->booking->preferred_date;
+        $dateFormat = $isDutch
+            ? 'D MMMM YYYY [om] HH:mm'
+            : 'D MMMM YYYY [at] h:mm A';
+        $displayScheduledAt = null;
+        if ($scheduledAt) {
+            $displayScheduledAt = \Carbon\Carbon::parse($scheduledAt->format('Y-m-d H:i:s'), $serverTimezone)
+                ->locale($isDutch ? 'nl' : 'en')
+                ->isoFormat($dateFormat);
         }
 
+        $formatLabels = [
+            'intake'   => $isDutch ? 'Kennismakingsgesprek' : 'Introductory Call',
+            'standard' => $isDutch ? 'Standaard sessie' : 'Standard Session',
+            'emdr'     => 'EMDR Session',
+            'initial'  => $isDutch ? 'Eerste sessie' : 'Initial Session',
+        ];
+        $sessionFormat = $this->booking->session_format;
+        $appointmentType = $formatLabels[$sessionFormat] ?? ($sessionFormat ? ucfirst($sessionFormat) : null);
+
         return new Content(
-            view: 'emails.client.booking-approved',
+            view: $isDutch
+                ? 'emails.client.booking-approved-nl'
+                : 'emails.client.booking-approved',
             with: [
                 'firstName' => $this->booking->first_name,
+                'appointmentType' => $appointmentType,
+                'sessionType' => $this->booking->session_type,
                 'displayScheduledAt' => $displayScheduledAt,
                 'meetingLink' => $this->booking->meeting_link,
                 'meetingPlatform' => $this->booking->meeting_platform,
-                'clientTimezone' => $clientTimezone,
+                'appointmentTimezone' => $serverTimezone,
             ],
         );
     }

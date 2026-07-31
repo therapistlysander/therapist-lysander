@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AdminTableTrait;
 use App\Models\PageSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -10,6 +11,7 @@ use Illuminate\Support\Str;
 
 class AdminPageSectionController extends Controller
 {
+    use AdminTableTrait;
     private array $pageLabels = [
         'home'         => 'Home',
         'about'        => 'About',
@@ -20,6 +22,8 @@ class AdminPageSectionController extends Controller
         'faq'          => 'FAQ',
         'contact'      => 'Contact',
         'booking'      => 'Booking',
+        'privacy'      => 'Privacy Policy',
+        'terms'        => 'Terms & Conditions',
     ];
 
     private array $pageRoutes = [
@@ -32,6 +36,8 @@ class AdminPageSectionController extends Controller
         'faq'          => '/faq',
         'contact'      => '/contact',
         'booking'      => '/booking',
+        'privacy'      => '/privacy',
+        'terms'        => '/terms',
     ];
 
     public function pages()
@@ -57,11 +63,22 @@ class AdminPageSectionController extends Controller
         return view('admin.pages.sections.pages', compact('pages'));
     }
 
-    public function index(string $page)
+    public function index(string $page, Request $request)
     {
-        $sections = PageSection::where('page', $page)->orderBy('sort_order')->get();
+        $query = PageSection::where('page', $page);
 
-        if ($sections->isEmpty()) {
+        // Search
+        $this->applySearch($query, ['label', 'section_key'], $request->input('search'));
+
+        // Filters
+        $this->applyFilters($query, ['status' => 'is_active']);
+
+        // Sorting
+        $this->applySort($query, ['sort_order', 'label', 'is_active', 'section_key'], 'sort_order', 'asc');
+
+        $sections = $this->safePaginate($query->paginate($this->getPerPage($request, 50)));
+
+        if ($sections->isEmpty() && !$request->hasAny(['search', 'status', 'sort'])) {
             abort(404);
         }
 
@@ -238,5 +255,20 @@ class AdminPageSectionController extends Controller
 
         return redirect()->route('admin.sections.edit', $section)
             ->with('success', 'Section "' . $section->label . '" saved successfully.');
+    }
+
+    public function bulkAction(Request $request)
+    {
+        $request->validate(['ids' => 'required|array', 'action' => 'required|in:activate,deactivate']);
+        $ids = $request->ids;
+        if (empty($ids)) return back()->with('error', 'No items selected.');
+
+        $items = PageSection::whereIn('id', $ids);
+        match ($request->action) {
+            'activate'   => $items->update(['is_active' => true]),
+            'deactivate' => $items->update(['is_active' => false]),
+        };
+
+        return back()->with('success', count($ids) . ' section(s) updated.');
     }
 }

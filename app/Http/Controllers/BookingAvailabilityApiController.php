@@ -51,6 +51,8 @@ class BookingAvailabilityApiController extends Controller
 
         // Get global config
         $config = BookingConfig::settings();
+        $slotDuration = (int) $config->slot_duration;
+        $buffer = (int) ($config->buffer_minutes ?? 0);
 
         // Use per-day overrides if set, otherwise use global defaults
         $startTime = $schedule->start_time ?: $config->default_start_time;
@@ -82,19 +84,44 @@ class BookingAvailabilityApiController extends Controller
             $slots = array_values(array_diff($slots, $blocked->blocked_slots));
         }
 
-        // Subtract slots that already have pending/confirmed bookings (double-booking prevention)
-        $bookedSlots = Booking::whereDate('preferred_date', $date->toDateString())
+        // Build the list of occupied time ranges (in minutes from midnight) from
+        // both local bookings and connected Google Calendars, then remove any
+        // candidate slot that would leave less than the configured buffer between
+        // appointments. Each session is treated as $slotDuration minutes long.
+        $busyRanges = [];
+
+        // Local pending/confirmed/scheduled bookings (double-booking prevention).
+        $bookedTimes = Booking::whereDate('preferred_date', $date->toDateString())
             ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
             ->pluck('preferred_date')
-            ->map(fn($dt) => $dt->format('H:i'))
-            ->toArray();
+            ->map(fn($dt) => $dt->format('H:i'));
 
-        $slots = array_values(array_diff($slots, $bookedSlots));
+        foreach ($bookedTimes as $time) {
+            $start = $this->timeToMinutes($time);
+            $busyRanges[] = [$start, $start + $slotDuration];
+        }
 
-        // Subtract Google Calendar busy slots (if connected)
-        $googleBusySlots = $this->getGoogleBusySlots($date, $timezone);
-        if (!empty($googleBusySlots)) {
-            $slots = array_values(array_diff($slots, $googleBusySlots));
+        // Google Calendar busy ranges (if connected).
+        foreach ($this->getGoogleBusyRanges($date, $timezone) as $busy) {
+            $busyRanges[] = [$this->timeToMinutes($busy['start']), $this->timeToMinutes($busy['end'])];
+        }
+
+        // Remove any candidate slot whose interval, once each busy range is
+        // expanded by the buffer on both sides, would overlap a busy range.
+        // This guarantees at least $buffer minutes between consecutive sessions.
+        if (!empty($busyRanges)) {
+            $slots = array_values(array_filter($slots, function ($slot) use ($busyRanges, $slotDuration, $buffer) {
+                $slotStart = $this->timeToMinutes($slot);
+                $slotEnd = $slotStart + $slotDuration;
+
+                foreach ($busyRanges as [$busyStart, $busyEnd]) {
+                    if ($slotStart < $busyEnd + $buffer && $slotEnd > $busyStart - $buffer) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }));
         }
 
         // Filter out past time slots if the requested date is today
@@ -140,12 +167,13 @@ class BookingAvailabilityApiController extends Controller
     }
 
     /**
-     * Get Google Calendar busy slots for a given date.
+     * Get Google Calendar busy time ranges for a given date.
      * Checks all configured availability calendars (multi-calendar support).
-     * Returns array of 'H:i' strings to subtract from available slots.
+     * Returns an array of ['start' => 'H:i', 'end' => 'H:i'] ranges so the
+     * caller can apply buffer-aware overlap logic.
      * Fails open: returns empty array if Google API is unavailable.
      */
-    private function getGoogleBusySlots(Carbon $date, string $timezone): array
+    private function getGoogleBusyRanges(Carbon $date, string $timezone): array
     {
         $token = GoogleCalendarToken::where('is_active', true)->first();
         if (!$token) {
@@ -169,49 +197,19 @@ class BookingAvailabilityApiController extends Controller
             }
         });
 
-        // Convert busy time ranges to slot times (H:i format)
-        return $this->busySlotsToSlotTimes($busySlots, $date);
+        return array_map(fn($busy) => [
+            'start' => $busy['start'],
+            'end'   => $busy['end'],
+        ], $busySlots);
     }
 
     /**
-     * Convert Google Calendar busy time ranges to slot start times (H:i format).
-     * A slot is considered busy if any part of it overlaps with a busy period.
+     * Convert an 'H:i' wall-clock time to minutes from midnight.
      */
-    private function busySlotsToSlotTimes(array $busySlots, Carbon $date): array
+    private function timeToMinutes(string $hhmm): int
     {
-        if (empty($busySlots)) {
-            return [];
-        }
+        [$h, $m] = array_map('intval', explode(':', $hhmm));
 
-        $config = BookingConfig::settings();
-        $slotDuration = $config->slot_duration;
-        $busySlotTimes = [];
-
-        // Get all possible slot times for the day
-        $allSlots = BookingConfig::generateSlots(
-            $config->default_start_time,
-            $config->default_end_time,
-            $slotDuration,
-            $config->break_start,
-            $config->break_end
-        );
-
-        foreach ($allSlots as $slot) {
-            $slotStart = Carbon::parse($date->toDateString() . ' ' . $slot);
-            $slotEnd = $slotStart->copy()->addMinutes($slotDuration);
-
-            foreach ($busySlots as $busy) {
-                $busyStart = $busy['start_dt'] ?? Carbon::parse($date->toDateString() . ' ' . $busy['start']);
-                $busyEnd = $busy['end_dt'] ?? Carbon::parse($date->toDateString() . ' ' . $busy['end']);
-
-                // Check overlap
-                if ($slotStart < $busyEnd && $slotEnd > $busyStart) {
-                    $busySlotTimes[] = $slot;
-                    break;
-                }
-            }
-        }
-
-        return $busySlotTimes;
+        return $h * 60 + $m;
     }
 }

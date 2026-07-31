@@ -74,11 +74,16 @@
   </div>
   @endforeach
 
-  {{-- Non-translatable: Canonical URL --}}
+  {{-- Non-translatable: Canonical URL & OG Image --}}
   <div style="margin-top:24px;">
     <div class="admin-form">
       <div class="admin-form__section">
-        <div class="admin-form__section-title">Canonical URL (shared)</div>
+        <div class="admin-form__section-title">Social Sharing & Canonical (shared)</div>
+        <div class="admin-field">
+          <label class="admin-label">OG Image URL</label>
+          <input type="url" name="og_image" class="admin-input" value="{{ old('og_image', $seo->og_image) }}" placeholder="https://www.therapistlysander.com/images/og-image.jpg">
+          <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Image shown when shared on WhatsApp, Facebook, LinkedIn. Recommended: 1200×630px. Leave empty to use the site default.</p>
+        </div>
         <div class="admin-field">
           <label class="admin-label">Canonical URL</label>
           <input type="url" name="canonical_url" class="admin-input" value="{{ old('canonical_url', $seo->canonical_url) }}" placeholder="https://www.therapistlysander.com/...">

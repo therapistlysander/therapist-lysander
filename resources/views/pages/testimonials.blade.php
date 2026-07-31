@@ -9,102 +9,191 @@
   $cta       = $sections['testimonials_cta'] ?? null;
 @endphp
 
+@section('page_styles')
+<style>
+  /* --- Testimonials page --- */
+
+  /* Cards grid */
+  .testimonials-cards {
+    padding: var(--space-12) 0;
+    background: var(--color-white);
+  }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .testimonial-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-10) var(--space-8);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+  }
+  .testimonial-card__opening {
+    font-size: var(--size-lg);
+    color: var(--color-accent);
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.6;
+    margin: 0 0 var(--space-8);
+  }
+  .testimonial-card__text {
+    font-size: var(--size-base);
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    flex: 1;
+  }
+  .testimonial-card__text p {
+    margin: 0 0 var(--space-4);
+  }
+  .testimonial-card__text p:last-child {
+    margin-bottom: 0;
+  }
+  .testimonial-card__signature {
+    font-family: var(--font-heading);
+    font-size: var(--size-base);
+    color: var(--color-accent);
+    font-weight: 600;
+    margin-top: var(--space-6);
+  }
+  .testimonial-card__fallback {
+    font-size: var(--size-base);
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    font-style: italic;
+    flex: 1;
+  }
+
+  /* Endorsement */
+  .testimonials-endorsement {
+    padding: var(--space-12) 0;
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+  }
+  .testimonials-endorsement .section-header h2 {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+  }
+  .endorsement-block {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .endorsement-block__quote {
+    font-family: var(--font-heading);
+    font-size: clamp(var(--size-base), 1.6vw, var(--size-lg));
+    color: var(--color-text);
+    line-height: 1.65;
+    font-style: italic;
+  }
+  .endorsement-block__attribution {
+    margin-top: var(--space-4);
+    font-family: var(--font-heading);
+    font-size: var(--size-base);
+    color: var(--color-accent);
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .testimonials-cards { padding: var(--space-8) 0; }
+    .testimonials-endorsement { padding: var(--space-8) 0; }
+  }
+</style>
+@endsection
+
 @section('content')
 <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 <main id="main-content">
 
+  {{-- Hero — clean minimalist style consistent with other pages --}}
   <div class="page-hero">
     <div class="container--narrow">
-      <span class="page-hero__eyebrow">{{ $hero?->content['subheading'] ?? __('ui.testimonials.hero_subheading') }}</span>
+      <span class="page-hero__eyebrow">{{ $hero?->content['subheading'] ?? __('ui.testimonials.hero_heading') }}</span>
       <h1 class="page-hero__title">{{ $hero?->content['heading'] ?? __('ui.testimonials.hero_heading') }}</h1>
       <div class="page-hero__text">{!! $hero?->content['body'] ?? '<p>' . __('ui.testimonials.hero_body') . '</p>' !!}</div>
     </div>
   </div>
 
-  <!-- Section 1: Client Experiences -->
-  <section class="section section--white" aria-labelledby="client-experiences-heading">
+  {{-- Testimonial cards --}}
+  <section class="testimonials-cards">
     <div class="container">
-      <div class="section-header fade-in" style="text-align:center;">
-        <span class="section-label">{{ __('ui.testimonials.client_experiences') }}</span>
-        <h2 id="client-experiences-heading">{{ __('ui.testimonials.client_experiences_heading') }}</h2>
-      </div>
+      <div class="testimonials-grid">
+        @foreach($testimonials as $t)
+        <div class="testimonial-card fade-in">
+          {{-- Opening quote (headline) as highlighted title --}}
+          @if($t->headline)
+            <p class="testimonial-card__opening">&ldquo;{{ $t->headline }}&rdquo;</p>
+          @endif
 
-      @foreach($testimonials as $i => $t)
-      <div class="testimonial-long fade-in">
-        <div class="testimonial-long__content">
-          <p class="testimonial-long__headline">{{ $t->headline ?? Str::limit(strip_tags($t->body), 80) }}</p>
-          <div class="testimonial-long__text">
-            {!! $t->body !!}
-          </div>
-          <p class="testimonial-long__sig">&mdash; {{ $t->client_name }}</p>
-        </div>
-        <div class="testimonial-long__media">
-          <img src="{{ $i % 2 !== 0 ? '/images/de8d235e4bd94eb8-a3c153_20122b9a32cc4e9a9faca835b9f82d14-mv2.jpg' : '/images/1cea4c553e34803a-a3c153_bbf1019446e34069a3b96c18f172e810-mv2.jpg' }}" alt="Calm reflective landscape" loading="lazy" width="600" height="520">
-        </div>
-      </div>
-      @endforeach
+          {{-- Body with preserved paragraph formatting --}}
+          @if($t->body)
+            <div class="testimonial-card__text">
+              {!! strip_tags($t->body, '<p><br><strong><em><b><i><a><u>') !!}
+            </div>
+          @elseif($t->short_description)
+            <div class="testimonial-card__fallback">
+              <p>{{ $t->short_description }}</p>
+            </div>
+          @endif
 
+          {{-- Signature --}}
+          <p class="testimonial-card__signature">&mdash; {{ $t->client_name }}</p>
+        </div>
+        @endforeach
+      </div>
     </div>
   </section>
 
-  <!-- Section 2: Professional Recommendation -->
+  {{-- Professional Endorsement --}}
   @php
     $settingsHeading = $endorsementSettings['endorsement_heading'][$locale] ?? '';
     $settingsFullBody = $endorsementSettings['endorsement_full_body'][$locale] ?? '';
     $settingsAttribution = $endorsementSettings['endorsement_attribution'][$locale] ?? '';
   @endphp
-  @if($endorsements->count() > 0)
-  <section class="section section--endorsement" aria-labelledby="professional-recommendation-heading">
+  <section class="testimonials-endorsement" aria-labelledby="endorsement-heading">
     <div class="container--narrow">
       <div class="section-header fade-in" style="text-align:center;">
         <span class="section-label">{{ __('ui.testimonials.professional_recommendation') }}</span>
-        <h2 id="professional-recommendation-heading">{{ $settingsHeading ?: __('ui.testimonials.professional_recommendation_heading') }}</h2>
+        <h2 id="endorsement-heading">{{ $settingsHeading ?: __('ui.testimonials.professional_recommendation_heading') }}</h2>
       </div>
-
-      @foreach($endorsements as $endorsement)
-      <div class="endorsement-card fade-in">
-        <blockquote class="endorsement-card__quote">
-          {!! nl2br(e($endorsement->body)) ?: ($settingsFullBody ? nl2br(e($settingsFullBody)) : '') !!}
-        </blockquote>
-        <p class="endorsement-card__attribution">
-          &mdash; {{ $endorsement->client_name }}
-        </p>
-      </div>
-      @endforeach
-    </div>
-  </section>
-  @else
-  {{-- Fallback: show endorsement from settings or translations --}}
-  <section class="section section--endorsement" aria-labelledby="professional-recommendation-heading">
-    <div class="container--narrow">
-      <div class="section-header fade-in" style="text-align:center;">
-        <span class="section-label">{{ __('ui.testimonials.professional_recommendation') }}</span>
-        <h2 id="professional-recommendation-heading">{{ $settingsHeading ?: __('ui.testimonials.professional_recommendation_heading') }}</h2>
-      </div>
-      @if($settingsFullBody)
-      <div class="endorsement-card fade-in">
-        <blockquote class="endorsement-card__quote">
-          {!! nl2br(e($settingsFullBody)) !!}
-        </blockquote>
-        <p class="endorsement-card__attribution">
-          &mdash; {{ $settingsAttribution ?: __('ui.home.endorsement_attribution') }}
-        </p>
-      </div>
+      @if($endorsements->count() > 0)
+        @foreach($endorsements as $endorsement)
+        <div class="endorsement-block fade-in">
+          <blockquote class="endorsement-block__quote">
+            {!! nl2br(e($endorsement->body)) ?: ($settingsFullBody ? nl2br(e($settingsFullBody)) : '') !!}
+          </blockquote>
+          <p class="endorsement-block__attribution">
+            &mdash; {{ $endorsement->client_name }}
+          </p>
+        </div>
+        @endforeach
+      @elseif($settingsFullBody)
+        <div class="endorsement-block fade-in">
+          <blockquote class="endorsement-block__quote">
+            {!! nl2br(e($settingsFullBody)) !!}
+          </blockquote>
+          <p class="endorsement-block__attribution">
+            &mdash; {{ $settingsAttribution ?: __('ui.home.endorsement_attribution') }}
+          </p>
+        </div>
       @else
-      <div class="endorsement-card fade-in">
-        <blockquote class="endorsement-card__quote">
-          {!! __('ui.home.endorsement_body') !!}
-        </blockquote>
-        <p class="endorsement-card__attribution">
-          &mdash; {{ __('ui.home.endorsement_attribution') }}
-        </p>
-      </div>
+        <div class="endorsement-block fade-in">
+          <blockquote class="endorsement-block__quote">
+            {!! __('ui.home.endorsement_body') !!}
+          </blockquote>
+          <p class="endorsement-block__attribution">
+            &mdash; {{ __('ui.home.endorsement_attribution') }}
+          </p>
+        </div>
       @endif
     </div>
   </section>
-  @endif
 
-  <!-- CTA -->
+  {{-- CTA — transition directly from testimonials to CTA --}}
   <div class="cta-section">
     <div class="container--narrow">
       <span class="section-label" style="color:var(--color-accent-light);border-color:var(--color-accent-light);">{{ __('ui.common.ready_next_step') }}</span>

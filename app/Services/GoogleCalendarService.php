@@ -146,6 +146,67 @@ class GoogleCalendarService
     // ─── Calendar Operations ─────────────────────────────────────────────────
 
     /**
+     * Build the localized summary and description for a booking's calendar event.
+     *
+     * The client is added as an attendee and receives Google's native calendar
+     * invitation, so the wording follows the booking's preferred language
+     * (Dutch or English) to keep the invite consistent with the confirmation email.
+     *
+     * @return array{summary: string, description: string}
+     */
+    private function buildEventContent(Booking $booking): array
+    {
+        $isDutch = $booking->preferred_language === 'nl';
+
+        $formatLabels = $isDutch
+            ? [
+                'intake'   => 'Kennismakingsgesprek',
+                'standard' => 'Standaard sessie',
+                'emdr'     => 'EMDR-sessie',
+                'initial'  => 'Eerste sessie',
+            ]
+            : [
+                'intake'   => 'Introduction Call',
+                'standard' => 'Standard Session',
+                'emdr'     => 'EMDR Session',
+                'initial'  => 'Initial Session',
+            ];
+
+        $formatValue = $formatLabels[$booking->session_format]
+            ?? ucfirst($booking->session_format ?? '');
+
+        $sessionTypeValue = ($isDutch && $booking->session_type === 'in-person')
+            ? 'Op locatie'
+            : ucfirst($booking->session_type ?? ($isDutch ? 'Onbekend' : 'N/A'));
+
+        if ($isDutch) {
+            $summary = 'Sessie: ' . $booking->full_name;
+            $description = implode("\n", array_filter([
+                'Cliënt: ' . $booking->full_name,
+                'E-mail: ' . $booking->email,
+                $booking->phone ? 'Telefoon: ' . $booking->phone : null,
+                'Soort afspraak: ' . $formatValue,
+                'Type sessie: ' . $sessionTypeValue,
+                $booking->reason ? 'Reden: ' . $booking->reason : null,
+                $booking->meeting_link ? 'Deelnamelink: ' . $booking->meeting_link : null,
+            ]));
+        } else {
+            $summary = 'Session: ' . $booking->full_name;
+            $description = implode("\n", array_filter([
+                'Client: ' . $booking->full_name,
+                'Email: ' . $booking->email,
+                $booking->phone ? 'Phone: ' . $booking->phone : null,
+                'Format: ' . $formatValue,
+                'Type: ' . $sessionTypeValue,
+                $booking->reason ? 'Reason: ' . $booking->reason : null,
+                $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
+            ]));
+        }
+
+        return ['summary' => $summary, 'description' => $description];
+    }
+
+    /**
      * Create a Google Calendar event for a confirmed booking.
      *
      * @return string The Google event ID.
@@ -160,25 +221,11 @@ class GoogleCalendarService
         $slotDuration = BookingConfig::settings()->slot_duration;
         $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
 
-        $formatLabels = [
-            'intake'   => 'Introduction Call',
-            'standard' => 'Standard Session',
-            'emdr'     => 'EMDR Session',
-            'initial'  => 'Initial Session',
-        ];
+        $content = $this->buildEventContent($booking);
 
         $event = new Event($service);
-        $event->setSummary('Session: ' . $booking->full_name);
-        $event->setDescription(implode("\n", array_filter([
-            'Client: ' . $booking->full_name,
-            'Email: ' . $booking->email,
-            'Phone: ' . ($booking->phone ?? 'Not provided'),
-            'Format: ' . ($formatLabels[$booking->session_format] ?? ucfirst($booking->session_format ?? '')),
-            'Type: ' . ucfirst($booking->session_type ?? 'N/A'),
-            'Language: ' . ($booking->preferred_language ?? 'N/A'),
-            $booking->reason ? 'Reason: ' . $booking->reason : null,
-            $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
-        ])));
+        $event->setSummary($content['summary']);
+        $event->setDescription($content['description']);
 
         if ($booking->meeting_link) {
             $event->setLocation($booking->meeting_link);
@@ -247,24 +294,10 @@ class GoogleCalendarService
         $slotDuration = BookingConfig::settings()->slot_duration;
         $endTime = $scheduledAt->copy()->addMinutes($slotDuration);
 
-        $formatLabels = [
-            'intake'   => 'Introduction Call',
-            'standard' => 'Standard Session',
-            'emdr'     => 'EMDR Session',
-            'initial'  => 'Initial Session',
-        ];
+        $content = $this->buildEventContent($booking);
 
-        $existingEvent->setSummary('Session: ' . $booking->full_name);
-        $existingEvent->setDescription(implode("\n", array_filter([
-            'Client: ' . $booking->full_name,
-            'Email: ' . $booking->email,
-            'Phone: ' . ($booking->phone ?? 'Not provided'),
-            'Format: ' . ($formatLabels[$booking->session_format] ?? ucfirst($booking->session_format ?? '')),
-            'Type: ' . ucfirst($booking->session_type ?? 'N/A'),
-            'Language: ' . ($booking->preferred_language ?? 'N/A'),
-            $booking->reason ? 'Reason: ' . $booking->reason : null,
-            $booking->meeting_link ? 'Meeting Link: ' . $booking->meeting_link : null,
-        ])));
+        $existingEvent->setSummary($content['summary']);
+        $existingEvent->setDescription($content['description']);
 
         if ($booking->meeting_link) {
             $existingEvent->setLocation($booking->meeting_link);
@@ -358,28 +391,55 @@ class GoogleCalendarService
         $request->setTimeZone($this->getAppTimezone());
         $request->setItems($items);
 
+        Log::debug('GoogleCalendar: FreeBusy request', [
+            'time_min' => $start->toIso8601String(),
+            'time_max' => $end->toIso8601String(),
+            'calendar_ids' => $calendarIds,
+        ]);
+
         $response = $service->freebusy->query($request);
         $busySlots = [];
 
         // Merge busy periods from all calendars
         $calendars = $response->getCalendars();
+
         foreach ($calendarIds as $calId) {
             if (isset($calendars[$calId])) {
-                foreach ($calendars[$calId]->getBusy() as $busy) {
+                $calendarResult = $calendars[$calId];
+
+                // Google can return per-calendar errors (e.g. shared calendar not readable)
+                if (method_exists($calendarResult, 'getErrors') && $calendarResult->getErrors()) {
+                    Log::warning('GoogleCalendar: FreeBusy error for calendar', [
+                        'calendar_id' => $calId,
+                        'errors' => $calendarResult->getErrors(),
+                    ]);
+                    continue;
+                }
+
+                foreach ($calendarResult->getBusy() as $busy) {
                     $busyStart = Carbon::parse($busy->getStart());
                     $busyEnd = Carbon::parse($busy->getEnd());
                     $busySlots[] = [
-                        'start' => $busyStart->format('H:i'),
-                        'end'   => $busyEnd->format('H:i'),
-                        'start_dt' => $busyStart,
-                        'end_dt'   => $busyEnd,
+                        'start'       => $busyStart->format('H:i'),
+                        'end'         => $busyEnd->format('H:i'),
+                        'calendar_id' => $calId,
                     ];
                 }
+            } else {
+                Log::warning('GoogleCalendar: FreeBusy response missing expected calendar', [
+                    'calendar_id' => $calId,
+                    'returned_calendars' => array_keys((array) $calendars),
+                ]);
             }
         }
 
+        Log::info('GoogleCalendar: FreeBusy response summary', [
+            'calendar_ids' => $calendarIds,
+            'busy_slots_found' => count($busySlots),
+        ]);
+
         // Sort by start time for consistent ordering
-        usort($busySlots, fn($a, $b) => $a['start_dt'] <=> $b['start_dt']);
+        usort($busySlots, fn($a, $b) => $a['start'] <=> $b['start']);
 
         return $busySlots;
     }
@@ -392,8 +452,8 @@ class GoogleCalendarService
         $busySlots = $this->getBusySlots($slotStart->copy()->startOfDay(), $slotEnd->copy()->endOfDay(), $calendarId);
 
         foreach ($busySlots as $busy) {
-            $busyStart = $busy['start_dt'];
-            $busyEnd = $busy['end_dt'];
+            $busyStart = Carbon::parse($slotStart->toDateString() . ' ' . $busy['start']);
+            $busyEnd = Carbon::parse($slotEnd->toDateString() . ' ' . $busy['end']);
 
             // Overlap check: slot overlaps with busy period
             if ($slotStart < $busyEnd && $slotEnd > $busyStart) {

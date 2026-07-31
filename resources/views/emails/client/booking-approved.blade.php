@@ -8,14 +8,26 @@
 <p>Your appointment has been scheduled. Please see the details below:</p>
 
 <div class="highlight-box">
-    <table style="width:100%;border-collapse:collapse;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+        @if($appointmentType)
+        <tr>
+            <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Appointment type:</td>
+            <td style="padding:4px 0;color:#1a2332;">{{ $appointmentType }}</td>
+        </tr>
+        @endif
+        @if($sessionType)
+        <tr>
+            <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;">Session type:</td>
+            <td style="padding:4px 0;color:#1a2332;">{{ ucfirst($sessionType) }}</td>
+        </tr>
+        @endif
         @if($displayScheduledAt)
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:130px;">Date & time:</td>
             <td style="padding:4px 0;color:#1a2332;">
                 {{ $displayScheduledAt }}
-                @if(!empty($clientTimezone))
-                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $clientTimezone) }})</span>
+                @if(!empty($appointmentTimezone))
+                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $appointmentTimezone) }})</span>
                 @endif
             </td>
         </tr>
@@ -35,7 +47,7 @@
     </table>
 </div>
 
-<p>Please try to be available a few minutes before the session starts. If you need to reschedule, please contact us as soon as possible.</p>
+<p>Please try to be available a few minutes before the session starts. If you need to reschedule, please contact me as soon as possible.</p>
 
 <p>Looking forward to our session together.<br>Lysander Verschuur, MSc.</p>
 @endsection

@@ -54,7 +54,7 @@ class WarmCalendarCacheJob implements ShouldQueue
             // Cache per-date for efficient per-request lookups
             $slotsByDate = [];
             foreach ($busySlots as $slot) {
-                $dateKey = $slot['start_dt']->toDateString();
+                $dateKey = \Carbon\Carbon::parse($slot['start'])->toDateString();
                 $slotsByDate[$dateKey][] = $slot;
             }
 

@@ -34,8 +34,12 @@ return [
         'credentials'       => 'MSc. Psychology',
         'book_intro_call'   => 'Book a Free Intro Call',
         'online_worldwide'  => 'Online sessions worldwide',
+        'service_locations' => '📍 Amsterdam (in person) & Online',
         'all_rights'        => 'All rights reserved.',
         'psychotherapy'     => 'Psychotherapy & Trauma Therapy',
+        'privacy'           => 'Privacy Policy',
+        'terms'             => 'Terms & Conditions',
+        'registration'      => 'Chamber of Commerce (KvK): 80970729 | VAT: NL003511998B26',
     ],
 
     /*
@@ -172,9 +176,10 @@ return [
     |--------------------------------------------------------------------------
     */
     'training' => [
-        'academic_label'        => 'Academic background',
+        'academic_label'        => 'Professional qualifications',
         'training_education'    => 'Training &amp; education',
         'approach_label'        => 'Approach',
+        'nip_caption'           => 'Psychologist NIP',
     ],
 
     /*
@@ -239,8 +244,8 @@ return [
         'whatsapp_desc'         => 'Feel free to send a WhatsApp message for brief questions or practical matters. Messages are answered during working days as availability allows.',
         'whatsapp_preferred'    => 'Prefer a quick message?',
         'email_label'           => 'Email',
-        'online_sessions'       => 'Online sessions',
-        'online_sessions_value' => 'Available worldwide via secure video call',
+        'online_sessions'       => 'Session Format',
+        'online_sessions_value' => 'Online worldwide or in person at my practice in Amsterdam',
         'session_duration'      => 'Session duration',
         'session_duration_value'=> '60 minutes · Free introduction call (30 min)',
         'languages'             => 'Languages',
@@ -298,9 +303,10 @@ return [
         'goals_placeholder'     => "I'd like to feel more... / I struggle with...",
         'optional_helper'       => 'This is optional. You can also discuss this during the call itself.',
         'choose_time'           => 'Choose a date & time',
-        'choose_time_desc'      => 'Select a date to view available appointment times.',
+        'choose_time_desc'      => 'Select a day to view the available time slots. If you don\'t see a suitable time, feel free to contact me.',
         'select_date'           => 'Select a date',
         'available_times'       => 'Available times',
+        'timezone_notice'       => 'Times shown in your local timezone: :tz',
         'review_booking'        => 'Review your booking',
         'name_summary'          => 'Name',
         'datetime_summary'      => 'Date &amp; time',
@@ -309,9 +315,9 @@ return [
         'notes_placeholder'     => 'Briefly share what brings you here — this helps me prepare for our first conversation.',
         'send_request'          => 'Send booking request',
         'sending'               => 'Sending...',
-        'booking_disclaimer'   => "Your booking request will be sent to Lysander. You'll receive a confirmation via email or WhatsApp within 24 hours.",
+        'booking_disclaimer'   => "Your booking request will be sent to Lysander. You'll receive a confirmation via email or WhatsApp within 1–2 business days.",
         'success_title'         => 'Booking request sent!',
-        'success_desc'          => 'Thank you, :name. Lysander will confirm your session for :datetime via email or WhatsApp within 24 hours.',
+        'success_desc'          => 'Thank you, :name. Lysander will confirm your booking via email or WhatsApp within 1–2 business days.',
         'also_whatsapp'         => 'Also send via WhatsApp',
         'back_to_home'          => 'Back to home',
         'success_toast'         => 'Booking request submitted!',
@@ -324,6 +330,15 @@ return [
         'toast_error'           => 'Something went wrong. Please try again.',
         'wa_type_online'        => 'Online',
         'wa_type_inperson'      => 'In-person',
+        'wa_greeting'           => 'Hello Lysander,',
+        'wa_intro'              => "I'd like to book a session.",
+        'wa_label_name'         => 'Name',
+        'wa_label_type'         => 'Type',
+        'wa_label_appointment'  => 'Appointment',
+        'wa_label_date'         => 'Date',
+        'wa_label_reason'       => 'Reason',
+        'wa_closing'            => 'Thank you!',
+        'wa_appointment_intake' => 'Introductory Call',
     ],
 
     /*

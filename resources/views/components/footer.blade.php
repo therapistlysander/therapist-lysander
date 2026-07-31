@@ -23,14 +23,19 @@
       </div>
       <div class="footer__col">
         {{-- <h4>{{ __('ui.footer.contact') }}</h4> --}}
-        <a href="mailto:therapistlysander@gmail.com">therapistlysander@gmail.com</a>
-        <a href="https://wa.me/66935309052" target="_blank" rel="noopener noreferrer">WhatsApp: +66 93 530 9052</a>
+        <a href="mailto:contact@therapistlysander.com">contact@therapistlysander.com</a>
+        <a href="https://wa.me/31641087913" target="_blank" rel="noopener noreferrer">WhatsApp: +31 6 41087913</a>
         <a href="{{ route('booking') }}">{{ __('ui.footer.book_intro_call') }}</a>
       </div>
     </div>
     <div class="footer__bottom">
-      <p>&copy; {{ date('Y') }} Lysander Verschuur, MSc. {{ __('ui.footer.all_rights') }}</p>
-      <p>{!! __('ui.footer.psychotherapy') !!}</p>
+      <p class="footer__copyright">&copy; {{ date('Y') }} Therapist Lysander. {{ __('ui.footer.all_rights') }}</p>
+      <nav class="footer__legal" aria-label="{{ __('ui.footer.privacy') }} / {{ __('ui.footer.terms') }}">
+        <a href="{{ route('privacy') }}">{{ __('ui.footer.privacy') }}</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="{{ route('terms') }}">{{ __('ui.footer.terms') }}</a>
+      </nav>
+      <p class="footer__registration">{{ __('ui.footer.registration') }}</p>
     </div>
   </div>
 </footer>

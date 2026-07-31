@@ -336,22 +336,23 @@
           @endphp
 
           @if($currentImg)
-          <div style="margin-bottom:14px;">
-            <img src="{{ $currentImg }}" alt="" style="width:100%;max-height:180px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+          <div class="current-image-wrap" style="position:relative;margin-bottom:14px;">
+            <img src="{{ $currentImg }}" alt="" class="current-image-preview" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
             <p style="display:none;font-size:11px;color:#ef4444;margin:4px 0;">Image could not be loaded: {{ basename($currentImg) }}</p>
-            <p style="font-size:11px;color:#6b7280;margin:4px 0 0;">Current: {{ basename($currentImg) }}</p>
-            <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;color:#ef4444;margin-top:6px;">
-              <input type="checkbox" name="remove_image" value="1"> Remove current image
-            </label>
+            <button type="button" class="current-image-delete" onclick="removeCurrentImage(this)" title="Remove image">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <input type="hidden" name="remove_image" value="0" class="remove-image-input">
           </div>
           @else
           <p style="font-size:12px;color:#9ca3af;margin:0 0 12px;">No image set for this section.</p>
           @endif
 
-          <div class="admin-field">
-            <label class="admin-label">Upload new</label>
-            <input type="file" name="image" class="admin-input" accept=".jpg,.jpeg,.png,.webp,.gif,.svg" id="image-upload-input" onchange="previewNewImage(this)">
-            <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Max 5 MB</p>
+          <div class="upload-dropzone" id="upload-dropzone" onclick="document.getElementById('image-upload-input').click()">
+            <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,.gif,.svg" id="image-upload-input" onchange="previewNewImage(this)" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="32" height="32"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+            <span class="upload-dropzone__text">Click to upload or drag &amp; drop</span>
+            <span class="upload-dropzone__hint">JPG, PNG, WebP, SVG — Max 5 MB</span>
           </div>
           <div id="new-image-preview" style="display:none;margin-top:8px;">
             <img id="new-image-thumb" src="" alt="" style="width:100%;max-height:140px;object-fit:cover;border-radius:8px;border:1px solid #e5e7eb;display:block;">
@@ -422,6 +423,34 @@
     transition:background 0.15s,border-color 0.15s;line-height:1;
   }
   .repeater-remove:hover { background:#fef2f2;border-color:#fca5a5; }
+
+  /* Modern file upload dropzone */
+  .upload-dropzone {
+    border: 2px dashed #d1d5db; border-radius: 10px; padding: 28px 20px;
+    text-align: center; cursor: pointer; transition: all 0.2s;
+    background: #fafbfc;
+  }
+  .upload-dropzone:hover, .upload-dropzone.dragover {
+    border-color: #5a9e97; background: #f0f7f6;
+  }
+  .upload-dropzone svg { color: #9ca3af; margin-bottom: 8px; }
+  .upload-dropzone:hover svg { color: #5a9e97; }
+  .upload-dropzone__text { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 2px; }
+  .upload-dropzone__hint { display: block; font-size: 11px; color: #9ca3af; }
+
+  /* Current image delete button */
+  .current-image-delete {
+    position: absolute; top: 8px; right: 8px; width: 30px; height: 30px;
+    border-radius: 50%; border: none; background: rgba(239,68,68,0.9);
+    color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s, background 0.15s;
+  }
+  .current-image-wrap:hover .current-image-delete { opacity: 1; }
+  .current-image-delete:hover { background: #dc2626; }
+
+  /* Image removed state */
+  .current-image-wrap.image-removed .current-image-preview { opacity: 0.3; filter: grayscale(1); }
+  .current-image-wrap.image-removed .current-image-delete svg { d: path("M6 18L18 6M6 6l12 12"); }
 </style>
 @endsection
 
@@ -443,8 +472,37 @@ function previewNewImage(input) {
     document.querySelectorAll('.media-thumb-btn').forEach(b => b.classList.remove('media-thumb-btn--selected'));
     const lbl = document.getElementById('media-picked-label');
     if (lbl) lbl.style.display = 'none';
+    // Clear remove flag when new file selected
+    const removeInput = document.querySelector('.remove-image-input');
+    if (removeInput) removeInput.value = '0';
+    const imgWrap = document.querySelector('.current-image-wrap');
+    if (imgWrap) imgWrap.classList.remove('image-removed');
   }
 }
+
+function removeCurrentImage(btn) {
+  const wrap = btn.closest('.current-image-wrap');
+  const removeInput = wrap.querySelector('.remove-image-input');
+  if (removeInput.value === '1') {
+    removeInput.value = '0';
+    wrap.classList.remove('image-removed');
+  } else {
+    removeInput.value = '1';
+    wrap.classList.add('image-removed');
+  }
+}
+
+// Drag & drop support for upload dropzone
+(function() {
+  const dz = document.getElementById('upload-dropzone');
+  if (!dz) return;
+  ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+  dz.addEventListener('drop', e => {
+    const input = document.getElementById('image-upload-input');
+    if (e.dataTransfer.files.length) { input.files = e.dataTransfer.files; previewNewImage(input); }
+  });
+})();
 
 function pickMediaImage(url, btn) {
   document.getElementById('media-image-url').value = url;

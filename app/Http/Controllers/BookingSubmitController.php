@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SyncBookingToCalendarJob;
 use App\Models\Booking;
 use App\Models\BookingConfig;
 use App\Models\GoogleCalendarToken;
@@ -39,10 +40,26 @@ class BookingSubmitController extends Controller
         // Build preferred_date from date + time
         $preferredDate = $request->input('date') . ' ' . $request->input('time') . ':00';
 
-        // Double-booking prevention: check if slot is already taken
-        $existingBooking = Booking::where('preferred_date', $preferredDate)
+        // Session length + configurable buffer between appointments.
+        $config = BookingConfig::settings();
+        $slotDuration = (int) $config->slot_duration;
+        $buffer = (int) ($config->buffer_minutes ?? 0);
+
+        $slotStart = Carbon::parse($preferredDate);
+        $slotEnd = $slotStart->copy()->addMinutes($slotDuration);
+
+        // Double-booking prevention: reject if the requested session (plus the
+        // buffer on either side) overlaps an existing booking on the same day.
+        $existingBooking = Booking::whereDate('preferred_date', $slotStart->toDateString())
             ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
-            ->first();
+            ->get()
+            ->first(function ($booking) use ($slotStart, $slotEnd, $slotDuration, $buffer) {
+                $busyStart = Carbon::parse($booking->preferred_date);
+                $busyEnd = $busyStart->copy()->addMinutes($slotDuration);
+
+                return $slotStart < $busyEnd->copy()->addMinutes($buffer)
+                    && $slotEnd > $busyStart->copy()->subMinutes($buffer);
+            });
 
         if ($existingBooking) {
             return response()->json([
@@ -60,20 +77,36 @@ class BookingSubmitController extends Controller
             ], 409);
         }
 
-        // Create the booking
-        $booking = Booking::create([
-            'first_name'     => $firstName,
-            'last_name'      => $lastName,
-            'email'          => $request->input('email'),
-            'session_type'   => $request->input('type'),
-            'session_format' => $request->input('format'),
-            'preferred_date' => $preferredDate,
-            'reason'         => $request->input('notes'),
-            'source'         => 'website',
-            'status'         => 'pending',
-            'client_timezone' => $request->input('client_timezone'),
-            'preferred_language' => $request->input('preferred_language'),
-        ]);
+        // Create the booking. Wrap in try/catch so any persistence failure is
+        // logged and surfaced instead of silently lost (Issue #1, #9).
+        try {
+            $booking = Booking::create([
+                'first_name'     => $firstName,
+                'last_name'      => $lastName,
+                'email'          => $request->input('email'),
+                'session_type'   => $request->input('type'),
+                'session_format' => $request->input('format'),
+                'preferred_date' => $preferredDate,
+                // The frontend multi-step form sends the "reason for seeking
+                // therapy" as `pi_brings`; `notes` is kept for backwards
+                // compatibility. Persist whichever value is present (Issue #3).
+                'reason'         => $request->input('notes') ?: $request->input('pi_brings'),
+                'source'         => 'website',
+                'status'         => 'pending',
+                'client_timezone' => $request->input('client_timezone'),
+                'preferred_language' => $request->input('preferred_language'),
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Booking: Failed to save booking request: ' . $e->getMessage(), [
+                'email'     => $request->input('email'),
+                'exception' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'We could not process your request right now. Please try again in a moment.',
+            ], 500);
+        }
 
         // Create pre-intake response if any pre-intake data provided
         $supportAreas = $request->input('support_areas', []);
@@ -84,26 +117,43 @@ class BookingSubmitController extends Controller
         $piNotes      = $request->input('pi_notes');
 
         if ($piBrings || !empty($supportAreas) || $piTherapy || $piComm || $piExpect || $piNotes) {
-            PreIntakeResponse::create([
-                'booking_id'           => $booking->id,
-                'first_name'           => $firstName,
-                'last_name'            => $lastName,
-                'email'                => $request->input('email'),
-                'presenting_issue'     => $piBrings ?: 'Not provided',
-                'brings_to_therapy'    => $piBrings,
-                'support_areas'        => !empty($supportAreas) ? $supportAreas : null,
-                'previous_therapy'     => $piTherapy,
-                'communication_style'  => $piComm,
-                'duration_expectation' => $piExpect,
-                'additional_notes'     => $piNotes,
-                'session_preference'   => $request->input('type'),
-                'status'               => 'pending',
-            ]);
+            try {
+                PreIntakeResponse::create([
+                    'booking_id'           => $booking->id,
+                    'first_name'           => $firstName,
+                    'last_name'            => $lastName,
+                    'email'                => $request->input('email'),
+                    'presenting_issue'     => $piBrings ?: 'Not provided',
+                    'brings_to_therapy'    => $piBrings,
+                    'support_areas'        => !empty($supportAreas) ? $supportAreas : null,
+                    'previous_therapy'     => $piTherapy,
+                    'communication_style'  => $piComm,
+                    'duration_expectation' => $piExpect,
+                    'additional_notes'     => $piNotes,
+                    'session_preference'   => $request->input('type'),
+                    'status'               => 'pending',
+                ]);
+            } catch (\Throwable $e) {
+                Log::error("Booking: Failed to save pre-intake response for booking #{$booking->id}: {$e->getMessage()}");
+            }
         }
 
-        $notifications = app(NotificationService::class);
-        $notifications->sendBookingConfirmation($booking);
-        $notifications->alertAdminNewBooking($booking);
+        // Notifications are queued; a failure here must never lose the booking (Issue #6, #9).
+        try {
+            $notifications = app(NotificationService::class);
+            $notifications->sendBookingConfirmation($booking);
+            $notifications->alertAdminNewBooking($booking);
+        } catch (\Throwable $e) {
+            Log::error("Booking: Failed to dispatch notifications for booking #{$booking->id}: {$e->getMessage()}");
+        }
+
+        // Create the Google Calendar event asynchronously. The job logs its own
+        // errors and retries; a Calendar failure must never lose the booking (Issue #2, #6, #9).
+        try {
+            SyncBookingToCalendarJob::dispatch($booking, 'create');
+        } catch (\Throwable $e) {
+            Log::error("Booking: Failed to queue Google Calendar sync for booking #{$booking->id}: {$e->getMessage()}");
+        }
 
         return response()->json([
             'success'    => true,
@@ -127,6 +177,7 @@ class BookingSubmitController extends Controller
         try {
             $calendar = app(GoogleCalendarService::class);
             $config = BookingConfig::settings();
+            $buffer = (int) ($config->buffer_minutes ?? 0);
 
             $slotStart = Carbon::parse($preferredDate);
             $slotEnd = $slotStart->copy()->addMinutes($config->slot_duration);
@@ -143,7 +194,10 @@ class BookingSubmitController extends Controller
                 $busyStart = $busy['start_dt'];
                 $busyEnd = $busy['end_dt'];
 
-                if ($slotStart < $busyEnd && $slotEnd > $busyStart) {
+                // Expand each busy range by the buffer on both sides so at least
+                // $buffer minutes remain free between consecutive sessions.
+                if ($slotStart < $busyEnd->copy()->addMinutes($buffer)
+                    && $slotEnd > $busyStart->copy()->subMinutes($buffer)) {
                     return true;
                 }
             }

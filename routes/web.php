@@ -31,8 +31,8 @@ use App\Http\Controllers\SitemapController;
 */
 
 Route::get('/', function () {
-    $locale = app()->getLocale();
-    return redirect("/{$locale}");
+    // Default landing page is English for international visitors
+    return redirect('/en');
 })->name('root');
 
 /*
@@ -83,6 +83,10 @@ Route::prefix('{locale}')
         Route::get('/faq', [FrontendController::class, 'faq'])->name('faq');
         Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
         Route::get('/booking', [FrontendController::class, 'booking'])->name('booking');
+
+        // Legal pages
+        Route::get('/privacy', [FrontendController::class, 'privacy'])->name('privacy');
+        Route::get('/terms', [FrontendController::class, 'terms'])->name('terms');
 
         // Contact form POST (web)
         Route::post('/contact', [ContactWebController::class, 'submit'])->name('contact.submit');
@@ -172,6 +176,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
     Route::patch('/google-calendar/settings', [AdminGoogleCalendarController::class, 'updateSettings'])->name('google-calendar.settings');
     Route::post('/google-calendar/credentials', [AdminGoogleCalendarController::class, 'saveCredentials'])->name('google-calendar.credentials');
     Route::post('/google-calendar/test-sync', [AdminGoogleCalendarController::class, 'testSync'])->name('google-calendar.test-sync');
+    Route::get('/google-calendar/diagnose', [AdminGoogleCalendarController::class, 'diagnoseAvailability'])->name('google-calendar.diagnose');
 
     // Change Password (all admin roles)
     Route::get('/password', [AdminPasswordController::class, 'edit'])->name('password.edit');
@@ -192,15 +197,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin.web'])->group
 
         // Testimonials
         Route::resource('testimonials', AdminTestimonialController::class);
+        Route::post('/testimonials/bulk-action', [AdminTestimonialController::class, 'bulkAction'])->name('testimonials.bulkAction');
 
         // FAQs
         Route::resource('faqs', AdminFaqController::class);
+        Route::post('/faqs/bulk-action', [AdminFaqController::class, 'bulkAction'])->name('faqs.bulkAction');
 
         // Page sections
         Route::get('/pages', [AdminPageSectionController::class, 'pages'])->name('pages.index');
         Route::get('/pages/{page}/sections', [AdminPageSectionController::class, 'index'])->name('sections.index');
         Route::get('/sections/{section}/edit', [AdminPageSectionController::class, 'edit'])->name('sections.edit');
         Route::patch('/sections/{section}', [AdminPageSectionController::class, 'update'])->name('sections.update');
+        Route::post('/sections/bulk-action', [AdminPageSectionController::class, 'bulkAction'])->name('sections.bulkAction');
 
         // SEO settings
         Route::get('/seo', [AdminSeoController::class, 'index'])->name('seo.index');

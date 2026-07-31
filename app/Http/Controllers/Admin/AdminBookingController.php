@@ -3,33 +3,34 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AdminTableTrait;
 use App\Jobs\SyncBookingToCalendarJob;
 use App\Models\Booking;
+use App\Models\SiteSetting;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class AdminBookingController extends Controller
 {
+    use AdminTableTrait;
+
     public function index(Request $request)
     {
-        $query = Booking::with('preIntakeResponse')->latest();
+        $query = Booking::with('preIntakeResponse');
 
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('first_name', 'like', "%$search%")
-                  ->orWhere('last_name', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%");
-            });
-        }
-        if ($request->filled('type')) {
-            $query->where('session_type', $request->type);
-        }
+        // Search
+        $this->applySearch($query, ['first_name', 'last_name', 'email'], $request->input('search'));
 
-        $bookings = $query->paginate(20)->withQueryString();
+        // Filters
+        $this->applyFilters($query, [
+            'status' => 'status',
+            'type'   => 'session_type',
+        ]);
+
+        // Sorting
+        $this->applySort($query, ['first_name', 'status', 'session_type', 'created_at', 'scheduled_at'], 'created_at', 'desc');
+
+        $bookings = $this->safePaginate($query->paginate($this->getPerPage($request)));
 
         $stats = [
             'total'     => Booking::count(),
@@ -82,7 +83,9 @@ class AdminBookingController extends Controller
     public function show(Booking $booking)
     {
         $booking->load('preIntakeResponse');
-        return view('admin.pages.bookings.show', compact('booking'));
+        $defaultMeetingLink = SiteSetting::where('key', 'default_meeting_link')->value('value');
+        $defaultMeetingPlatform = SiteSetting::where('key', 'default_meeting_platform')->value('value');
+        return view('admin.pages.bookings.show', compact('booking', 'defaultMeetingLink', 'defaultMeetingPlatform'));
     }
 
     public function updateStatus(Request $request, Booking $booking)
@@ -95,6 +98,11 @@ class AdminBookingController extends Controller
         $newStatus = $request->status;
 
         $booking->update(['status' => $newStatus]);
+
+        // Confirming a booking applies the site-wide default meeting room.
+        if ($newStatus === 'confirmed') {
+            $this->applyDefaultMeetingLink($booking);
+        }
 
         // Send notification if status actually changed
         if ($oldStatus !== $newStatus && $newStatus !== 'pending') {
@@ -110,22 +118,21 @@ class AdminBookingController extends Controller
     public function schedule(Request $request, Booking $booking)
     {
         $request->validate([
-            'scheduled_at'     => 'required|date|after:now',
-            'meeting_link'     => 'nullable|url|max:500',
-            'meeting_platform' => 'nullable|in:zoom,google_meet,teams,whereby,other',
-            'admin_notes'      => 'nullable|string|max:2000',
+            'scheduled_at' => 'required|date|after:now',
+            'admin_notes'  => 'nullable|string|max:2000',
         ]);
 
         $booking->update([
-            'scheduled_at'     => $request->scheduled_at,
-            'meeting_link'     => $request->meeting_link,
-            'meeting_platform' => $request->meeting_platform,
-            'admin_notes'      => $request->admin_notes,
-            'status'           => 'confirmed',
-            'confirmed_at'     => now(),
+            'scheduled_at' => $request->scheduled_at,
+            'admin_notes'  => $request->admin_notes,
+            'status'       => 'confirmed',
+            'confirmed_at' => now(),
         ]);
 
-        app(NotificationService::class)->sendBookingApproved($booking);
+        // Online sessions always use the site-wide default meeting room.
+        $this->applyDefaultMeetingLink($booking);
+
+        app(NotificationService::class)->sendBookingApproved($booking->fresh());
 
         // Sync to Google Calendar
         SyncBookingToCalendarJob::dispatch($booking->fresh(), 'create');
@@ -155,7 +162,10 @@ class AdminBookingController extends Controller
             'confirmed_at' => now(),
         ]);
 
-        app(NotificationService::class)->sendBookingApproved($booking);
+        // Online sessions always use the site-wide default meeting room.
+        $this->applyDefaultMeetingLink($booking);
+
+        app(NotificationService::class)->sendBookingApproved($booking->fresh());
 
         // Sync to Google Calendar if booking has a scheduled time
         if ($booking->scheduled_at) {
@@ -200,6 +210,11 @@ class AdminBookingController extends Controller
 
     public function bulkDelete(Request $request)
     {
+        $action = $request->input('action', 'delete');
+        if ($action !== 'delete') {
+            return back()->with('error', 'Unsupported bulk action.');
+        }
+
         $ids = $request->input('ids', []);
         if (empty($ids)) {
             return back()->with('error', 'No bookings selected.');
@@ -231,5 +246,26 @@ class AdminBookingController extends Controller
                 SyncBookingToCalendarJob::dispatch($booking, 'delete'),
             default => null,
         };
+    }
+
+    /**
+     * Apply the site-wide default online meeting link/platform to a booking.
+     * All online sessions use the single default room managed in Site Settings,
+     * so there is no per-booking link to enter.
+     */
+    private function applyDefaultMeetingLink(Booking $booking): void
+    {
+        $link = SiteSetting::where('key', 'default_meeting_link')->value('value');
+
+        if (! $link) {
+            return;
+        }
+
+        $platform = SiteSetting::where('key', 'default_meeting_platform')->value('value');
+
+        $booking->update([
+            'meeting_link'     => $link,
+            'meeting_platform' => $platform ?: $booking->meeting_platform,
+        ]);
     }
 }

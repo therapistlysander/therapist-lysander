@@ -80,6 +80,7 @@
   .btn--ghost:hover { color: var(--color-text); }
 
   .success-state { text-align: center; padding: var(--space-10) 0; animation: fadeInUp 0.5s ease; }
+  .success-state p { word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
   .success-icon { width: 64px; height: 64px; background: var(--color-teal-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-6); }
   .success-icon svg { width: 30px; height: 30px; }
 
@@ -229,7 +230,7 @@
 
       <div class="step-section" id="slots-wrap" style="display:none;">
         <label class="step-section__label">{{ __('ui.booking.available_times') }}</label>
-        <p id="timezone-label" style="font-size:var(--size-xs);color:var(--color-text-light);margin-bottom:var(--space-3);"></p>
+        <p id="timezone-label" style="font-size:var(--size-sm);color:var(--color-text-light);margin-bottom:var(--space-3);"></p>
         <div class="time-slots" id="time-slots"></div>
       </div>
 
@@ -272,11 +273,12 @@ window.__translations = {
     sending: '{{ __('ui.booking.sending') }}',
     sendRequest: '{{ __('ui.booking.send_request') }}',
     successTitle: '{{ __('ui.booking.success_title') }}',
-    successDesc: '{{ __('ui.booking.success_desc') }}',
+    successDesc: @json(__('ui.booking.success_desc')),
     alsoWhatsapp: '{{ __('ui.booking.also_whatsapp') }}',
     backToHome: '{{ __('ui.booking.back_to_home') }}',
     successToast: '{{ __('ui.booking.success_toast') }}',
     noSlots: '{{ __('ui.booking.no_slots') }}',
+    timezoneNotice: '{{ __('ui.booking.timezone_notice', ['tz' => ':tz']) }}',
     loadError: '{{ __('ui.booking.load_error') }}',
     loading: '{{ __('ui.booking.loading') }}',
     toastNameEmail: '{{ __('ui.booking.toast_name_email') }}',
@@ -285,6 +287,15 @@ window.__translations = {
     toastError: '{{ __('ui.booking.toast_error') }}',
     waTypeOnline: '{{ __('ui.booking.wa_type_online') }}',
     waTypeInperson: '{{ __('ui.booking.wa_type_inperson') }}',
+    waGreeting: @json(__('ui.booking.wa_greeting')),
+    waIntro: @json(__('ui.booking.wa_intro')),
+    waLabelName: @json(__('ui.booking.wa_label_name')),
+    waLabelType: @json(__('ui.booking.wa_label_type')),
+    waLabelAppointment: @json(__('ui.booking.wa_label_appointment')),
+    waLabelDate: @json(__('ui.booking.wa_label_date')),
+    waLabelReason: @json(__('ui.booking.wa_label_reason')),
+    waClosing: @json(__('ui.booking.wa_closing')),
+    waAppointmentIntake: @json(__('ui.booking.wa_appointment_intake')),
   }
 };
 const __t = window.__translations.booking;
@@ -386,6 +397,35 @@ const schedulePromise = fetch('/api/availability/schedule')
 // Get current locale from URL path (e.g. /en/booking → 'en')
 const currentLocale = window.location.pathname.split('/')[1] || 'en';
 const bookingSubmitUrl = '/' + currentLocale + '/booking';
+
+// ── Localized date & time formatting ──────────────────────────────
+// English: "21 July 2026" / "21 July 2026 at 2:00 PM" (12-hour clock, "at").
+// Dutch:   "21 juli 2026" / "21 juli 2026 om 14:00" (24-hour clock, "om").
+function formatBookingDate(dateStr) {
+  if (!dateStr) return '';
+  const p = dateStr.split('-').map(Number);
+  const dt = new Date(p[0], p[1] - 1, p[2]);
+  const loc = currentLocale === 'nl' ? 'nl-NL' : 'en-GB';
+  return dt.toLocaleDateString(loc, { day: 'numeric', month: 'long', year: 'numeric' });
+}
+function formatBookingTime(timeStr) {
+  if (!timeStr) return '';
+  const t = timeStr.split(':').map(Number);
+  const dt = new Date(2000, 0, 1, t[0], t[1] || 0);
+  if (currentLocale === 'nl') {
+    return dt.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  return dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
+function formatBookingDateTime(dateStr, timeStr) {
+  const datePart = formatBookingDate(dateStr);
+  const timePart = formatBookingTime(timeStr);
+  if (!datePart) return '';
+  if (!timePart) return datePart;
+  const connector = currentLocale === 'nl' ? 'om' : 'at';
+  // Use non-breaking space to keep date+time together on one line
+  return datePart + '\u00A0' + connector + '\u00A0' + timePart;
+}
 
 // Format is always 'intake' (free intro call only)
 
@@ -491,8 +531,12 @@ function fetchAndRenderSlots(dateStr) {
 
       // Update timezone label - show only visitor's timezone
       const tzLabel = document.getElementById('timezone-label');
-      const friendlyTz = visitorTimezone.replace(/_/g, ' ');
-      tzLabel.textContent = 'Times shown in your local timezone: ' + friendlyTz;
+      let friendlyTz = visitorTimezone.replace(/_/g, ' ');
+      // Dutch page localizes the "Europe/" prefix to "Europa/".
+      if (currentLocale === 'nl') {
+        friendlyTz = friendlyTz.replace(/^Europe\//, 'Europa/');
+      }
+      tzLabel.textContent = __t.timezoneNotice.replace(':tz', friendlyTz);
 
       if (!data.available || !data.slots.length) {
         grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#9ca3af;font-size:13px;padding:12px;">' + __t.noSlots + '</div>';
@@ -524,7 +568,7 @@ function fetchAndRenderSlots(dateStr) {
 function showSummary() {
   document.getElementById('sum-name').textContent = state.name;
   const displayTime = state.localTime || state.time;
-  document.getElementById('sum-datetime').textContent = state.date + ' at ' + displayTime;
+  document.getElementById('sum-datetime').textContent = formatBookingDateTime(state.date, displayTime);
   document.getElementById('sum-email').textContent = state.email;
   document.getElementById('summary-section').style.display = 'block';
 }
@@ -565,13 +609,14 @@ function submitBooking() {
   })
   .then(data => {
     const msg = encodeURIComponent(
-      'Hi Lysander,\n\nI\'d like to book a session:\n\n' +
-      'Name: ' + state.name + '\n' +
-      'Type: ' + (state.type === 'online' ? __t.waTypeOnline : __t.waTypeInperson) + '\n' +
-      'Format: ' + state.format + '\n' +
-      'Date: ' + state.date + ' at ' + state.time + '\n' +
-      (state.piGoals ? '\nReason: ' + state.piGoals : '') +
-      '\n\nThank you!'
+      __t.waGreeting + '\n\n' +
+      __t.waIntro + '\n\n' +
+      __t.waLabelName + ': ' + state.name + '\n' +
+      __t.waLabelType + ': ' + (state.type === 'online' ? __t.waTypeOnline : __t.waTypeInperson) + '\n' +
+      __t.waLabelAppointment + ': ' + __t.waAppointmentIntake + '\n' +
+      __t.waLabelDate + ': ' + formatBookingDateTime(state.date, state.time) +
+      (state.piGoals ? '\n' + __t.waLabelReason + ': ' + state.piGoals : '') +
+      '\n\n' + __t.waClosing
     );
 
     document.getElementById('step-3').innerHTML = `
@@ -580,10 +625,10 @@ function submitBooking() {
           <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-teal)" stroke-width="2" width="34" height="34"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
         </div>
         <h2 style="margin-bottom:var(--space-3);">${__t.successTitle}</h2>
-        <p style="color:var(--color-text-muted);font-size:var(--size-sm);margin:0 auto var(--space-8);max-width:380px;">
-          ${__t.successDesc.replace(':name', state.name).replace(':datetime', '<strong>' + state.date + ' at ' + state.time + '</strong>')}
+        <p style="color:var(--color-text-muted);font-size:var(--size-sm);margin:0 auto var(--space-8);max-width:480px;line-height:1.6;">
+          ${__t.successDesc.replace(':name', '<span style="white-space:nowrap;">' + state.name + '</span>').replace(':datetime', '<strong style="white-space:nowrap;">' + formatBookingDateTime(state.date, state.localTime || state.time) + '</strong>')}
         </p>
-        <a href="https://wa.me/66935309052?text=${msg}" target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp" style="margin:0 auto;">
+        <a href="https://wa.me/31641087913?text=${msg}" target="_blank" rel="noopener noreferrer" class="btn btn--whatsapp" style="margin:0 auto;">
           <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           ${__t.alsoWhatsapp}
         </a>
@@ -594,6 +639,8 @@ function submitBooking() {
     document.getElementById('progress-pct').textContent = '100%';
     document.getElementById('progress-label').textContent = __t.complete;
     updateStepIndicators(4);
+    // Bring the success/confirmation message into view immediately.
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   })
   .catch(err => {
     btn.disabled = false; btn.textContent = __t.sendRequest;

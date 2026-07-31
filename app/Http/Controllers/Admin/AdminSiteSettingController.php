@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AdminSiteSettingController extends Controller
 {
@@ -17,10 +18,38 @@ class AdminSiteSettingController extends Controller
     public function update(Request $request)
     {
         $data = $request->input('settings', []);
+        $files = $request->file('settings', []);
+        $removeKeys = $request->input('remove_settings', []);
+
+        // Handle image removals first
+        foreach ($removeKeys as $key => $shouldRemove) {
+            if (!$shouldRemove) continue;
+            $setting = SiteSetting::where('key', $key)->first();
+            if ($setting && $setting->type === 'image') {
+                $setting->update(['value' => '/images/og-image.jpg']);
+            }
+        }
+
+        // Ensure image settings are processed even when no text value is submitted
+        foreach ($files as $key => $file) {
+            if (!isset($data[$key])) {
+                $data[$key] = null;
+            }
+        }
 
         foreach ($data as $key => $value) {
             $setting = SiteSetting::where('key', $key)->first();
             if (!$setting) continue;
+
+            // Handle image uploads
+            if ($setting->type === 'image' && isset($files[$key]) && $files[$key]->isValid()) {
+                $file = $files[$key];
+                $name = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+                      . '-' . time()
+                      . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('media', $name, 'public');
+                $value = '/storage/media/' . $name;
+            }
 
             // Normalise booleans
             if ($setting->type === 'boolean') {

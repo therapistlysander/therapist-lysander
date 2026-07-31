@@ -3,14 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\AdminTableTrait;
 use App\Models\SeoSetting;
 use Illuminate\Http\Request;
 
 class AdminSeoController extends Controller
 {
-    public function index()
+    use AdminTableTrait;
+
+    public function index(Request $request)
     {
-        $seoSettings = SeoSetting::orderBy('page_key')->get();
+        $query = SeoSetting::query();
+
+        // Search
+        $this->applySearch($query, ['page_key'], $request->input('search'));
+
+        // Sorting
+        $this->applySort($query, ['page_key', 'updated_at'], 'page_key', 'asc');
+
+        $seoSettings = $this->safePaginate($query->paginate($this->getPerPage($request)));
+
         return view('admin.pages.seo.index', compact('seoSettings'));
     }
 
@@ -25,11 +37,13 @@ class AdminSeoController extends Controller
     {
         $request->validate([
             'canonical_url' => 'nullable|url|max:500',
+            'og_image'      => 'nullable|url|max:500',
             'translations'  => 'nullable|array',
         ]);
 
         $seo = SeoSetting::where('page_key', $pageKey)->firstOrNew(['page_key' => $pageKey]);
         $seo->canonical_url = $request->input('canonical_url');
+        $seo->og_image = $request->input('og_image');
 
         $translations = $request->input('translations', []);
         foreach ($translations as $locale => $data) {

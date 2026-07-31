@@ -5,10 +5,10 @@
 @section('content')
 <h2>Thank you for your booking request, {{ $firstName }}.</h2>
 
-<p>We have received your request and will review it shortly. You can expect to hear back from us within 1-2 business days.</p>
+<p>I have received your request and will review it shortly. You can expect to hear back from me within 1-2 business days.</p>
 
 <div class="highlight-box">
-    <table style="width:100%;border-collapse:collapse;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         @if($appointmentType)
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:150px;">Appointment type:</td>
@@ -26,16 +26,22 @@
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;">Preferred date:</td>
             <td style="padding:4px 0;color:#1a2332;">
                 {{ $displayDate }}
-                @if(!empty($clientTimezone))
-                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $clientTimezone) }})</span>
+                @if(!empty($appointmentTimezone))
+                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $appointmentTimezone) }})</span>
                 @endif
             </td>
+        </tr>
+        @endif
+        @if(!empty($reason))
+        <tr>
+            <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;vertical-align:top;">Reason for seeking therapy:</td>
+            <td style="padding:4px 0;color:#1a2332;white-space:pre-line;">{{ $reason }}</td>
         </tr>
         @endif
     </table>
 </div>
 
-<p>We will confirm your appointment or suggest an alternative time that works for both of us.</p>
+<p>I will confirm your appointment or suggest an alternative time that works for both of us.</p>
 
 <p>Warm regards,<br>Lysander Verschuur, MSc.</p>
 @endsection

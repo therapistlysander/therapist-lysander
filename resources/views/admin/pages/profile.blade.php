@@ -30,7 +30,7 @@
 
         <div class="admin-field">
           <label class="admin-label">Member Since</label>
-          <input type="text" class="admin-input" value="{{ $user->created_at->format('F j, Y') }}" disabled style="background: #f9fafb; color: #6b7280;">
+          <input type="text" class="admin-input" value="{{ $user->created_at->format('j F Y') }}" disabled style="background: #f9fafb; color: #6b7280;">
         </div>
 
         <div style="display: flex; gap: 12px; margin-top: 8px;">

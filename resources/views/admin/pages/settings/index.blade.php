@@ -14,18 +14,19 @@
   <div class="admin-alert admin-alert--error">{{ $errors->first() }}</div>
 @endif
 
-<form method="POST" action="{{ route('admin.settings.update') }}" style="max-width:820px;">
+<form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" style="max-width:820px;">
   @csrf @method('PATCH')
 
   @php
     $groupLabels = [
       'general'    => 'General',
       'contact'    => 'Contact & Location',
+      'booking'    => 'Booking & Sessions',
       'social'     => 'Social Media & Profiles',
       'analytics'  => 'Analytics & Tracking',
       'endorsement' => 'Professional Endorsement',
     ];
-    $groupOrder = ['general', 'contact', 'social', 'analytics', 'endorsement'];
+    $groupOrder = ['general', 'contact', 'booking', 'social', 'analytics', 'endorsement'];
     // Groups managed on other pages (e.g. /email-settings)
     $skipGroups = ['email', 'notifications'];
     // Hide Professional Endorsement from non-superadmin users
@@ -67,6 +68,31 @@
             <span>Enabled</span>
           </label>
 
+        @elseif($setting->type === 'image')
+          <div class="og-image-field">
+            <input type="file"
+              id="setting-{{ $setting->key }}"
+              name="settings[{{ $setting->key }}]"
+              class="admin-input"
+              accept="image/jpeg,image/png,image/webp"
+              onchange="previewOgImage(this, 'preview-{{ $setting->key }}')">
+            @php
+              $currentOgImage = $setting->getRawOriginal('value') ?: '/images/og-image.jpg';
+              $currentOgImageUrl = \Illuminate\Support\Str::startsWith($currentOgImage, ['http://', 'https://']) ? $currentOgImage : url($currentOgImage);
+              $hasCustomOgImage = $currentOgImage !== '/images/og-image.jpg';
+            @endphp
+            <div style="margin-top:10px;">
+              <img id="preview-{{ $setting->key }}" src="{{ $currentOgImageUrl }}" alt="Current OG image preview" style="max-width:320px;max-height:168px;border-radius:6px;border:1px solid #e5e7eb;object-fit:cover;">
+            </div>
+            @if($hasCustomOgImage)
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;margin-top:10px;color:#dc2626;">
+              <input type="checkbox" name="remove_settings[{{ $setting->key }}]" value="1">
+              <span>Remove uploaded image and use default</span>
+            </label>
+            @endif
+            <p style="font-size:11px;color:#9ca3af;margin-top:6px;">Recommended size: 1200 × 630 px. Leave empty and save to keep the current image. Upload a new image to replace it.</p>
+          </div>
+
         @elseif($setting->key === 'language')
           {{-- Language checkboxes — only shown when multilingual is enabled --}}
           <div id="language-section" style="{{ ($settings['general']->firstWhere('key','multilingual_enabled')?->getRawOriginal('value') === '0') ? 'display:none;' : '' }}">
@@ -92,6 +118,16 @@
           <div class="settings-locale-panel" data-target="endorsement" data-locale="nl" style="display:none;flex-direction:column;">
             <textarea name="settings[{{ $setting->key }}][nl]" class="admin-input" rows="6">{{ old("settings.{$setting->key}.nl", $ftVal['nl'] ?? '') }}</textarea>
           </div>
+
+        @elseif($setting->key === 'default_meeting_platform')
+          <select name="settings[{{ $setting->key }}]"
+            id="setting-{{ $setting->key }}"
+            class="admin-select"
+            style="width:100%;">
+            @foreach(['zoom'=>'Zoom','google_meet'=>'Google Meet','teams'=>'Microsoft Teams','whereby'=>'Whereby','other'=>'Other'] as $val => $lbl)
+              <option value="{{ $val }}" {{ $setting->getRawOriginal('value') === $val ? 'selected' : '' }}>{{ $lbl }}</option>
+            @endforeach
+          </select>
 
         @elseif($setting->type === 'text')
           <textarea name="settings[{{ $setting->key }}]"
@@ -126,6 +162,8 @@
           <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Format: GTM-XXXXXXX</p>
         @elseif($setting->key === 'calendly_url')
           <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Full Calendly URL, e.g. https://calendly.com/yourname</p>
+        @elseif($setting->key === 'default_meeting_link')
+          <p style="font-size:11px;color:#9ca3af;margin-top:4px;">Your online meeting room link (e.g. https://zoom.us/j/… or https://meet.google.com/…). This link is used automatically for every online session and included in approval emails and calendar invites.</p>
         @endif
       </div>
       @endforeach
@@ -187,6 +225,17 @@ function switchSettingsLocale(btn) {
 
 function toggleLanguageSection(enabled) {
   document.getElementById('language-section').style.display = enabled ? '' : 'none';
+}
+
+function previewOgImage(input, previewId) {
+  var preview = document.getElementById(previewId);
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
 }
 
 // Sync language checkboxes to hidden field before submit

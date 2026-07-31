@@ -4,6 +4,7 @@
 @section('page_title', 'Booking Availability')
 
 @section('page_styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
   .avail-layout { display: flex; flex-direction: column; gap: 24px; }
   .avail-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -161,6 +162,23 @@
             </div>
           </div>
           <div class="config-field">
+            <label>Buffer Between Sessions</label>
+            <div class="form-dropdown" id="buffer-dropdown">
+              <button type="button" class="form-dropdown__trigger" onclick="toggleFormDropdown('buffer-dropdown')">
+                <span id="buffer-label">{{ collect([0 => 'No buffer', 5 => '5 minutes', 10 => '10 minutes', 15 => '15 minutes', 20 => '20 minutes', 30 => '30 minutes', 45 => '45 minutes', 60 => '1 hour'])->first(fn($v, $k) => $k == (int) ($config->buffer_minutes ?? 0)) ?? 'No buffer' }}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div class="form-dropdown__menu">
+                @foreach([0 => 'No buffer', 5 => '5 minutes', 10 => '10 minutes', 15 => '15 minutes', 20 => '20 minutes', 30 => '30 minutes', 45 => '45 minutes', 60 => '1 hour'] as $val => $label)
+                <button type="button" class="form-dropdown__item {{ (int) ($config->buffer_minutes ?? 0) == $val ? 'active' : '' }}" onclick="selectFormDropdown('buffer-dropdown', '{{ $val }}', '{{ $label }}')">
+                  {{ $label }}
+                </button>
+                @endforeach
+              </div>
+              <input type="hidden" name="buffer_minutes" value="{{ (int) ($config->buffer_minutes ?? 0) }}">
+            </div>
+          </div>
+          <div class="config-field">
             <label>Start Time</label>
             <input type="time" name="default_start_time" value="{{ $config->default_start_time }}">
           </div>
@@ -294,7 +312,7 @@
             <div class="add-block__row">
               <div class="add-block__field">
                 <label>Date to block</label>
-                <input type="date" name="blocked_date" required min="{{ date('Y-m-d') }}">
+                <input type="text" name="blocked_date" id="blocked_date" required autocomplete="off">
               </div>
               <div class="add-block__field">
                 <label>Block type</label>
@@ -339,6 +357,20 @@
 @endsection
 
 @section('page_scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.flatpickr) {
+      flatpickr('#blocked_date', {
+        dateFormat: 'Y-m-d',       // value submitted to the server
+        altInput: true,
+        altFormat: 'd/m/Y',        // European format shown to the user
+        minDate: 'today',
+        allowInput: true,
+      });
+    }
+  });
+</script>
 <script>
 function toggleBreak(checkbox) {
   const startField = document.getElementById('break-start-field');

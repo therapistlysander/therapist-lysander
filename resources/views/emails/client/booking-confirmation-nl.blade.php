@@ -7,10 +7,10 @@
 
 <p>Fijn dat je een kennismakingsgesprek hebt aangevraagd.</p>
 
-<p>Ik heb je aanvraag in goede orde ontvangen en bekijk deze zo spoedig mogelijk. Binnen 1 à 2 werkdagen ontvang je een bevestiging of, indien nodig, een voorstel voor een alternatief tijdstip.</p>
+<p>Ik heb je aanvraag in goede orde ontvangen en bekijk deze zo spoedig mogelijk. Binnen 1–2 werkdagen ontvang je een bevestiging of, indien nodig, een voorstel voor een alternatief tijdstip.</p>
 
 <div class="highlight-box">
-    <table style="width:100%;border-collapse:collapse;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         @if($appointmentType)
         <tr>
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;width:150px;">Type afspraak:</td>
@@ -28,10 +28,16 @@
             <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;">Voorkeursdatum:</td>
             <td style="padding:4px 0;color:#1a2332;">
                 {{ $displayDate }}
-                @if(!empty($clientTimezone))
-                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $clientTimezone) }})</span>
+                @if(!empty($appointmentTimezone))
+                    <span style="font-size:11px;color:#9ca3af;">({{ str_replace('_', ' ', $appointmentTimezone) }})</span>
                 @endif
             </td>
+        </tr>
+        @endif
+        @if(!empty($reason))
+        <tr>
+            <td style="padding:4px 0;font-weight:600;color:#6b7280;font-size:13px;vertical-align:top;">Reden voor je aanmelding:</td>
+            <td style="padding:4px 0;color:#1a2332;white-space:pre-line;">{{ $reason }}</td>
         </tr>
         @endif
     </table>

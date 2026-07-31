@@ -2,52 +2,57 @@ name: Deploy to Production
 
 on:
   push:
-    branches: [dev]
+    branches:
+      - main
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy to Contabo Server
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/dev'
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          password: ${{ secrets.DEPLOY_PASSWORD }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
           script: |
-            cd /home/kodeclouds-therapistlysander/htdocs/therapistlysander.kodeclouds.com
+            cd ${{ secrets.PROJECT_PATH }}
 
-            echo "=== Pulling latest code ==="
-            git stash
-            git remote set-url origin https://${{ secrets.GH_PAT }}@github.com/rakeshmaity271/therapistlysander.git
-            git pull origin dev
-            git stash drop || true
+            # Pull latest code
+            git pull origin main
 
-            echo "=== Composer install ==="
-            COMPOSER_ALLOW_SUPERUSER=1 composer install --optimize-autoloader --no-dev --no-interaction
+            # Install Composer dependencies
+            composer install --no-dev --optimize-autoloader --no-interaction
 
-            echo "=== NPM install + build ==="
-            npm install --ignore-scripts
+            # Install Node dependencies and build assets
+            npm install --no-fund --no-audit
             npm run build
 
-            echo "=== Run migrations ==="
+            # Run migrations
             php artisan migrate --force
 
-            echo "=== Rebuild caches ==="
-            php artisan view:clear
-            php artisan config:clear
-            php artisan cache:clear
+            # Optimize Laravel
+            php artisan optimize
             php artisan config:cache
             php artisan route:cache
-            php artisan event:cache
+            php artisan view:cache
 
-            echo "=== Restart queue workers ==="
+            # Fix permissions
+            chown -R www-data:www-data storage bootstrap/cache
+            chmod -R 775 storage bootstrap/cache
+
+            # Restart queue workers
             php artisan queue:restart
 
-            echo "=== Deployment complete ==="
+            # Restart Supervisor workers (if available)
+            supervisorctl reread || true
+            supervisorctl update || true
+            supervisorctl restart all || true
+
+            echo "Deployment completed successfully!"

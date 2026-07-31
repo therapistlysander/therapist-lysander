@@ -137,4 +137,18 @@ class FrontendController extends Controller
         $seo      = $this->seo('booking');
         return view('pages.booking', compact('sections', 'seo'));
     }
+
+    public function privacy(string $locale)
+    {
+        $sections = $this->sections('privacy');
+        $seo      = $this->seo('privacy');
+        return view('pages.privacy', compact('sections', 'seo'));
+    }
+
+    public function terms(string $locale)
+    {
+        $sections = $this->sections('terms');
+        $seo      = $this->seo('terms');
+        return view('pages.terms', compact('sections', 'seo'));
+    }
 }

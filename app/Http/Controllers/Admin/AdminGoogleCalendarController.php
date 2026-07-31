@@ -172,6 +172,61 @@ class AdminGoogleCalendarController extends Controller
     }
 
     /**
+     * Diagnostic: query Google FreeBusy directly for a date and return raw results.
+     * Bypasses cache so we can see exactly what Google returns.
+     */
+    public function diagnoseAvailability(Request $request)
+    {
+        $token = GoogleCalendarToken::where('user_id', auth()->id())->first();
+
+        if (!$token || !$token->is_active) {
+            return response()->json(['error' => 'Google Calendar not connected.'], 400);
+        }
+
+        $dateStr = $request->query('date', now()->toDateString());
+        try {
+            $date = \Carbon\Carbon::parse($dateStr);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => 'Invalid date.'], 400);
+        }
+
+        $calendarIds = $token->getAvailabilityCalendarIds();
+        $calendarService = app(GoogleCalendarService::class);
+
+        try {
+            // Also list calendars so we can compare IDs/names
+            $allCalendars = $calendarService->listCalendars();
+
+            $start = $date->copy()->startOfDay();
+            $end = $date->copy()->endOfDay();
+
+            $busySlots = $calendarService->getBusySlotsForCalendars($start, $end, $calendarIds);
+
+            return response()->json([
+                'date' => $dateStr,
+                'timezone' => config('app.timezone', 'Europe/Amsterdam'),
+                'connected_email' => $token->google_email,
+                'write_target_calendar_id' => $token->calendar_id,
+                'availability_calendar_ids' => $calendarIds,
+                'available_calendars' => $allCalendars,
+                'busy_slots_raw' => collect($busySlots)->map(fn($s) => [
+                    'calendar_id' => $s['calendar_id'] ?? null,
+                    'start' => $s['start'] ?? null,
+                    'end' => $s['end'] ?? null,
+                ])->toArray(),
+                'booking_api_slots' => (new \App\Http\Controllers\BookingAvailabilityApiController())->slots($request)->getData(true)['slots'] ?? [],
+            ]);
+        } catch (\Throwable $e) {
+            Log::error("GoogleCalendar: diagnoseAvailability failed: {$e->getMessage()}");
+            return response()->json([
+                'error' => $e->getMessage(),
+                'connected_email' => $token->google_email,
+                'availability_calendar_ids' => $calendarIds,
+            ], 500);
+        }
+    }
+
+    /**
      * Update calendar settings (write target + availability calendars).
      */
     public function updateSettings(Request $request)
@@ -186,6 +241,7 @@ class AdminGoogleCalendarController extends Controller
 
         if ($token) {
             $availabilityIds = $request->input('availability_calendar_ids', []);
+            $oldAvailabilityIds = $token->getAvailabilityCalendarIds();
 
             // Ensure the write-target calendar is always included in availability checks
             if (!in_array($request->calendar_id, $availabilityIds)) {
@@ -197,8 +253,16 @@ class AdminGoogleCalendarController extends Controller
                 'availability_calendar_ids' => $availabilityIds,
             ]);
 
-            // Clear cached busy slots when calendars change
+            // Clear cached busy slots when calendars change (both aggregate + per-date keys)
             Cache::forget('google_calendar_busy_slots');
+            $newSuffix = md5(implode(',', $availabilityIds));
+            $oldSuffix = md5(implode(',', $oldAvailabilityIds));
+            foreach ([$newSuffix, $oldSuffix] as $suffix) {
+                for ($i = 0; $i <= 60; $i++) {
+                    $d = now()->addDays($i)->toDateString();
+                    Cache::forget("gcal_busy_{$d}_{$suffix}");
+                }
+            }
 
             // Re-warm cache with new calendar selection
             WarmCalendarCacheJob::dispatch();
