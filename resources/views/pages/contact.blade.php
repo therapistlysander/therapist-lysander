@@ -149,6 +149,12 @@
 
             <form method="POST" action="{{ route('contact.submit') }}" id="contact-form">
               @csrf
+              <input type="hidden" name="form_token" value="{{ app(\App\Services\ContactSpamGuard::class)->issueFormToken() }}">
+              {{-- Spam protection: real visitors never see or fill this field --}}
+              <div class="form-extra" aria-hidden="true">
+                <label for="inquiry-website">Website</label>
+                <input type="text" id="inquiry-website" name="website" tabindex="-1" autocomplete="off">
+              </div>
               <div class="form-group">
                 <label class="form-label" for="inquiry-name">{{ __('ui.contact.your_name') }}</label>
                 <input type="text" class="form-input" id="inquiry-name" name="name" placeholder="{{ __('ui.contact.full_name_placeholder') }}" autocomplete="name" value="{{ old('name') }}" required>
@@ -164,6 +170,10 @@
                 <textarea class="form-textarea" id="inquiry-message" name="message" placeholder="{{ __('ui.contact.message_placeholder') }}" required>{{ old('message') }}</textarea>
                 @error('message')<p style="color:#dc2626;font-size:var(--size-xs);margin-top:4px;">{{ $message }}</p>@enderror
               </div>
+              @if(config('services.turnstile.site_key'))
+                <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="light" style="margin-top:var(--space-4);"></div>
+                <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+              @endif
               <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;margin-top:var(--space-4);">
                 {{ __('ui.common.send_message') }}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>

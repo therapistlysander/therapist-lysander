@@ -264,6 +264,8 @@ return [
         'message_label'         => 'Message',
         'message_placeholder'   => 'How can I help you?',
         'success_message'       => "Thank you for your message. I've received it and will get back to you as soon as possible.",
+        'rate_limited'          => 'Too many messages have been sent from your connection. Please wait a while and try again.',
+        'turnstile_failed'      => 'Verification failed. Please refresh the page and try again.',
     ],
 
     /*
