@@ -22,9 +22,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            set -e
             cd ${{ secrets.PROJECT_PATH }}
 
-            # Pull latest code
+            # Log any local drift on the server before syncing (recoverable from stash below)
+            git status --porcelain
+            git --no-pager diff --stat
+
+            # Preserve any manual server edits, then pull latest code
+            git stash push --include-untracked -m "pre-deploy stash $(date +%F_%H%M%S)" || true
             git pull origin main
 
             # Install Composer dependencies
