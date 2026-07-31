@@ -173,6 +173,14 @@
               @if(config('services.turnstile.site_key'))
                 <div class="cf-turnstile" data-sitekey="{{ config('services.turnstile.site_key') }}" data-theme="light" style="margin-top:var(--space-4);"></div>
                 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+              @else
+                @php($captcha = app(\App\Services\ContactSpamGuard::class)->issueCaptcha())
+                <div class="form-group" style="margin-top:var(--space-4);">
+                  <label class="form-label" for="inquiry-captcha">{{ __('ui.contact.captcha_label', ['a' => $captcha['a'], 'b' => $captcha['b']]) }}</label>
+                  <input type="text" class="form-input" id="inquiry-captcha" name="captcha_answer" inputmode="numeric" placeholder="{{ __('ui.contact.captcha_placeholder') }}" autocomplete="off" required>
+                  <input type="hidden" name="captcha_token" value="{{ $captcha['token'] }}">
+                  @error('captcha_answer')<p style="color:#dc2626;font-size:var(--size-xs);margin-top:4px;">{{ $message }}</p>@enderror
+                </div>
               @endif
               <button type="submit" class="btn btn--primary" style="width:100%;justify-content:center;margin-top:var(--space-4);">
                 {{ __('ui.common.send_message') }}
