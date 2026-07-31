@@ -35,7 +35,7 @@ Route::prefix('v1')->group(function () {
     // Public form submissions
     Route::post('bookings',             [BookingController::class, 'store']);
     Route::post('pre-intake',           [BookingController::class, 'storePreIntake']);
-    Route::post('contact',              [ContactController::class, 'store']);
+    Route::post('contact',              [ContactController::class, 'store'])->middleware('throttle:10,60');
 
     /*
     |--------------------------------------------------------------------------

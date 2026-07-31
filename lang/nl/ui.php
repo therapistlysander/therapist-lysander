@@ -264,6 +264,8 @@ return [
         'message_label'         => 'Bericht',
         'message_placeholder'   => 'Hoe kan ik je helpen?',
         'success_message'       => 'Bedankt voor je bericht. Ik heb het ontvangen en neem zo snel mogelijk contact met je op.',
+        'rate_limited'          => 'Er zijn te veel berichten verzonden vanaf jouw verbinding. Wacht even en probeer het opnieuw.',
+        'turnstile_failed'      => 'Verificatie mislukt. Vernieuw de pagina en probeer het opnieuw.',
     ],
 
     /*
