@@ -1003,18 +1003,6 @@ strong { font-weight: 600; }
   flex-wrap: wrap;
 }
 .stats__item { flex: 1 1 0; min-width: 0; text-align: left; }
-.stats__icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: var(--color-teal-light);
-  border-radius: var(--radius);
-  color: var(--color-teal);
-  margin-bottom: var(--space-2);
-}
-.stats__icon svg { width: 18px; height: 18px; }
 .stats__num {
   font-family: var(--font-heading);
   font-size: var(--size-2xl);
@@ -1696,8 +1684,6 @@ strong { font-weight: 600; }
   /* Stats smaller on mobile */
   .stats__num { font-size: var(--size-xl); }
   .stats__label { font-size: var(--size-xs); }
-  .stats__icon { width: 30px; height: 30px; }
-  .stats__icon svg { width: 16px; height: 16px; }
   .nip-badge img { width: 72px; }
 
   /* Footer center-alignment on mobile */

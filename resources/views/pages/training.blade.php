@@ -59,7 +59,6 @@
           <div class="stats">
             @foreach($bgStats as $stat)
             <div class="stats__item">
-              @include('components.credential-icon', ['value' => $stat['value']])
               <div class="stats__num">{{ $stat['value'] }}</div>
               <div class="stats__label">{{ $stat['label'] }}</div>
             </div>
