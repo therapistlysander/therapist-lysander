@@ -17,8 +17,10 @@ use Illuminate\Support\Facades\RateLimiter;
  *  2. User-Agent        — every genuine browser sends one
  *  3. Time trap         — encrypted render timestamp; submissions faster than
  *                         a human can type are rejected
- *  4. Rate limiting     — max submissions per IP per hour
- *  5. Cloudflare Turnstile — server-side token verification (only when
+ *  4. Built-in captcha   — localized arithmetic check with an encrypted
+ *                         answer token (skipped when Turnstile is active)
+ *  5. Rate limiting     — max submissions per IP per hour
+ *  6. Cloudflare Turnstile — server-side token verification (only when
  *                         TURNSTILE_SECRET_KEY is configured)
  *
  * Blocks are either "silent" (bot receives a fake success so it learns
@@ -38,6 +40,9 @@ class ContactSpamGuard
     /** Minimum seconds between form render and submit. */
     private const MIN_FILL_SECONDS = 3;
 
+    /** Lifetime of an issued captcha challenge. */
+    private const CAPTCHA_TTL_HOURS = 2;
+
     /** Rate limit: max submissions per IP within the decay window. */
     private const MAX_ATTEMPTS = 5;
 
@@ -50,6 +55,26 @@ class ContactSpamGuard
     public function issueFormToken(): string
     {
         return Crypt::encryptString((string) now()->timestamp);
+    }
+
+    /**
+     * Random arithmetic challenge for the built-in captcha. The answer
+     * travels back inside an encrypted, expiring token so no session or
+     * database state is needed.
+     */
+    public function issueCaptcha(): array
+    {
+        $a = random_int(2, 9);
+        $b = random_int(1, 9);
+
+        return [
+            'a'     => $a,
+            'b'     => $b,
+            'token' => Crypt::encryptString(json_encode([
+                'answer'  => $a + $b,
+                'expires' => now()->addHours(self::CAPTCHA_TTL_HOURS)->timestamp,
+            ])),
+        ];
     }
 
     /**
@@ -74,12 +99,17 @@ class ContactSpamGuard
             return $this->block($request, $reason);
         }
 
-        // 4. Per-IP rate limit
+        // 4. Built-in captcha (web form only; Turnstile supersedes it)
+        if ($requireFormToken && ($reason = $this->checkCaptcha($request))) {
+            return $this->block($request, $reason);
+        }
+
+        // 5. Per-IP rate limit
         if (RateLimiter::tooManyAttempts($this->rateLimitKey($request), self::MAX_ATTEMPTS)) {
             return $this->block($request, 'rate_limited');
         }
 
-        // 5. Cloudflare Turnstile — enforced only when keys are configured
+        // 6. Cloudflare Turnstile — enforced only when keys are configured
         if (config('services.turnstile.secret_key') && ! $this->passesTurnstile($request)) {
             return $this->block($request, 'turnstile_failed');
         }
@@ -134,6 +164,37 @@ class ContactSpamGuard
 
         if (now()->timestamp - $renderedAt < self::MIN_FILL_SECONDS) {
             return 'time_trap';
+        }
+
+        return null;
+    }
+
+    private function checkCaptcha(Request $request): ?string
+    {
+        // Turnstile replaces the built-in captcha when configured
+        if (config('services.turnstile.secret_key')) {
+            return null;
+        }
+
+        $token  = $request->input('captcha_token');
+        $answer = $request->input('captcha_answer');
+
+        if (blank($token) || blank($answer)) {
+            return 'captcha_failed';
+        }
+
+        try {
+            $challenge = json_decode(Crypt::decryptString($token), true);
+        } catch (\Throwable) {
+            return 'captcha_failed';
+        }
+
+        if (! is_array($challenge) || now()->timestamp > ($challenge['expires'] ?? 0)) {
+            return 'captcha_failed';
+        }
+
+        if ((int) trim((string) $answer) !== (int) ($challenge['answer'] ?? -1)) {
+            return 'captcha_failed';
         }
 
         return null;

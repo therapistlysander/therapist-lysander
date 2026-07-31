@@ -24,6 +24,18 @@ class ContactSpamProtectionTest extends TestCase
         return Crypt::encryptString((string) now()->subSeconds(30)->timestamp);
     }
 
+    /** A captcha token/answer pair that passes the built-in captcha. */
+    private function solvedCaptcha(int $answer = 7, ?int $expiresAt = null): array
+    {
+        return [
+            'captcha_token' => Crypt::encryptString(json_encode([
+                'answer' => 7,
+                'expires' => $expiresAt ?? now()->addHour()->timestamp,
+            ])),
+            'captcha_answer' => (string) $answer,
+        ];
+    }
+
     private function validPayload(array $overrides = []): array
     {
         return array_merge([
@@ -32,7 +44,7 @@ class ContactSpamProtectionTest extends TestCase
             'message' => 'I would like to book an introduction call.',
             'website' => '',
             'form_token' => $this->humanFormToken(),
-        ], $overrides);
+        ], $this->solvedCaptcha(), $overrides);
     }
 
     public function test_valid_submission_is_stored_and_shows_success(): void
@@ -97,6 +109,57 @@ class ContactSpamProtectionTest extends TestCase
 
         $response->assertSessionHas('success');
         $this->assertDatabaseCount('contact_submissions', 0);
+    }
+
+    public function test_wrong_captcha_answer_shows_visible_error(): void
+    {
+        $response = $this->post('/en/contact', $this->validPayload(
+            $this->solvedCaptcha(answer: 99)
+        ));
+
+        $response->assertSessionHasErrors('captcha_answer');
+        $this->assertDatabaseCount('contact_submissions', 0);
+    }
+
+    public function test_missing_captcha_shows_visible_error(): void
+    {
+        $payload = $this->validPayload();
+        unset($payload['captcha_token'], $payload['captcha_answer']);
+
+        $response = $this->post('/en/contact', $payload);
+
+        $response->assertSessionHasErrors('captcha_answer');
+        $this->assertDatabaseCount('contact_submissions', 0);
+    }
+
+    public function test_expired_captcha_shows_visible_error(): void
+    {
+        $response = $this->post('/en/contact', $this->validPayload(
+            $this->solvedCaptcha(expiresAt: now()->subMinute()->timestamp)
+        ));
+
+        $response->assertSessionHasErrors('captcha_answer');
+        $this->assertDatabaseCount('contact_submissions', 0);
+    }
+
+    public function test_forged_captcha_token_shows_visible_error(): void
+    {
+        $response = $this->post('/en/contact', $this->validPayload([
+            'captcha_token' => 'not-a-real-token',
+        ]));
+
+        $response->assertSessionHasErrors('captcha_answer');
+        $this->assertDatabaseCount('contact_submissions', 0);
+    }
+
+    public function test_captcha_answer_with_surrounding_spaces_is_accepted(): void
+    {
+        $response = $this->post('/en/contact', $this->validPayload([
+            'captcha_answer' => ' 7 ',
+        ]));
+
+        $response->assertSessionHas('success');
+        $this->assertDatabaseCount('contact_submissions', 1);
     }
 
     public function test_rate_limit_blocks_sixth_submission_with_visible_error(): void
@@ -184,13 +247,16 @@ class ContactSpamProtectionTest extends TestCase
         $this->assertDatabaseCount('contact_submissions', 5);
     }
 
-    public function test_contact_page_renders_honeypot_and_form_token(): void
+    public function test_contact_page_renders_honeypot_form_token_and_captcha(): void
     {
         $response = $this->get('/en/contact');
 
         $response->assertOk();
         $response->assertSee('name="form_token"', false);
         $response->assertSee('name="website"', false);
+        $response->assertSee('name="captcha_answer"', false);
+        $response->assertSee('name="captcha_token"', false);
+        $response->assertSee('Spam check: what is');
     }
 
     public function test_booking_submission_remains_unaffected(): void

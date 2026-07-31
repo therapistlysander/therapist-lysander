@@ -21,7 +21,10 @@ class ContactWebController extends Controller
 
             return redirect()->route('contact')
                 ->withInput()
-                ->withErrors(['message' => __('ui.contact.'.$reason)]);
+                ->withErrors([
+                    // Show captcha errors under the captcha field itself
+                    $reason === 'captcha_failed' ? 'captcha_answer' : 'message' => __('ui.contact.'.$reason),
+                ]);
         }
 
         $validated = $request->validate([
