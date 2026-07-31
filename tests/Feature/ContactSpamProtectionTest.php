@@ -256,7 +256,7 @@ class ContactSpamProtectionTest extends TestCase
         $response->assertSee('name="website"', false);
         $response->assertSee('name="captcha_answer"', false);
         $response->assertSee('name="captcha_token"', false);
-        $response->assertSee('Spam check: what is');
+        $response->assertSee('Quick check: what is');
     }
 
     public function test_booking_submission_remains_unaffected(): void
