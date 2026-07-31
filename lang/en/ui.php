@@ -176,9 +176,10 @@ return [
     |--------------------------------------------------------------------------
     */
     'training' => [
-        'academic_label'        => 'Academic background',
+        'academic_label'        => 'Professional qualifications',
         'training_education'    => 'Training &amp; education',
         'approach_label'        => 'Approach',
+        'nip_caption'           => 'Psychologist NIP',
     ],
 
     /*

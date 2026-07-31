@@ -176,9 +176,10 @@ return [
     |--------------------------------------------------------------------------
     */
     'training' => [
-        'academic_label'        => 'Academische achtergrond',
+        'academic_label'        => 'Professionele kwalificaties',
         'training_education'    => 'Opleiding &amp; training',
         'approach_label'        => 'Aanpak',
+        'nip_caption'           => 'Psycholoog NIP',
     ],
 
     /*

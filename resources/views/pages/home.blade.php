@@ -78,10 +78,13 @@
         <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
           {!! $intro?->content['body'] ?? '<p>I am a psychologist working with adults who feel emotionally overwhelmed, stuck in longstanding patterns, or disconnected from themselves and their lives.</p><p>Many of the people I work with struggle with the effects of trauma, anxiety, chronic self-criticism, emotional dysregulation, or difficulties related to self-worth and relationships.</p><p>Alongside my clinical training, my work is informed by <strong>personal experience with trauma, anxiety, and struggles with self-worth</strong>. My approach is warm, direct, collaborative, and focused on meaningful psychological change.</p>' !!}
         </div>
-        @php $introStats = $intro?->content['stats'] ?? [['value'=>'5','label'=>'Approaches — EMDR, CBT, ACT, Schema & Somatic']]; @endphp
+        @php $introStats = $intro?->content['stats'] ?? [['value'=>'NIP','label'=>'Psychologist NIP'],['value'=>'EMDR','label'=>'Trauma Specialization'],['value'=>'MSc.','label'=>'Psychology'],['value'=>'15+','label'=>'Specialized Trainings']]; @endphp
         <div class="stats" style="margin-bottom:var(--space-6);">
           @foreach($introStats as $stat)
-          <div class="stats__item"><div class="stats__num">{{ $stat['value'] }}</div><div class="stats__label">{{ $stat['label'] }}</div></div>
+          <div class="stats__item">
+            @include('components.credential-icon', ['value' => $stat['value']])
+            <div class="stats__num">{{ $stat['value'] }}</div><div class="stats__label">{{ $stat['label'] }}</div>
+          </div>
           @endforeach
         </div>
       </div>

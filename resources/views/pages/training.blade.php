@@ -50,10 +50,16 @@
           <div style="font-size:var(--size-base);color:var(--color-text-muted);line-height:1.85;margin-bottom:var(--space-6);">
             {!! $background?->content['body'] ?? '<p>I hold an <strong>MSc in Psychology</strong>, with additional academic specialization in <strong>Social Psychology</strong> and <strong>Neurocognitive Science</strong>.</p><p>I have completed advanced clinical training in multiple evidence-based psychotherapy approaches, with a particular focus on trauma treatment, experiential therapies, and integrative psychotherapy.</p><p>Psychology is a field that continues to evolve. I believe that effective therapy requires ongoing learning, reflection, and professional development. Continuing education allows me to integrate new insights, refine existing skills, and provide care that is both evidence-based and responsive to the individual needs of each client.</p>' !!}
           </div>
-          @php $bgStats = $background?->content['stats'] ?? [['value'=>'5','label'=>'Approaches — EMDR, CBT, ACT, Schema & Somatic']]; @endphp
+          {{-- Official NIP registration logo (transparent PNG supplied by NIP) --}}
+          <div class="nip-badge">
+            <img src="/images/nip-psycholoog-nip.png" alt="{{ __('ui.training.nip_caption') }} — Nederlands Instituut van Psychologen" width="88" height="88" loading="lazy">
+            <span class="nip-badge__caption">{{ __('ui.training.nip_caption') }}</span>
+          </div>
+          @php $bgStats = $background?->content['stats'] ?? [['value'=>'NIP','label'=>'Psychologist NIP'],['value'=>'EMDR','label'=>'Advanced Training'],['value'=>'MSc.','label'=>'Psychology degree'],['value'=>'15+','label'=>'Specialized Trainings']]; @endphp
           <div class="stats">
             @foreach($bgStats as $stat)
             <div class="stats__item">
+              @include('components.credential-icon', ['value' => $stat['value']])
               <div class="stats__num">{{ $stat['value'] }}</div>
               <div class="stats__label">{{ $stat['label'] }}</div>
             </div>
@@ -110,10 +116,20 @@
 
         <div>
           @foreach(array_slice($groups, 2) as $index => $group)
+          @php
+            // Icon by group title keyword — shield for professional registration/memberships,
+            // open book for ACT & CBT, graduation cap for academic background (fallback).
+            $groupTitle = mb_strtolower($group['title'] ?? '');
+            $isRegistration = str_contains($groupTitle, 'registration') || str_contains($groupTitle, 'membership')
+                || str_contains($groupTitle, 'registratie') || str_contains($groupTitle, 'lidmaatschap');
+          @endphp
           <div class="training-section">
             <div class="training-header">
               <div class="training-header__icon">
-                @if($index === 0)
+                @if($isRegistration)
+                {{-- Professional Registration & Memberships — shield --}}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.249-8.25-3.286z"/></svg>
+                @elseif($index === 0)
                 {{-- ACT & CBT — open book / learning --}}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
                 @else
