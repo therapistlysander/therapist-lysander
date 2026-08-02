@@ -1117,10 +1117,11 @@ strong { font-weight: 600; }
   align-items: start;
 }
 .contact-info__item {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 40px 1fr;
   gap: var(--space-3);
   margin-bottom: var(--space-6);
+  align-items: start;
 }
 .contact-info__icon {
   width: 40px;
@@ -1130,21 +1131,31 @@ strong { font-weight: 600; }
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
   color: var(--color-teal);
 }
 .contact-info__icon svg { width: 18px; height: 18px; }
-.contact-info__text { flex: 1; min-width: 0; }
+.contact-info__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
 .contact-info__label {
   font-size: var(--size-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-text-light);
-  margin-bottom: 2px;
+  margin-bottom: 3px;
+  line-height: 1.2;
 }
 .contact-info__value {
   font-size: var(--size-base);
   color: var(--color-text);
+  line-height: 1.6;
+}
+@media (max-width: 640px) {
+  .contact-info__item { grid-template-columns: 36px 1fr; }
+  .contact-info__icon { width: 36px; height: 36px; }
+  .contact-info__label { letter-spacing: 0.1em; }
 }
 
 /* --- Booking calendar --- */

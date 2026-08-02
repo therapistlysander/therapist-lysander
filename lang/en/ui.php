@@ -219,7 +219,7 @@ return [
         'hero_body'             => 'Information about fees, availability, and what to expect when starting therapy. The introductory call is free and without obligation.',
         'process_free_title'    => 'Free Introductory Call',
         'process_free_desc'     => 'We briefly discuss what brings you to therapy, your goals, and whether we feel like a good fit to work together.',
-        'process_free_duration' => '30 minutes',
+        'process_free_duration' => '30 minutes · Free',
         'process_intake_title'  => 'Introduction Call',
         'process_intake_desc'   => 'An in-depth call exploring your background, current difficulties, relevant life experiences, and treatment goals. Prior to the session, you\'ll complete a questionnaire that helps guide the assessment process. Following the introduction call, you\'ll receive a personalized treatment plan outlining the main difficulties, therapeutic goals, and proposed treatment approach.',
         'process_intake_duration' => '60 minutes',

@@ -58,7 +58,7 @@
       <p style="color:var(--color-text-muted);font-size:var(--size-base);max-width:600px;">{{ $process?->content['subheading'] ?? 'Therapy begins with a free introductory call, followed by an introduction call where we explore your situation, goals, and what you hope to gain from therapy. From there, treatment is tailored to your individual needs.' }}</p>
     </div>
     @php $processSteps = $process?->content['steps'] ?? [
-      ['title'=>__('ui.fees.process_free_title'),'description'=>__('ui.fees.process_free_desc'),'duration'=>__('ui.fees.process_free_duration'),'badge'=>null],
+      ['title'=>__('ui.fees.process_free_title'),'description'=>__('ui.fees.process_free_desc'),'duration'=>__('ui.fees.process_free_duration'),'badge'=>__('ui.common.free')],
       ['title'=>__('ui.fees.process_intake_title'),'description'=>__('ui.fees.process_intake_desc'),'duration'=>__('ui.fees.process_intake_duration'),'badge'=>null],
       ['title'=>__('ui.fees.process_ongoing_title'),'description'=>__('ui.fees.process_ongoing_desc'),'duration'=>__('ui.fees.process_ongoing_duration'),'badge'=>null],
     ]; @endphp
@@ -98,6 +98,10 @@
     color: var(--color-text-muted);
     margin-top: var(--space-4);
     line-height: 1.6;
+  }
+  /* Mobile: slightly larger for readability (+2px) */
+  @media (max-width: 640px) {
+    .practice-room-caption { font-size: calc(var(--size-sm) + 2px); }
   }
   /* Desktop: reduce width ~18% for better visual balance, keep centred, add breathing room below */
   @media (min-width: 1024px) {
