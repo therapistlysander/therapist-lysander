@@ -1134,6 +1134,7 @@ strong { font-weight: 600; }
   color: var(--color-teal);
 }
 .contact-info__icon svg { width: 18px; height: 18px; }
+.contact-info__text { flex: 1; min-width: 0; }
 .contact-info__label {
   font-size: var(--size-xs);
   letter-spacing: 0.14em;
@@ -1566,7 +1567,7 @@ strong { font-weight: 600; }
   }
   .grid-2 { grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
   .grid-2--reverse .grid-2__media { order: 0; }
-  .grid-2__media { aspect-ratio: 4/5; }
+  .grid-2__media { aspect-ratio: 4/5; margin: 0 auto; max-width: 420px; }
   .contact-grid { grid-template-columns: minmax(0, 1fr); }
   .footer__grid { grid-template-columns: 1fr 1fr; gap: var(--space-6); }
   .footer__col { text-align: center; }
@@ -1590,7 +1591,7 @@ strong { font-weight: 600; }
   .card-grid { grid-template-columns: minmax(0, 1fr); }
   .testimonial-grid { grid-template-columns: minmax(0, 1fr); }
   .t-carousel__track { grid-template-columns: minmax(0, 1fr); }
-  .stats { gap: var(--space-6); }
+  .stats { gap: var(--space-6); padding-right: var(--space-4); }
   .stats__item { flex: 1 1 0; min-width: 0; }
   .footer__grid { grid-template-columns: minmax(0, 1fr); text-align: center; gap: var(--space-4); }
   .footer__bottom { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; padding-bottom: var(--space-3); gap: var(--space-3); }

@@ -444,7 +444,7 @@ class PopulateDutchContent extends Command
             ],
             'fees_pricing' => [
                 'heading' => 'Tarief',
-                'body' => '<p>Een individuele therapiesessie duurt 60 minuten en kost <strong>€110 per sessie</strong>.</p><p>Alle sessies vinden online plaats in een veilige, vertrouwelijke en professionele omgeving.</p>',
+                'body' => '<p>Individuele therapiesessies duren 60 minuten. Daarnaast bied ik een gratis en vrijblijvend kennismakingsgesprek van 30 minuten aan.</p>',
                 'fee_amount' => '€110',
                 'fee_duration' => 'Per sessie · 60 minuten',
                 'items' => [

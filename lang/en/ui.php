@@ -214,12 +214,12 @@ return [
         'availability_heading'  => 'Availability &amp; Waiting Times',
         'availability_text'     => 'I currently maintain a limited caseload to ensure therapy remains thoughtful, personal, and attentive. Availability varies over time, but new clients can usually be accommodated within',
         'availability_weeks'    => '2–6 weeks',
-        'session_duration_note' => 'Individual therapy sessions last 60 minutes. The introductory call is free and without obligation.',
+        'session_duration_note' => 'Individual therapy sessions last 60 minutes. A free, no-obligation 30-minute introductory call is included before treatment.',
         'hero_heading'          => 'Fees & Practical Information',
         'hero_body'             => 'Information about fees, availability, and what to expect when starting therapy. The introductory call is free and without obligation.',
         'process_free_title'    => 'Free Introductory Call',
         'process_free_desc'     => 'We briefly discuss what brings you to therapy, your goals, and whether we feel like a good fit to work together.',
-        'process_free_duration' => '30 minutes · Free',
+        'process_free_duration' => '30 minutes',
         'process_intake_title'  => 'Introduction Call',
         'process_intake_desc'   => 'An in-depth call exploring your background, current difficulties, relevant life experiences, and treatment goals. Prior to the session, you\'ll complete a questionnaire that helps guide the assessment process. Following the introduction call, you\'ll receive a personalized treatment plan outlining the main difficulties, therapeutic goals, and proposed treatment approach.',
         'process_intake_duration' => '60 minutes',
@@ -232,6 +232,7 @@ return [
         'info_duration_desc'    => 'Sessions are typically 60 minutes in length. Shorter or longer sessions can occasionally be arranged when clinically appropriate. As a general principle, therapy is kept as short as possible and as long as necessary.',
         'info_languages_title'  => 'Languages',
         'info_languages_desc'   => 'Sessions are conducted in Dutch or English. Both languages are equally available for all therapy modalities.',
+        'practice_room_caption' => 'My practice room in Amsterdam, where I offer in-person therapy by appointment.',
     ],
 
     /*

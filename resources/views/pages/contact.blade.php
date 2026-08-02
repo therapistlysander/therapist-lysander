@@ -105,7 +105,7 @@
             <div class="contact-info__icon">
               {!! $item['icon'] !!}
             </div>
-            <div>
+            <div class="contact-info__text">
               <p class="contact-info__label">{{ $item['label'] }}</p>
               <p class="contact-info__value">{{ $item['value'] }}</p>
             </div>
