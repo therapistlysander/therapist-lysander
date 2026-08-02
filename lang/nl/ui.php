@@ -214,7 +214,7 @@ return [
         'availability_heading'  => 'Beschikbaarheid &amp; Wachttijden',
         'availability_text'     => 'Ik houd momenteel een beperkt aantal cliënten aan om therapie doordacht, persoonlijk en aandachtig te houden. De beschikbaarheid varieert, maar nieuwe cliënten kunnen doorgaans binnen',
         'availability_weeks'    => '2–6 weken',
-        'session_duration_note' => 'Individuele therapiesessies duren 60 minuten. Het kennismakingsgesprek is gratis en vrijblijvend.',
+        'session_duration_note' => 'Individuele therapiesessies duren 60 minuten. Daarnaast bied ik een gratis en vrijblijvend kennismakingsgesprek van 30 minuten aan.',
         'hero_heading'          => 'Tarieven & Praktische Informatie',
         'hero_body'             => 'Informatie over tarieven, beschikbaarheid en wat te verwachten bij het starten van therapie. Het kennismakingsgesprek is gratis en vrijblijvend.',
         'process_free_title'    => 'Gratis Kennismakingsgesprek',
@@ -232,6 +232,7 @@ return [
         'info_duration_desc'    => 'Sessies duren doorgaans 60 minuten. Kortere of langere sessies zijn incidenteel mogelijk wanneer klinisch verantwoord. Als uitgangspunt geldt: therapie duurt zo kort als mogelijk en zo lang als nodig.',
         'info_languages_title'  => 'Talen',
         'info_languages_desc'   => 'Sessies worden gevoerd in het Nederlands of Engels. Beide talen zijn gelijkelijk beschikbaar voor alle therapievormen.',
+        'practice_room_caption' => 'Mijn praktijkruimte in Amsterdam, waar sessies op afspraak plaatsvinden.',
     ],
 
     /*
