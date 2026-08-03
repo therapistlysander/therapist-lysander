@@ -39,6 +39,7 @@
   --space-3:  0.75rem;
   --space-4:  1rem;
   --space-6:  1.5rem;
+  --space-7:  1.75rem;
   --space-8:  2rem;
   --space-10: 2.5rem;
   --space-12: 3rem;
@@ -1119,8 +1120,8 @@ strong { font-weight: 600; }
 .contact-info__item {
   display: grid;
   grid-template-columns: 40px 1fr;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  gap: var(--space-4);
+  margin-bottom: var(--space-7);
   align-items: start;
 }
 .contact-info__icon {
@@ -1144,7 +1145,7 @@ strong { font-weight: 600; }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-text-light);
-  margin-bottom: 3px;
+  margin-bottom: 8px;
   line-height: 1.2;
 }
 .contact-info__value {
