@@ -1145,13 +1145,14 @@ strong { font-weight: 600; }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-text-light);
-  margin-bottom: 8px;
+  margin: 0 0 5px;
   line-height: 1.2;
 }
 .contact-info__value {
   font-size: var(--size-base);
   color: var(--color-text);
   line-height: 1.6;
+  margin: 0;
 }
 @media (max-width: 640px) {
   .contact-info__item { grid-template-columns: 36px 1fr; }
